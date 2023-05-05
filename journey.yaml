@@ -4,181 +4,310 @@ info:
   description: API to configure journeys
   version: 1.0.0
 security:
-- EpilotAuth: []
+  - EpilotAuth: []
+x-speakeasy-retries:
+  strategy: backoff
+  backoff:
+    initialInterval: 5000 # 5 seconds
+    maxInterval: 60000 # 60 seconds
+    maxElapsedTime: 3600000 # 5 minutes
+    exponent: 1.5
+  statusCodes:
+    - 5XX
+  retryConnectionErrors: true
 paths:
   /v1/journey/organization/{id}:
     get:
+      servers:
+        - url: https://api.epilot.com
       operationId: getJourneysByOrgId
       summary: getJourneysByOrgId
       description: Get all journeys by organization id
       tags:
-      - Journeys
+        - Journeys
       parameters:
-      - name: id
-        in: path
-        description: Organization ID
-        required: true
-        schema:
-          type: string
-          example: '123'
+        - name: id
+          in: path
+          description: Organization ID
+          required: true
+          schema:
+            type: string
+            example: "123"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetJourneysResponse'
+                $ref: "#/components/schemas/GetJourneysResponse"
   /v1/journey/configuration/{id}:
     get:
-      x-speakeasy-entity-operation: Journey#get
       operationId: getJourney
       summary: getJourney
       description: Get journey by id
       security: []
       tags:
-      - Journeys
+        - Journeys
       parameters:
-      - name: id
-        in: path
-        x-speakeasy-match: journeyId
-        description: Journey ID
-        required: true
-        schema:
-          type: string
-          format: uuid
-          example: 509cdffe-424f-457a-95c2-9708c304ce77
-      - name: source
-        in: query
-        x-speakeasy-ignore: true
-        description: What source ID. Journey or Entity ID
-        required: false
-        schema:
-          type: string
-      - name: orgId
-        in: query
-        x-speakeasy-match: organizationId
-        description: Organization ID
-        required: false
-        schema:
-          type: string
+        - name: id
+          in: path
+          x-speakeasy-match: journeyId
+          description: Journey ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 509cdffe-424f-457a-95c2-9708c304ce77
+        - name: source
+          in: query
+          x-speakeasy-ignore: true
+          description: What source ID. Journey or Entity ID
+          required: false
+          schema:
+            type: string
+        - name: orgId
+          in: query
+          x-speakeasy-match: organizationId
+          description: Organization ID
+          required: false
+          schema:
+            type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyResponse'
+                $ref: "#/components/schemas/JourneyResponse"
     delete:
-      x-speakeasy-entity-operation: Journey#delete
       operationId: removeJourney
       summary: removeJourney
       description: Remove journey by id
       tags:
-      - Journeys
+        - Journeys
       parameters:
-      - name: id
-        in: path
-        description: Journey ID
-        x-speakeasy-match: journeyId
-        required: true
-        schema:
-          type: string
-          format: uuid
-          example: 509cdffe-424f-457a-95c2-9708c304ce77
+        - name: id
+          in: path
+          description: Journey ID
+          x-speakeasy-match: journeyId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 509cdffe-424f-457a-95c2-9708c304ce77
       responses:
-        '200':
+        "200":
           description: Success
           content: {}
   /v1/journey/configuration:
     post:
-      x-speakeasy-entity-operation: Journey#create
       operationId: createJourney
       summary: createJourney
       description: Create a Journey
       tags:
-      - Journeys
+        - Journeys
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JourneyCreationRequest'
+              $ref: "#/components/schemas/JourneyCreationRequest"
         description: Payload
       parameters: []
       responses:
-        '201':
+        "201":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyResponse'
+                $ref: "#/components/schemas/JourneyResponse"
     put:
-      x-speakeasy-entity-operation: Journey#update
       operationId: updateJourney
       summary: updateJourney
       description: Update a Journey
       tags:
-      - Journeys
+        - Journeys
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JourneyCreationRequest'
+              $ref: "#/components/schemas/JourneyCreationRequest"
         description: Payload
       parameters: []
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyResponse'
+                $ref: "#/components/schemas/JourneyResponse"
     patch:
       operationId: patchUpdateJourney
       summary: patchUpdateJourney
       description: Update a Journey (partially / patch). Support for nested properties updates (e.g. "property[0].name").
       tags:
-      - Journeys
+        - Journeys
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchUpdateJourneyRequest'
+              $ref: "#/components/schemas/PatchUpdateJourneyRequest"
             example:
               journeyId: 509cdffe-424f-457a-95c2-9708c304ce77
               name: New Journey Name
               steps[0].uischema.elements[0].products:
-              - '123456'
-              - '654321'
+                - "123456"
+                - "654321"
         description: Payload
       parameters: []
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyResponse'
+                $ref: "#/components/schemas/JourneyResponse"
   /v1/journey/configuration/search:
     post:
       operationId: searchJourneys
       summary: searchJourneys
       description: Search Journeys
       tags:
-      - Journeys
+        - Journeys
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SearchJourneysQueryRequest'
+              $ref: "#/components/schemas/SearchJourneysQueryRequest"
         description: Payload
       parameters: []
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchJourneysResponse'
+                $ref: "#/components/schemas/SearchJourneysResponse"
+
+  # Journey V2 (Restful endpoints)
+  /v2/journey/configuration:
+    post:
+      x-speakeasy-entity-operation: Journey#create
+      operationId: createJourneyV2
+      summary: createJourneyV2
+      description: Create a Journey
+      tags:
+        - Journeys V2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JourneyCreationRequestV2"
+        description: Payload
+      parameters: []
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Journey"
+    put:
+      x-speakeasy-entity-operation: Journey#update
+      operationId: updateJourneyV2
+      summary: updateJourneyV2
+      description: Update a Journey
+      tags:
+        - Journeys V2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JourneyCreationRequestV2"
+        description: Payload
+      parameters: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Journey"
+    patch:
+      operationId: patchUpdateJourneyV2
+      summary: patchUpdateJourneyV2
+      description: Update a Journey (partially / patch). Support for nested properties updates (e.g. "property[0].name").
+      tags:
+        - Journeys V2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchUpdateJourneyRequest"
+            example:
+              journeyId: 509cdffe-424f-457a-95c2-9708c304ce77
+              name: "New Journey Name"
+              steps[0].uischema.elements[0].products: ["123456", "654321"]
+        description: Payload
+      parameters: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Journey"
+  /v2/journey/configuration/{id}:
+    get:
+      x-speakeasy-entity-operation: Journey#get
+      operationId: getJourneyV2
+      summary: getJourneyV2
+      description: Get journey by id
+      security: []
+      tags:
+        - Journeys V2
+      parameters:
+        - name: id
+          in: path
+          description: Journey ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 509cdffe-424f-457a-95c2-9708c304ce77
+        - name: source
+          in: query
+          description: What source ID. Journey or Entity ID
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Journey"
+    delete:
+      x-speakeasy-entity-operation: Journey#delete
+      operationId: removeJourneyV2
+      summary: removeJourneyV2
+      description: Remove journey by id
+      tags:
+        - Journeys V2
+      parameters:
+        - name: id
+          in: path
+          description: Journey ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 509cdffe-424f-457a-95c2-9708c304ce77
+      responses:
+        "200":
+          description: Success
+          content: {}
+
 components:
   schemas:
     GetJourneysResponse:
@@ -186,7 +315,7 @@ components:
     JourneyResponse:
       type: object
       allOf:
-        - $ref: '#/components/schemas/JourneyCreationRequest'
+        - $ref: "#/components/schemas/JourneyCreationRequest"
     PatchUpdateJourneyRequest:
       type: object
       properties:
@@ -198,7 +327,7 @@ components:
       description: |
         Patch request to update a journey (journey id is required) Support for nested properties (e.g. steps[0].uischema.elements[0].products) is supported.
       required:
-      - journeyId
+        - journeyId
     JourneyCreationRequest:
       x-speakeasy-entity: Journey
       type: object
@@ -245,9 +374,9 @@ components:
               schema: {}
               uischema: {}
             required:
-            - name
-            - schema
-            - uischema
+              - name
+              - schema
+              - uischema
         design:
           type: object
           properties:
@@ -258,7 +387,7 @@ components:
               type: object
               additionalProperties: {}
           required:
-          - theme
+            - theme
           additionalProperties: false
         rules:
           type: array
@@ -268,23 +397,23 @@ components:
               type:
                 type: string
                 enum:
-                - inject
-                - injectWithKey
+                  - inject
+                  - injectWithKey
               sourceType:
                 type: string
                 enum:
-                - journey
-                - step
-                - block
+                  - journey
+                  - step
+                  - block
               source:
                 type: string
               target:
                 type: string
             required:
-            - type
-            - sourceType
-            - source
-            - target
+              - type
+              - sourceType
+              - source
+              - target
             additionalProperties: false
         logics:
           type: array
@@ -302,8 +431,8 @@ components:
                 items:
                   type: string
             required:
-            - conditions
-            - actions
+              - conditions
+              - actions
             additionalProperties: false
         settings:
           type: object
@@ -314,14 +443,14 @@ components:
                 mode:
                   type: string
                   enum:
-                  - full-screen
-                  - inline
+                    - full-screen
+                    - inline
                 lang:
                   type: string
                   enum:
-                  - de
-                  - en
-                  - fr
+                    - de
+                    - en
+                    - fr
                 width:
                   type: string
                 topBar:
@@ -337,9 +466,9 @@ components:
                     align:
                       type: string
                       enum:
-                      - left
-                      - center
-                      - right
+                        - left
+                        - center
+                        - right
             safeModeAutomation:
               type: boolean
             designId:
@@ -369,23 +498,210 @@ components:
               items:
                 type: string
                 enum:
-                - ORDER
-                - OPPORTUNITY
+                  - ORDER
+                  - OPPORTUNITY
             entityTags:
               type: array
               items:
                 type: string
           required:
-          - designId
+            - designId
           additionalProperties: false
         createdBy:
           type: string
       required:
-      - organizationId
-      - brandId
-      - name
-      - steps
+        - organizationId
+        - brandId
+        - name
+        - steps
       additionalProperties: false
+    JourneyCreationRequestV2:
+      type: object
+      properties:
+        journeyId:
+          type: string
+        organizationId:
+          type: string
+        brandId:
+          type: string
+        name:
+          type: string
+        steps:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              showStepName:
+                type: boolean
+                nullable: true
+              title:
+                type: string
+                nullable: true
+              subTitle:
+                type: string
+                nullable: true
+              showStepSubtitle:
+                type: boolean
+                nullable: true
+              showStepper:
+                type: boolean
+                nullable: true
+              showStepperLabels:
+                type: boolean
+                nullable: true
+              hideNextButton:
+                type: boolean
+                nullable: true
+              name:
+                type: string
+              stepId:
+                type: string
+              schema: {}
+              uischema: {}
+            required:
+              - name
+              - schema
+              - uischema
+        design:
+          type: object
+          properties:
+            logoUrl:
+              type: string
+              nullable: true
+            theme:
+              type: object
+              additionalProperties: {}
+          additionalProperties: false
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - inject
+                  - injectWithKey
+              sourceType:
+                type: string
+                enum:
+                  - journey
+                  - step
+                  - block
+              source:
+                type: string
+              target:
+                type: string
+            required:
+              - type
+              - sourceType
+              - source
+              - target
+            additionalProperties: false
+        logics:
+          type: array
+          items:
+            type: object
+            properties:
+              autoGeneratedId:
+                type: string
+              conditions:
+                type: array
+                items:
+                  type: string
+              actions:
+                type: array
+                items:
+                  type: string
+            required:
+              - conditions
+              - actions
+            additionalProperties: false
+        settings:
+          type: object
+          properties:
+            embedOptions:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum:
+                    - "full-screen"
+                    - "inline"
+                lang:
+                  type: string
+                  enum:
+                    - "de"
+                    - "en"
+                    - "fr"
+                width:
+                  type: string
+                topBar:
+                  type: boolean
+                scrollToTop:
+                  type: boolean
+                button:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      nullable: true
+                    align:
+                      type: string
+                      enum:
+                        - "left"
+                        - "center"
+                        - "right"
+            safeModeAutomation:
+              type: boolean
+            designId:
+              type: string
+            templateId:
+              type: string
+            entityId:
+              type: string
+              nullable: true
+            mappingsAutomationId:
+              type: string
+            targetedCustomer:
+              type: string
+            description:
+              type: string
+              nullable: true
+            organizationSettings:
+              type: object
+              additionalProperties:
+                type: boolean
+              nullable: true
+            publicToken:
+              type: string
+              nullable: true
+            runtimeEntities:
+              type: array
+              items:
+                type: string
+                enum:
+                  - ORDER
+                  - OPPORTUNITY
+            filePurposes:
+              type: array
+              items:
+                type: string
+            entityTags:
+              type: array
+              items:
+                type: string
+            addressSuggestionsFileUrl:
+              type: string
+              nullable: true
+          additionalProperties: false
+        createdBy:
+          type: string
+      required:
+        - name
+        - steps
+      additionalProperties: true
     SearchJourneysQueryRequest:
       type: object
       properties:
@@ -395,7 +711,7 @@ components:
             Lucene query syntax
             See https://lucene.apache.org/core/2_9_4/queryparsersyntax.html ; https://www.elastic.co/guide/en/kibana/current/lucene-query.html
           example: _tags:*Flex*
-          default: '*'
+          default: "*"
         from:
           type: integer
           description: |
@@ -447,15 +763,15 @@ components:
               _org:
                 type: string
                 description: Organization ID
-                example: '739224'
+                example: "739224"
               _created_at:
                 type: string
                 format: date-time
-                example: '2020-01-01T00:00:00.000Z'
+                example: "2020-01-01T00:00:00.000Z"
               _updated_at:
                 type: string
                 format: date-time
-                example: '2020-01-01T00:00:00.000Z'
+                example: "2020-01-01T00:00:00.000Z"
               _tags:
                 type: array
                 items:
@@ -486,13 +802,17 @@ components:
                     id:
                       type: string
                       description: User ID
-                      example: '12345'
+                      example: "12345"
               journey_version:
                 type: string
                 description: Journey Version
                 enum:
-                - Flex
-                - Widget
+                  - Flex
+                  - Widget
+    Journey:
+      allOf:
+        - $ref: "#/components/schemas/JourneyCreationRequest"
+        - $ref: "#/components/schemas/JourneyCreationRequestV2"
   securitySchemes:
     EpilotAuth:
       type: http
@@ -500,5 +820,4 @@ components:
       description: Authorization header with epilot OAuth2 bearer token
       bearerFormat: JWT
 servers:
-- url: https://journey-config.sls.epilot.io
-
+  - url: https://journey-config.sls.epilot.io

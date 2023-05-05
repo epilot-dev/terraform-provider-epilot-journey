@@ -3,14 +3,13 @@ package sdk
 import (
 	"context"
 	"epilot-journey/internal/sdk/pkg/models/operations"
-	"epilot-journey/internal/sdk/pkg/models/shared"
 	"epilot-journey/internal/sdk/pkg/utils"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
-type journeys struct {
+type journeysV2 struct {
 	defaultClient  HTTPClient
 	securityClient HTTPClient
 	serverURL      string
@@ -19,8 +18,8 @@ type journeys struct {
 	genVersion     string
 }
 
-func newJourneys(defaultClient, securityClient HTTPClient, serverURL, language, sdkVersion, genVersion string) *journeys {
-	return &journeys{
+func newJourneysV2(defaultClient, securityClient HTTPClient, serverURL, language, sdkVersion, genVersion string) *journeysV2 {
+	return &journeysV2{
 		defaultClient:  defaultClient,
 		securityClient: securityClient,
 		serverURL:      serverURL,
@@ -30,11 +29,11 @@ func newJourneys(defaultClient, securityClient HTTPClient, serverURL, language, 
 	}
 }
 
-// CreateJourney - createJourney
+// CreateJourneyV2 - createJourneyV2
 // Create a Journey
-func (s *journeys) CreateJourney(ctx context.Context, request operations.CreateJourneyRequest) (*operations.CreateJourneyResponse, error) {
+func (s *journeysV2) CreateJourneyV2(ctx context.Context, request operations.CreateJourneyV2Request) (*operations.CreateJourneyV2Response, error) {
 	baseURL := s.serverURL
-	url := strings.TrimSuffix(baseURL, "/") + "/v1/journey/configuration"
+	url := strings.TrimSuffix(baseURL, "/") + "/v2/journey/configuration"
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
 	if err != nil {
@@ -82,7 +81,7 @@ func (s *journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.CreateJourneyResponse{
+	res := &operations.CreateJourneyV2Response{
 		StatusCode:  int32(httpRes.StatusCode),
 		ContentType: contentType,
 	}
@@ -90,23 +89,23 @@ func (s *journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 	case httpRes.StatusCode == 201:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.JourneyResponse
+			var out map[string]interface{}
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
 
-			res.JourneyResponse = out
+			res.Journey = out
 		}
 	}
 
 	return res, nil
 }
 
-// GetJourney - getJourney
+// GetJourneyV2 - getJourneyV2
 // Get journey by id
-func (s *journeys) GetJourney(ctx context.Context, request operations.GetJourneyRequest) (*operations.GetJourneyResponse, error) {
+func (s *journeysV2) GetJourneyV2(ctx context.Context, request operations.GetJourneyV2Request) (*operations.GetJourneyV2Response, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/journey/configuration/{id}", request.PathParams)
+	url := utils.GenerateURL(ctx, baseURL, "/v2/journey/configuration/{id}", request.PathParams)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -149,76 +148,7 @@ func (s *journeys) GetJourney(ctx context.Context, request operations.GetJourney
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.GetJourneyResponse{
-		StatusCode:  int32(httpRes.StatusCode),
-		ContentType: contentType,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.JourneyResponse
-			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
-				return nil, err
-			}
-
-			res.JourneyResponse = out
-		}
-	}
-
-	return res, nil
-}
-
-// GetJourneysByOrgID - getJourneysByOrgId
-// Get all journeys by organization id
-func (s *journeys) GetJourneysByOrgID(ctx context.Context, request operations.GetJourneysByOrgIDRequest) (*operations.GetJourneysByOrgIDResponse, error) {
-	baseURL := operations.GetJourneysByOrgIDServerList[0]
-	if request.ServerURL != nil {
-		baseURL = *request.ServerURL
-	}
-
-	url := utils.GenerateURL(ctx, baseURL, "/v1/journey/organization/{id}", request.PathParams)
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	client := s.securityClient
-
-	retryConfig := request.Retries
-	if retryConfig == nil {
-		retryConfig = &utils.RetryConfig{
-			Strategy: "backoff",
-			Backoff: &utils.BackoffStrategy{
-				InitialInterval: 5000,
-				MaxInterval:     60000,
-				Exponent:        1.5,
-				MaxElapsedTime:  3600000,
-			},
-			RetryConnectionErrors: true,
-		}
-	}
-
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"5XX",
-		},
-	}, func() (*http.Response, error) {
-		return client.Do(req)
-	})
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-	defer httpRes.Body.Close()
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.GetJourneysByOrgIDResponse{
+	res := &operations.GetJourneyV2Response{
 		StatusCode:  int32(httpRes.StatusCode),
 		ContentType: contentType,
 	}
@@ -231,18 +161,18 @@ func (s *journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 				return nil, err
 			}
 
-			res.GetJourneysResponse = out
+			res.Journey = out
 		}
 	}
 
 	return res, nil
 }
 
-// PatchUpdateJourney - patchUpdateJourney
+// PatchUpdateJourneyV2 - patchUpdateJourneyV2
 // Update a Journey (partially / patch). Support for nested properties updates (e.g. "property[0].name").
-func (s *journeys) PatchUpdateJourney(ctx context.Context, request operations.PatchUpdateJourneyRequest) (*operations.PatchUpdateJourneyResponse, error) {
+func (s *journeysV2) PatchUpdateJourneyV2(ctx context.Context, request operations.PatchUpdateJourneyV2Request) (*operations.PatchUpdateJourneyV2Response, error) {
 	baseURL := s.serverURL
-	url := strings.TrimSuffix(baseURL, "/") + "/v1/journey/configuration"
+	url := strings.TrimSuffix(baseURL, "/") + "/v2/journey/configuration"
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
 	if err != nil {
@@ -290,7 +220,7 @@ func (s *journeys) PatchUpdateJourney(ctx context.Context, request operations.Pa
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.PatchUpdateJourneyResponse{
+	res := &operations.PatchUpdateJourneyV2Response{
 		StatusCode:  int32(httpRes.StatusCode),
 		ContentType: contentType,
 	}
@@ -298,23 +228,23 @@ func (s *journeys) PatchUpdateJourney(ctx context.Context, request operations.Pa
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.JourneyResponse
+			var out map[string]interface{}
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
 
-			res.JourneyResponse = out
+			res.Journey = out
 		}
 	}
 
 	return res, nil
 }
 
-// RemoveJourney - removeJourney
+// RemoveJourneyV2 - removeJourneyV2
 // Remove journey by id
-func (s *journeys) RemoveJourney(ctx context.Context, request operations.RemoveJourneyRequest) (*operations.RemoveJourneyResponse, error) {
+func (s *journeysV2) RemoveJourneyV2(ctx context.Context, request operations.RemoveJourneyV2Request) (*operations.RemoveJourneyV2Response, error) {
 	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/v1/journey/configuration/{id}", request.PathParams)
+	url := utils.GenerateURL(ctx, baseURL, "/v2/journey/configuration/{id}", request.PathParams)
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {
@@ -355,7 +285,7 @@ func (s *journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.RemoveJourneyResponse{
+	res := &operations.RemoveJourneyV2Response{
 		StatusCode:  int32(httpRes.StatusCode),
 		ContentType: contentType,
 	}
@@ -366,83 +296,11 @@ func (s *journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 	return res, nil
 }
 
-// SearchJourneys - searchJourneys
-// Search Journeys
-func (s *journeys) SearchJourneys(ctx context.Context, request operations.SearchJourneysRequest) (*operations.SearchJourneysResponse, error) {
-	baseURL := s.serverURL
-	url := strings.TrimSuffix(baseURL, "/") + "/v1/journey/configuration/search"
-
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
-	if err != nil {
-		return nil, fmt.Errorf("error serializing request body: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bodyReader)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	req.Header.Set("Content-Type", reqContentType)
-
-	client := s.securityClient
-
-	retryConfig := request.Retries
-	if retryConfig == nil {
-		retryConfig = &utils.RetryConfig{
-			Strategy: "backoff",
-			Backoff: &utils.BackoffStrategy{
-				InitialInterval: 5000,
-				MaxInterval:     60000,
-				Exponent:        1.5,
-				MaxElapsedTime:  3600000,
-			},
-			RetryConnectionErrors: true,
-		}
-	}
-
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"5XX",
-		},
-	}, func() (*http.Response, error) {
-		return client.Do(req)
-	})
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-	defer httpRes.Body.Close()
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.SearchJourneysResponse{
-		StatusCode:  int32(httpRes.StatusCode),
-		ContentType: contentType,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.SearchJourneysResponse
-			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
-				return nil, err
-			}
-
-			res.SearchJourneysResponse = out
-		}
-	}
-
-	return res, nil
-}
-
-// UpdateJourney - updateJourney
+// UpdateJourneyV2 - updateJourneyV2
 // Update a Journey
-func (s *journeys) UpdateJourney(ctx context.Context, request operations.UpdateJourneyRequest) (*operations.UpdateJourneyResponse, error) {
+func (s *journeysV2) UpdateJourneyV2(ctx context.Context, request operations.UpdateJourneyV2Request) (*operations.UpdateJourneyV2Response, error) {
 	baseURL := s.serverURL
-	url := strings.TrimSuffix(baseURL, "/") + "/v1/journey/configuration"
+	url := strings.TrimSuffix(baseURL, "/") + "/v2/journey/configuration"
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
 	if err != nil {
@@ -490,7 +348,7 @@ func (s *journeys) UpdateJourney(ctx context.Context, request operations.UpdateJ
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.UpdateJourneyResponse{
+	res := &operations.UpdateJourneyV2Response{
 		StatusCode:  int32(httpRes.StatusCode),
 		ContentType: contentType,
 	}
@@ -498,12 +356,12 @@ func (s *journeys) UpdateJourney(ctx context.Context, request operations.UpdateJ
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.JourneyResponse
+			var out map[string]interface{}
 			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
 				return nil, err
 			}
 
-			res.JourneyResponse = out
+			res.Journey = out
 		}
 	}
 

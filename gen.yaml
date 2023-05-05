@@ -3,7 +3,6 @@ generation:
   telemetryEnabled: false
   sdkClassName: SDK
   sdkFlattening: true
-  singleTagPerOp: false
 terraform:
   version: 0.0.3
   author: epilot-dev
