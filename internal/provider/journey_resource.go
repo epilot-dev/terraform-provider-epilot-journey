@@ -4,18 +4,19 @@ package provider
 
 import (
 	"context"
-	"epilot-journey/internal/sdk"
 	"fmt"
-
-	"epilot-journey/internal/sdk/pkg/models/operations"
-	"epilot-journey/internal/validators"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators"
+	speakeasy_listvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/listvalidators"
+	speakeasy_mapvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/mapvalidators"
+	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/stringvalidators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -35,16 +36,16 @@ type JourneyResource struct {
 
 // JourneyResourceModel describes the resource data model.
 type JourneyResourceModel struct {
-	BrandID        types.String                    `tfsdk:"brand_id"`
-	CreatedBy      types.String                    `tfsdk:"created_by"`
-	Design         *JourneyCreationRequestDesign   `tfsdk:"design"`
-	JourneyID      types.String                    `tfsdk:"journey_id"`
-	Logics         []JourneyCreationRequestLogics  `tfsdk:"logics"`
-	Name           types.String                    `tfsdk:"name"`
-	OrganizationID types.String                    `tfsdk:"organization_id"`
-	Rules          []JourneyCreationRequestRules   `tfsdk:"rules"`
-	Settings       *JourneyCreationRequestSettings `tfsdk:"settings"`
-	Steps          []JourneyCreationRequestSteps   `tfsdk:"steps"`
+	BrandID        types.String `tfsdk:"brand_id"`
+	CreatedBy      types.String `tfsdk:"created_by"`
+	Design         *Design      `tfsdk:"design"`
+	JourneyID      types.String `tfsdk:"journey_id"`
+	Logics         []Logics     `tfsdk:"logics"`
+	Name           types.String `tfsdk:"name"`
+	OrganizationID types.String `tfsdk:"organization_id"`
+	Rules          []Rules      `tfsdk:"rules"`
+	Settings       *Settings    `tfsdk:"settings"`
+	Steps          []Steps      `tfsdk:"steps"`
 }
 
 func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -72,17 +73,21 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Optional: true,
 					},
 					"theme": schema.MapAttribute{
-						Required:    true,
+						Computed:    true,
+						Optional:    true,
 						ElementType: types.StringType,
+						Description: `Not Null`,
 						Validators: []validator.Map{
+							speakeasy_mapvalidators.NotNull(),
 							mapvalidator.ValueStringsAre(validators.IsValidJSON()),
 						},
 					},
 				},
 			},
 			"journey_id": schema.StringAttribute{
-				Computed: true,
-				Optional: true,
+				Computed:    true,
+				Optional:    true,
+				Description: `Journey ID`,
 			},
 			"logics": schema.ListNestedAttribute{
 				Computed: true,
@@ -90,16 +95,26 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"actions": schema.ListAttribute{
-							Required:    true,
+							Computed:    true,
+							Optional:    true,
 							ElementType: types.StringType,
+							Description: `Not Null`,
+							Validators: []validator.List{
+								speakeasy_listvalidators.NotNull(),
+							},
 						},
 						"auto_generated_id": schema.StringAttribute{
 							Computed: true,
 							Optional: true,
 						},
 						"conditions": schema.ListAttribute{
-							Required:    true,
+							Computed:    true,
+							Optional:    true,
 							ElementType: types.StringType,
+							Description: `Not Null`,
+							Validators: []validator.List{
+								speakeasy_listvalidators.NotNull(),
+							},
 						},
 					},
 				},
@@ -116,11 +131,19 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"source": schema.StringAttribute{
-							Required: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Not Null`,
+							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
+							},
 						},
 						"source_type": schema.StringAttribute{
-							Required: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Not Null; must be one of ["journey", "step", "block"]`,
 							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
 								stringvalidator.OneOf(
 									"journey",
 									"step",
@@ -129,11 +152,19 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 							},
 						},
 						"target": schema.StringAttribute{
-							Required: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Not Null`,
+							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
+							},
 						},
 						"type": schema.StringAttribute{
-							Required: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Not Null; must be one of ["inject", "injectWithKey"]`,
 							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
 								stringvalidator.OneOf(
 									"inject",
 									"injectWithKey",
@@ -152,7 +183,12 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Optional: true,
 					},
 					"design_id": schema.StringAttribute{
-						Required: true,
+						Computed:    true,
+						Optional:    true,
+						Description: `Not Null`,
+						Validators: []validator.String{
+							speakeasy_stringvalidators.NotNull(),
+						},
 					},
 					"embed_options": schema.SingleNestedAttribute{
 						Computed: true,
@@ -163,8 +199,9 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 								Optional: true,
 								Attributes: map[string]schema.Attribute{
 									"align": schema.StringAttribute{
-										Computed: true,
-										Optional: true,
+										Computed:    true,
+										Optional:    true,
+										Description: `must be one of ["left", "center", "right"]`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"left",
@@ -180,8 +217,9 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 								},
 							},
 							"lang": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
+								Computed:    true,
+								Optional:    true,
+								Description: `must be one of ["de", "en", "fr"]`,
 								Validators: []validator.String{
 									stringvalidator.OneOf(
 										"de",
@@ -191,8 +229,9 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 								},
 							},
 							"mode": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
+								Computed:    true,
+								Optional:    true,
+								Description: `must be one of ["full-screen", "inline"]`,
 								Validators: []validator.String{
 									stringvalidator.OneOf(
 										"full-screen",
@@ -264,20 +303,23 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 							Optional: true,
 						},
 						"name": schema.StringAttribute{
-							Required: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Not Null`,
+							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
+							},
 						},
 						"schema": schema.StringAttribute{
-							Required: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Parsed as JSON.`,
 							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
 								validators.IsValidJSON(),
 							},
-							Description: `Parsed as JSON.`,
 						},
 						"show_step_name": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"show_step_subtitle": schema.BoolAttribute{
 							Computed: true,
 							Optional: true,
 						},
@@ -286,6 +328,10 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 							Optional: true,
 						},
 						"show_stepper_labels": schema.BoolAttribute{
+							Computed: true,
+							Optional: true,
+						},
+						"show_step_subtitle": schema.BoolAttribute{
 							Computed: true,
 							Optional: true,
 						},
@@ -302,11 +348,13 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 							Optional: true,
 						},
 						"uischema": schema.StringAttribute{
-							Required: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Parsed as JSON.`,
 							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
 								validators.IsValidJSON(),
 							},
-							Description: `Parsed as JSON.`,
 						},
 					},
 				},
@@ -337,14 +385,14 @@ func (r *JourneyResource) Configure(ctx context.Context, req resource.ConfigureR
 
 func (r *JourneyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *JourneyResourceModel
-	var item types.Object
+	var plan types.Object
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &item)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+	resp.Diagnostics.Append(plan.As(ctx, &data, basetypes.ObjectAsOptions{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
 	})...)
@@ -353,10 +401,13 @@ func (r *JourneyResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
-	request := *data.ToSDKType()
+	request := data.ToSharedJourneyCreationRequest()
 	res, err := r.client.Journeys.CreateJourney(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
 		return
 	}
 	if res == nil {
@@ -371,7 +422,8 @@ func (r *JourneyResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSDKType(res.JourneyResponse)
+	data.RefreshFromSharedJourneyResponse(res.JourneyResponse)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -409,6 +461,9 @@ func (r *JourneyResource) Read(ctx context.Context, req resource.ReadRequest, re
 	res, err := r.client.Journeys.GetJourney(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
 		return
 	}
 	if res == nil {
@@ -423,7 +478,7 @@ func (r *JourneyResource) Read(ctx context.Context, req resource.ReadRequest, re
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSDKType(res.JourneyResponse)
+	data.RefreshFromSharedJourneyResponse(res.JourneyResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -431,15 +486,25 @@ func (r *JourneyResource) Read(ctx context.Context, req resource.ReadRequest, re
 
 func (r *JourneyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data *JourneyResourceModel
+	var plan types.Object
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	request := *data.ToSDKType()
+	request := data.ToSharedJourneyCreationRequest()
 	res, err := r.client.Journeys.UpdateJourney(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
 		return
 	}
 	if res == nil {
@@ -454,7 +519,8 @@ func (r *JourneyResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSDKType(res.JourneyResponse)
+	data.RefreshFromSharedJourneyResponse(res.JourneyResponse)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -485,6 +551,9 @@ func (r *JourneyResource) Delete(ctx context.Context, req resource.DeleteRequest
 	res, err := r.client.Journeys.RemoveJourney(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
 		return
 	}
 	if res == nil {
@@ -499,5 +568,5 @@ func (r *JourneyResource) Delete(ctx context.Context, req resource.DeleteRequest
 }
 
 func (r *JourneyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("journey_id"), req.ID)...)
 }

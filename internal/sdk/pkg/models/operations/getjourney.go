@@ -3,7 +3,7 @@
 package operations
 
 import (
-	"epilot-journey/internal/sdk/pkg/models/shared"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -14,10 +14,55 @@ type GetJourneyRequest struct {
 	OrgID *string `queryParam:"style=form,explode=true,name=orgId"`
 }
 
+func (o *GetJourneyRequest) GetID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ID
+}
+
+func (o *GetJourneyRequest) GetOrgID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.OrgID
+}
+
 type GetJourneyResponse struct {
+	// HTTP response content type for this operation
 	ContentType string
 	// Success
 	JourneyResponse *shared.JourneyResponse
-	StatusCode      int
-	RawResponse     *http.Response
+	// HTTP response status code for this operation
+	StatusCode int
+	// Raw HTTP response; suitable for custom response parsing
+	RawResponse *http.Response
+}
+
+func (o *GetJourneyResponse) GetContentType() string {
+	if o == nil {
+		return ""
+	}
+	return o.ContentType
+}
+
+func (o *GetJourneyResponse) GetJourneyResponse() *shared.JourneyResponse {
+	if o == nil {
+		return nil
+	}
+	return o.JourneyResponse
+}
+
+func (o *GetJourneyResponse) GetStatusCode() int {
+	if o == nil {
+		return 0
+	}
+	return o.StatusCode
+}
+
+func (o *GetJourneyResponse) GetRawResponse() *http.Response {
+	if o == nil {
+		return nil
+	}
+	return o.RawResponse
 }
