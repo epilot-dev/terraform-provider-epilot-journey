@@ -1,4 +1,4 @@
 import {
   to = epilot-journey_journey.grid_journey
-  id = "dca9f240-83d2-11ee-b475-5b191f85c600"
+  id = "7d5e4270-5888-11ee-9486-1745b3aedbc4" // Wallbox journey example
 }

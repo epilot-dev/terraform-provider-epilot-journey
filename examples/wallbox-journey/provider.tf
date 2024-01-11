@@ -13,5 +13,5 @@ variable epilot_auth {
 
 provider "epilot-journey" {
   # Configuration options
-  epilot_auth = var.epilot_auth
+  epilot_auth = "" 
 }
