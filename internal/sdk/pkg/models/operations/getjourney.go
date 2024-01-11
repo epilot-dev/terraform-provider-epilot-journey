@@ -41,7 +41,7 @@ type GetJourneyResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// Success
-	JourneyResponse *shared.JourneyResponse
+	Journey *shared.Journey
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
@@ -55,11 +55,11 @@ func (o *GetJourneyResponse) GetContentType() string {
 	return o.ContentType
 }
 
-func (o *GetJourneyResponse) GetJourneyResponse() *shared.JourneyResponse {
+func (o *GetJourneyResponse) GetJourney() *shared.Journey {
 	if o == nil {
 		return nil
 	}
-	return o.JourneyResponse
+	return o.Journey
 }
 
 func (o *GetJourneyResponse) GetStatusCode() int {
