@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 7596db1fc14f4c91d9812a570946245b
+  docChecksum: e9e7c1920b2835f30a6247d2d490e062
   docVersion: 1.0.0
   speakeasyVersion: internal
-  generationVersion: 2.237.3
-  releaseVersion: 0.2.3
-  configChecksum: bc1ba416af9e4e4c3cab1a05f650c045
+  generationVersion: 2.239.1
+  releaseVersion: 0.3.0
+  configChecksum: f719d356cc021d4b4a312ee25e2f9e78
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -14,7 +14,7 @@ features:
   terraform:
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.2
-    core: 3.8.4
+    core: 3.9.1
     globalSecurity: 2.81.3
     globalServerURLs: 2.82.1
     retries: 2.81.1
@@ -95,11 +95,11 @@ generatedFiles:
   - internal/sdk/pkg/models/operations/patchupdatejourneyv2.go
   - internal/sdk/pkg/models/operations/removejourneyv2.go
   - internal/sdk/pkg/models/operations/updatejourneyv2.go
-  - internal/sdk/pkg/models/shared/journeyresponse.go
   - internal/sdk/pkg/models/shared/journey.go
   - internal/sdk/pkg/models/shared/journeycreationrequest.go
   - internal/sdk/pkg/models/shared/journeyproductsresponse.go
   - internal/sdk/pkg/models/shared/getjourneysresponse.go
+  - internal/sdk/pkg/models/shared/journeyresponse.go
   - internal/sdk/pkg/models/shared/patchupdatejourneyrequest.go
   - internal/sdk/pkg/models/shared/searchjourneysresponse.go
   - internal/sdk/pkg/models/shared/searchjourneysqueryrequest.go
