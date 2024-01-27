@@ -20,6 +20,7 @@ resource "epilot-journey_journey" "my_journey" {
   journey_id            = "...my_journey_id..."
   name                  = "Dianne Kiehn"
   organization_id       = "...my_organization_id..."
+  skip_automation       = true
   steps = [
     {
       hide_next_button    = false
@@ -57,6 +58,7 @@ resource "epilot-journey_journey" "my_journey" {
 - `organization_id` (String)
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
+- `skip_automation` (String) skip creating an Automation (it takes Yn format "true, yes, 1, y"). Requires replacement if changed.
 
 ### Read-Only
 

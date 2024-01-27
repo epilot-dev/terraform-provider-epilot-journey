@@ -5,6 +5,7 @@ resource "epilot-journey_journey" "my_journey" {
   journey_id            = "...my_journey_id..."
   name                  = "Dianne Kiehn"
   organization_id       = "...my_organization_id..."
+  skip_automation       = true
   steps = [
     {
       hide_next_button    = false
