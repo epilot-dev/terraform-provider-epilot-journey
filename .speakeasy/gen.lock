@@ -4,9 +4,9 @@ management:
   docChecksum: f388cd5ec679b79a0e058210f52415d1
   docVersion: 1.0.0
   speakeasyVersion: internal
-  generationVersion: 2.250.2
-  releaseVersion: 0.4.0
-  configChecksum: 32492f8e7837da1af52261b306832651
+  generationVersion: 2.252.2
+  releaseVersion: 0.4.1
+  configChecksum: cb885d3e3b3027caade13ff12cced70c
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
