@@ -1,11 +1,8 @@
 resource "epilot-journey_journey" "my_journey" {
-  additional_properties = "{ \"see\": \"documentation\" }"
-  brand_id              = "...my_brand_id..."
-  created_by            = "...my_created_by..."
-  journey_id            = "...my_journey_id..."
-  name                  = "Dianne Kiehn"
-  organization_id       = "...my_organization_id..."
-  skip_automation       = true
+  brand_id        = "...my_brand_id..."
+  journey_id      = "...my_journey_id..."
+  name            = "Dianne Kiehn"
+  skip_automation = true
   steps = [
     {
       hide_next_button    = false
