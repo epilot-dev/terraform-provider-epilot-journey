@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (r *JourneyDataSourceModel) RefreshFromSharedJourneyV2(resp *shared.JourneyV2) {
+func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *shared.JourneyCreationRequestV2) {
 	r.BrandID = types.StringPointerValue(resp.BrandID)
 	if resp.Design == nil {
 		r.Design = nil
@@ -28,7 +28,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyV2(resp *shared.Journey
 		r.Logics = r.Logics[:len(resp.Logics)]
 	}
 	for logicsCount, logicsItem := range resp.Logics {
-		var logics1 JourneyV2Logics
+		var logics1 JourneyCreationRequestV2Logics
 		logics1.Actions = nil
 		for _, v := range logicsItem.Actions {
 			logics1.Actions = append(logics1.Actions, types.StringValue(v))
@@ -51,7 +51,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyV2(resp *shared.Journey
 		r.Rules = r.Rules[:len(resp.Rules)]
 	}
 	for rulesCount, rulesItem := range resp.Rules {
-		var rules1 JourneyV2Rules
+		var rules1 JourneyCreationRequestV2Rules
 		rules1.Source = types.StringValue(rulesItem.Source)
 		rules1.SourceType = types.StringValue(string(rulesItem.SourceType))
 		rules1.Target = types.StringValue(rulesItem.Target)
@@ -122,7 +122,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyV2(resp *shared.Journey
 		r.Steps = r.Steps[:len(resp.Steps)]
 	}
 	for stepsCount, stepsItem := range resp.Steps {
-		var steps1 JourneyV2Steps
+		var steps1 JourneyCreationRequestV2Steps
 		steps1.HideNextButton = types.BoolPointerValue(stepsItem.HideNextButton)
 		steps1.Name = types.StringValue(stepsItem.Name)
 		schemaResult, _ := json.Marshal(stepsItem.Schema)

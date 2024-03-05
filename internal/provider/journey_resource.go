@@ -40,12 +40,12 @@ type JourneyResourceModel struct {
 	BrandID        types.String                      `tfsdk:"brand_id"`
 	Design         *JourneyCreationRequestV2Design   `tfsdk:"design"`
 	JourneyID      types.String                      `tfsdk:"journey_id"`
-	Logics         []JourneyV2Logics                 `tfsdk:"logics"`
+	Logics         []JourneyCreationRequestV2Logics  `tfsdk:"logics"`
 	Name           types.String                      `tfsdk:"name"`
-	Rules          []JourneyV2Rules                  `tfsdk:"rules"`
+	Rules          []JourneyCreationRequestV2Rules   `tfsdk:"rules"`
 	Settings       *JourneyCreationRequestV2Settings `tfsdk:"settings"`
 	SkipAutomation types.String                      `tfsdk:"skip_automation"`
-	Steps          []JourneyV2Steps                  `tfsdk:"steps"`
+	Steps          []JourneyCreationRequestV2Steps   `tfsdk:"steps"`
 }
 
 func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -419,11 +419,11 @@ func (r *JourneyResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.JourneyV2 == nil {
+	if res.JourneyCreationRequestV2 == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyV2(res.JourneyV2)
+	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id := data.JourneyID.ValueString()
 	request1 := operations.GetJourneyV2Request{
@@ -445,11 +445,11 @@ func (r *JourneyResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.JourneyV2 == nil {
+	if res1.JourneyCreationRequestV2 == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyV2(res1.JourneyV2)
+	data.RefreshFromSharedJourneyCreationRequestV2(res1.JourneyCreationRequestV2)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -494,11 +494,11 @@ func (r *JourneyResource) Read(ctx context.Context, req resource.ReadRequest, re
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.JourneyV2 == nil {
+	if res.JourneyCreationRequestV2 == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyV2(res.JourneyV2)
+	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -535,11 +535,11 @@ func (r *JourneyResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.JourneyV2 == nil {
+	if res.JourneyCreationRequestV2 == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyV2(res.JourneyV2)
+	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

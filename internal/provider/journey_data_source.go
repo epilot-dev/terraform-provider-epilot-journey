@@ -31,11 +31,11 @@ type JourneyDataSourceModel struct {
 	BrandID   types.String                      `tfsdk:"brand_id"`
 	Design    *JourneyCreationRequestV2Design   `tfsdk:"design"`
 	JourneyID types.String                      `tfsdk:"journey_id"`
-	Logics    []JourneyV2Logics                 `tfsdk:"logics"`
+	Logics    []JourneyCreationRequestV2Logics  `tfsdk:"logics"`
 	Name      types.String                      `tfsdk:"name"`
-	Rules     []JourneyV2Rules                  `tfsdk:"rules"`
+	Rules     []JourneyCreationRequestV2Rules   `tfsdk:"rules"`
 	Settings  *JourneyCreationRequestV2Settings `tfsdk:"settings"`
-	Steps     []JourneyV2Steps                  `tfsdk:"steps"`
+	Steps     []JourneyCreationRequestV2Steps   `tfsdk:"steps"`
 }
 
 // Metadata returns the data source type name.
@@ -286,11 +286,11 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.JourneyV2 == nil {
+	if res.JourneyCreationRequestV2 == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyV2(res.JourneyV2)
+	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

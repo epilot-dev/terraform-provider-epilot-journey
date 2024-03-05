@@ -23,7 +23,7 @@ type GetJourneyV2Response struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// Success
-	JourneyV2 *shared.JourneyV2
+	JourneyCreationRequestV2 *shared.JourneyCreationRequestV2
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
@@ -37,11 +37,11 @@ func (o *GetJourneyV2Response) GetContentType() string {
 	return o.ContentType
 }
 
-func (o *GetJourneyV2Response) GetJourneyV2() *shared.JourneyV2 {
+func (o *GetJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
 	if o == nil {
 		return nil
 	}
-	return o.JourneyV2
+	return o.JourneyCreationRequestV2
 }
 
 func (o *GetJourneyV2Response) GetStatusCode() int {
