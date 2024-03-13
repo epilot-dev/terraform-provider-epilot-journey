@@ -3,10 +3,10 @@ id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
   docChecksum: 1493050dbb39c56bd4106b166c7e9e32
   docVersion: 1.0.0
-  speakeasyVersion: internal
-  generationVersion: 2.277.0
-  releaseVersion: 0.5.2
-  configChecksum: 66cac6e140fd2b2b1ba3f775b40aa2b2
+  speakeasyVersion: 1.207.1
+  generationVersion: 2.280.6
+  releaseVersion: 0.5.3
+  configChecksum: ec04302dd28bc40c8657a3a240796747
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -14,7 +14,7 @@ features:
   terraform:
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.10.2
+    core: 3.10.3
     globalSecurity: 2.81.5
     globalServerURLs: 2.82.1
     retries: 2.81.1
