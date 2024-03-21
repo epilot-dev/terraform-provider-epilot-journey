@@ -4,7 +4,8 @@ package provider
 
 import (
 	"encoding/json"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-journey/internal/provider/types"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -14,7 +15,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 		if resp.Design == nil {
 			r.Design = nil
 		} else {
-			r.Design = &JourneyCreationRequestV2Design{}
+			r.Design = &tfTypes.JourneyCreationRequestV2Design{}
 			r.Design.LogoURL = types.StringPointerValue(resp.Design.LogoURL)
 			if len(resp.Design.Theme) > 0 {
 				r.Design.Theme = make(map[string]types.String)
@@ -29,7 +30,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			r.Logics = r.Logics[:len(resp.Logics)]
 		}
 		for logicsCount, logicsItem := range resp.Logics {
-			var logics1 JourneyCreationRequestV2Logics
+			var logics1 tfTypes.JourneyCreationRequestV2Logics
 			logics1.Actions = nil
 			for _, v := range logicsItem.Actions {
 				logics1.Actions = append(logics1.Actions, types.StringValue(v))
@@ -52,7 +53,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			r.Rules = r.Rules[:len(resp.Rules)]
 		}
 		for rulesCount, rulesItem := range resp.Rules {
-			var rules1 JourneyCreationRequestV2Rules
+			var rules1 tfTypes.JourneyCreationRequestV2Rules
 			rules1.Source = types.StringValue(rulesItem.Source)
 			rules1.SourceType = types.StringValue(string(rulesItem.SourceType))
 			rules1.Target = types.StringValue(rulesItem.Target)
@@ -69,18 +70,18 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 		if resp.Settings == nil {
 			r.Settings = nil
 		} else {
-			r.Settings = &JourneyCreationRequestV2Settings{}
+			r.Settings = &tfTypes.JourneyCreationRequestV2Settings{}
 			r.Settings.AddressSuggestionsFileURL = types.StringPointerValue(resp.Settings.AddressSuggestionsFileURL)
 			r.Settings.Description = types.StringPointerValue(resp.Settings.Description)
 			r.Settings.DesignID = types.StringPointerValue(resp.Settings.DesignID)
 			if resp.Settings.EmbedOptions == nil {
 				r.Settings.EmbedOptions = nil
 			} else {
-				r.Settings.EmbedOptions = &JourneyCreationRequestV2EmbedOptions{}
+				r.Settings.EmbedOptions = &tfTypes.JourneyCreationRequestV2EmbedOptions{}
 				if resp.Settings.EmbedOptions.Button == nil {
 					r.Settings.EmbedOptions.Button = nil
 				} else {
-					r.Settings.EmbedOptions.Button = &JourneyCreationRequestV2Button{}
+					r.Settings.EmbedOptions.Button = &tfTypes.JourneyCreationRequestV2Button{}
 					if resp.Settings.EmbedOptions.Button.Align != nil {
 						r.Settings.EmbedOptions.Button.Align = types.StringValue(string(*resp.Settings.EmbedOptions.Button.Align))
 					} else {
@@ -123,7 +124,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			r.Steps = r.Steps[:len(resp.Steps)]
 		}
 		for stepsCount, stepsItem := range resp.Steps {
-			var steps1 JourneyCreationRequestV2Steps
+			var steps1 tfTypes.JourneyCreationRequestV2Steps
 			steps1.HideNextButton = types.BoolPointerValue(stepsItem.HideNextButton)
 			steps1.Name = types.StringValue(stepsItem.Name)
 			schemaResult, _ := json.Marshal(stepsItem.Schema)

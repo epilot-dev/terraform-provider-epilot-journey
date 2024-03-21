@@ -5,8 +5,9 @@ package provider
 import (
 	"context"
 	"fmt"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-journey/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators"
 	speakeasy_listvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/listvalidators"
 	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/stringvalidators"
@@ -37,15 +38,15 @@ type JourneyResource struct {
 
 // JourneyResourceModel describes the resource data model.
 type JourneyResourceModel struct {
-	BrandID        types.String                      `tfsdk:"brand_id"`
-	Design         *JourneyCreationRequestV2Design   `tfsdk:"design"`
-	JourneyID      types.String                      `tfsdk:"journey_id"`
-	Logics         []JourneyCreationRequestV2Logics  `tfsdk:"logics"`
-	Name           types.String                      `tfsdk:"name"`
-	Rules          []JourneyCreationRequestV2Rules   `tfsdk:"rules"`
-	Settings       *JourneyCreationRequestV2Settings `tfsdk:"settings"`
-	SkipAutomation types.String                      `tfsdk:"skip_automation"`
-	Steps          []JourneyCreationRequestV2Steps   `tfsdk:"steps"`
+	BrandID        types.String                              `tfsdk:"brand_id"`
+	Design         *tfTypes.JourneyCreationRequestV2Design   `tfsdk:"design"`
+	JourneyID      types.String                              `tfsdk:"journey_id"`
+	Logics         []tfTypes.JourneyCreationRequestV2Logics  `tfsdk:"logics"`
+	Name           types.String                              `tfsdk:"name"`
+	Rules          []tfTypes.JourneyCreationRequestV2Rules   `tfsdk:"rules"`
+	Settings       *tfTypes.JourneyCreationRequestV2Settings `tfsdk:"settings"`
+	SkipAutomation types.String                              `tfsdk:"skip_automation"`
+	Steps          []tfTypes.JourneyCreationRequestV2Steps   `tfsdk:"steps"`
 }
 
 func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
