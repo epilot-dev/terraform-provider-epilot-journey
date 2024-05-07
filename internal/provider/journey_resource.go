@@ -5,8 +5,9 @@ package provider
 import (
 	"context"
 	"fmt"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-journey/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators"
 	speakeasy_listvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/listvalidators"
 	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/stringvalidators"
@@ -35,14 +36,14 @@ type JourneyResource struct {
 
 // JourneyResourceModel describes the resource data model.
 type JourneyResourceModel struct {
-	BrandID   types.String                      `tfsdk:"brand_id"`
-	Design    *JourneyCreationRequestV2Design   `tfsdk:"design"`
-	JourneyID types.String                      `tfsdk:"journey_id"`
-	Logics    []JourneyCreationRequestV2Logics  `tfsdk:"logics"`
-	Name      types.String                      `tfsdk:"name"`
-	Rules     []JourneyCreationRequestV2Rules   `tfsdk:"rules"`
-	Settings  *JourneyCreationRequestV2Settings `tfsdk:"settings"`
-	Steps     []JourneyCreationRequestV2Steps   `tfsdk:"steps"`
+	BrandID   types.String                              `tfsdk:"brand_id"`
+	Design    *tfTypes.JourneyCreationRequestV2Design   `tfsdk:"design"`
+	JourneyID types.String                              `tfsdk:"journey_id"`
+	Logics    []tfTypes.JourneyCreationRequestV2Logics  `tfsdk:"logics"`
+	Name      types.String                              `tfsdk:"name"`
+	Rules     []tfTypes.JourneyCreationRequestV2Rules   `tfsdk:"rules"`
+	Settings  *tfTypes.JourneyCreationRequestV2Settings `tfsdk:"settings"`
+	Steps     []tfTypes.JourneyCreationRequestV2Steps   `tfsdk:"steps"`
 }
 
 func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -52,7 +53,6 @@ func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataReq
 func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Journey Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"brand_id": schema.StringAttribute{
 				Computed: true,
@@ -442,6 +442,10 @@ func (r *JourneyResource) Read(ctx context.Context, req resource.ReadRequest, re
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

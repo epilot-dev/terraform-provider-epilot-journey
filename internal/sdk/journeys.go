@@ -6,13 +6,15 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/operations"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/sdkerrors"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/shared"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/utils"
+	"github.com/cenkalti/backoff/v4"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/internal/hooks"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/internal/utils"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/errors"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
 	"io"
 	"net/http"
-	"strings"
+	"net/url"
 )
 
 type Journeys struct {
@@ -28,6 +30,13 @@ func newJourneys(sdkConfig sdkConfiguration) *Journeys {
 // CreateJourney - createJourney
 // Create a Journey
 func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJourneyRequest, opts ...operations.Option) (*operations.CreateJourneyResponse, error) {
+	hookCtx := hooks.HookContext{
+		Context:        ctx,
+		OperationID:    "createJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
+
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -39,29 +48,31 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url := strings.TrimSuffix(baseURL, "/") + "/v1/journey/configuration"
+	opURL, err := url.JoinPath(baseURL, "/v1/journey/configuration")
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "JourneyCreationRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
-		return nil, fmt.Errorf("error serializing request body: %w", err)
+		return nil, err
 	}
-	debugBody := bytes.NewBuffer([]byte{})
-	debugReader := io.TeeReader(bodyReader, debugBody)
 
-	req, err := http.NewRequestWithContext(ctx, "POST", url, debugReader)
+	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 	req.Header.Set("Content-Type", reqContentType)
 
 	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
-	client := s.sdkConfiguration.SecurityClient
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+		return nil, err
+	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
@@ -88,34 +99,57 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 			"5XX",
 		},
 	}, func() (*http.Response, error) {
-		return client.Do(req)
+		if req.Body != nil {
+			copyBody, err := req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			req.Body = copyBody
+		}
+
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, backoff.Permanent(err)
+		}
+
+		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+		}
+		return httpRes, err
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
+		return nil, err
+	} else {
+		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
+
+	res := &operations.CreateJourneyResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
 	}
 
 	rawBody, err := io.ReadAll(httpRes.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %w", err)
 	}
-	httpRes.Request.Body = io.NopCloser(debugBody)
 	httpRes.Body.Close()
 	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
 
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.CreateJourneyResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
 	switch {
 	case httpRes.StatusCode == 201:
 		switch {
-		case utils.MatchContentType(contentType, `application/json`):
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			var out shared.Journey
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
@@ -123,8 +157,10 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 
 			res.Journey = &out
 		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	default:
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
 	return res, nil
@@ -133,6 +169,13 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 // GetJourney - getJourney
 // Get journey by id
 func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourneyRequest, opts ...operations.Option) (*operations.GetJourneyResponse, error) {
+	hookCtx := hooks.HookContext{
+		Context:        ctx,
+		OperationID:    "getJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: nil,
+	}
+
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -144,23 +187,21 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/configuration/{id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/configuration/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
 	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
-
-	client := s.sdkConfiguration.SecurityClient
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
@@ -187,13 +228,44 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 			"5XX",
 		},
 	}, func() (*http.Response, error) {
-		return client.Do(req)
+		if req.Body != nil {
+			copyBody, err := req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			req.Body = copyBody
+		}
+
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, backoff.Permanent(err)
+		}
+
+		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+		}
+		return httpRes, err
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
+		return nil, err
+	} else {
+		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
+
+	res := &operations.GetJourneyResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
 	}
 
 	rawBody, err := io.ReadAll(httpRes.Body)
@@ -203,17 +275,10 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 	httpRes.Body.Close()
 	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
 
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.GetJourneyResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
-		case utils.MatchContentType(contentType, `application/json`):
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			var out shared.Journey
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
@@ -221,8 +286,10 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 
 			res.Journey = &out
 		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	default:
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
 	return res, nil
@@ -231,6 +298,13 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 // GetJourneyProducts - getJourneyProducts
 // Get products available in the journey by id
 func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.GetJourneyProductsRequest, opts ...operations.Option) (*operations.GetJourneyProductsResponse, error) {
+	hookCtx := hooks.HookContext{
+		Context:        ctx,
+		OperationID:    "getJourneyProducts",
+		OAuth2Scopes:   []string{},
+		SecuritySource: nil,
+	}
+
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -242,23 +316,21 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/products/{id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/products/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
 	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
-
-	client := s.sdkConfiguration.SecurityClient
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
@@ -285,13 +357,44 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 			"5XX",
 		},
 	}, func() (*http.Response, error) {
-		return client.Do(req)
+		if req.Body != nil {
+			copyBody, err := req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			req.Body = copyBody
+		}
+
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, backoff.Permanent(err)
+		}
+
+		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+		}
+		return httpRes, err
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
+		return nil, err
+	} else {
+		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
+
+	res := &operations.GetJourneyProductsResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
 	}
 
 	rawBody, err := io.ReadAll(httpRes.Body)
@@ -301,17 +404,10 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 	httpRes.Body.Close()
 	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
 
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.GetJourneyProductsResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
-		case utils.MatchContentType(contentType, `application/json`):
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			var out []shared.JourneyProductsResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
@@ -319,8 +415,10 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 
 			res.JourneyProductsResponse = out
 		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	default:
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
 	return res, nil
@@ -329,6 +427,13 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 // GetJourneysByOrgID - getJourneysByOrgId
 // Get all journeys by organization id
 func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.GetJourneysByOrgIDRequest, opts ...operations.Option) (*operations.GetJourneysByOrgIDResponse, error) {
+	hookCtx := hooks.HookContext{
+		Context:        ctx,
+		OperationID:    "getJourneysByOrgId",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
+
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -340,23 +445,25 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/organization/{id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/organization/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
 	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
-	client := s.sdkConfiguration.SecurityClient
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+		return nil, err
+	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
@@ -383,13 +490,44 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 			"5XX",
 		},
 	}, func() (*http.Response, error) {
-		return client.Do(req)
+		if req.Body != nil {
+			copyBody, err := req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			req.Body = copyBody
+		}
+
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, backoff.Permanent(err)
+		}
+
+		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+		}
+		return httpRes, err
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
+		return nil, err
+	} else {
+		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
+
+	res := &operations.GetJourneysByOrgIDResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
 	}
 
 	rawBody, err := io.ReadAll(httpRes.Body)
@@ -399,17 +537,10 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 	httpRes.Body.Close()
 	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
 
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.GetJourneysByOrgIDResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
-		case utils.MatchContentType(contentType, `application/json`):
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			var out shared.GetJourneysResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
@@ -417,8 +548,10 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 
 			res.GetJourneysResponse = &out
 		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	default:
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
 	return res, nil
@@ -427,6 +560,13 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 // PatchUpdateJourney - patchUpdateJourney
 // Update a Journey (partially / patch). Support for nested properties updates (e.g. "property[0].name").
 func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.PatchUpdateJourneyRequest, opts ...operations.Option) (*operations.PatchUpdateJourneyResponse, error) {
+	hookCtx := hooks.HookContext{
+		Context:        ctx,
+		OperationID:    "patchUpdateJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
+
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -438,25 +578,27 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url := strings.TrimSuffix(baseURL, "/") + "/v1/journey/configuration"
+	opURL, err := url.JoinPath(baseURL, "/v1/journey/configuration")
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
-		return nil, fmt.Errorf("error serializing request body: %w", err)
+		return nil, err
 	}
-	debugBody := bytes.NewBuffer([]byte{})
-	debugReader := io.TeeReader(bodyReader, debugBody)
 
-	req, err := http.NewRequestWithContext(ctx, "PATCH", url, debugReader)
+	req, err := http.NewRequestWithContext(ctx, "PATCH", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := s.sdkConfiguration.SecurityClient
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+		return nil, err
+	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
@@ -483,34 +625,57 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 			"5XX",
 		},
 	}, func() (*http.Response, error) {
-		return client.Do(req)
+		if req.Body != nil {
+			copyBody, err := req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			req.Body = copyBody
+		}
+
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, backoff.Permanent(err)
+		}
+
+		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+		}
+		return httpRes, err
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
+		return nil, err
+	} else {
+		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
+
+	res := &operations.PatchUpdateJourneyResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
 	}
 
 	rawBody, err := io.ReadAll(httpRes.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %w", err)
 	}
-	httpRes.Request.Body = io.NopCloser(debugBody)
 	httpRes.Body.Close()
 	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
 
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.PatchUpdateJourneyResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
-		case utils.MatchContentType(contentType, `application/json`):
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			var out shared.JourneyResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
@@ -518,8 +683,10 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 
 			res.JourneyResponse = &out
 		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	default:
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
 	return res, nil
@@ -528,6 +695,13 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 // RemoveJourney - removeJourney
 // Remove journey by id
 func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJourneyRequest, opts ...operations.Option) (*operations.RemoveJourneyResponse, error) {
+	hookCtx := hooks.HookContext{
+		Context:        ctx,
+		OperationID:    "removeJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
+
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -539,19 +713,21 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/configuration/{id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/configuration/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+	req, err := http.NewRequestWithContext(ctx, "DELETE", opURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "*/*")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
-	client := s.sdkConfiguration.SecurityClient
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+		return nil, err
+	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
@@ -578,13 +754,44 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 			"5XX",
 		},
 	}, func() (*http.Response, error) {
-		return client.Do(req)
+		if req.Body != nil {
+			copyBody, err := req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			req.Body = copyBody
+		}
+
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, backoff.Permanent(err)
+		}
+
+		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+		}
+		return httpRes, err
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
+		return nil, err
+	} else {
+		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
+
+	res := &operations.RemoveJourneyResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
 	}
 
 	rawBody, err := io.ReadAll(httpRes.Body)
@@ -594,15 +801,10 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 	httpRes.Body.Close()
 	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
 
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.RemoveJourneyResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
 	switch {
 	case httpRes.StatusCode == 200:
+	default:
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
 	return res, nil
@@ -611,6 +813,13 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 // SearchJourneys - searchJourneys
 // Search Journeys
 func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJourneysQueryRequest, opts ...operations.Option) (*operations.SearchJourneysResponse, error) {
+	hookCtx := hooks.HookContext{
+		Context:        ctx,
+		OperationID:    "searchJourneys",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
+
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -622,25 +831,27 @@ func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJou
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url := strings.TrimSuffix(baseURL, "/") + "/v1/journey/configuration/search"
+	opURL, err := url.JoinPath(baseURL, "/v1/journey/configuration/search")
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
-		return nil, fmt.Errorf("error serializing request body: %w", err)
+		return nil, err
 	}
-	debugBody := bytes.NewBuffer([]byte{})
-	debugReader := io.TeeReader(bodyReader, debugBody)
 
-	req, err := http.NewRequestWithContext(ctx, "POST", url, debugReader)
+	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := s.sdkConfiguration.SecurityClient
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+		return nil, err
+	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
@@ -667,34 +878,57 @@ func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJou
 			"5XX",
 		},
 	}, func() (*http.Response, error) {
-		return client.Do(req)
+		if req.Body != nil {
+			copyBody, err := req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			req.Body = copyBody
+		}
+
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, backoff.Permanent(err)
+		}
+
+		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+		}
+		return httpRes, err
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
+		return nil, err
+	} else {
+		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
+
+	res := &operations.SearchJourneysResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
 	}
 
 	rawBody, err := io.ReadAll(httpRes.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %w", err)
 	}
-	httpRes.Request.Body = io.NopCloser(debugBody)
 	httpRes.Body.Close()
 	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
 
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.SearchJourneysResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
-		case utils.MatchContentType(contentType, `application/json`):
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			var out shared.SearchJourneysResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
@@ -702,8 +936,10 @@ func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJou
 
 			res.SearchJourneysResponse = &out
 		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	default:
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
 	return res, nil
@@ -712,6 +948,13 @@ func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJou
 // UpdateJourney - updateJourney
 // Update a Journey
 func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCreationRequest, opts ...operations.Option) (*operations.UpdateJourneyResponse, error) {
+	hookCtx := hooks.HookContext{
+		Context:        ctx,
+		OperationID:    "updateJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
+
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -723,25 +966,27 @@ func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCre
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url := strings.TrimSuffix(baseURL, "/") + "/v1/journey/configuration"
+	opURL, err := url.JoinPath(baseURL, "/v1/journey/configuration")
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
-		return nil, fmt.Errorf("error serializing request body: %w", err)
+		return nil, err
 	}
-	debugBody := bytes.NewBuffer([]byte{})
-	debugReader := io.TeeReader(bodyReader, debugBody)
 
-	req, err := http.NewRequestWithContext(ctx, "PUT", url, debugReader)
+	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 	req.Header.Set("Content-Type", reqContentType)
 
-	client := s.sdkConfiguration.SecurityClient
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+		return nil, err
+	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
@@ -768,34 +1013,57 @@ func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCre
 			"5XX",
 		},
 	}, func() (*http.Response, error) {
-		return client.Do(req)
+		if req.Body != nil {
+			copyBody, err := req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			req.Body = copyBody
+		}
+
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, backoff.Permanent(err)
+		}
+
+		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+		}
+		return httpRes, err
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
+		return nil, err
+	} else {
+		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
+
+	res := &operations.UpdateJourneyResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
 	}
 
 	rawBody, err := io.ReadAll(httpRes.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %w", err)
 	}
-	httpRes.Request.Body = io.NopCloser(debugBody)
 	httpRes.Body.Close()
 	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
 
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.UpdateJourneyResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
-		case utils.MatchContentType(contentType, `application/json`):
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			var out shared.JourneyResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
@@ -803,8 +1071,10 @@ func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCre
 
 			res.JourneyResponse = &out
 		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	default:
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
 	return res, nil
