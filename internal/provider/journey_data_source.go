@@ -5,8 +5,9 @@ package provider
 import (
 	"context"
 	"fmt"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-journey/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -28,14 +29,14 @@ type JourneyDataSource struct {
 
 // JourneyDataSourceModel describes the data model.
 type JourneyDataSourceModel struct {
-	BrandID   types.String                      `tfsdk:"brand_id"`
-	Design    *JourneyCreationRequestV2Design   `tfsdk:"design"`
-	JourneyID types.String                      `tfsdk:"journey_id"`
-	Logics    []JourneyCreationRequestV2Logics  `tfsdk:"logics"`
-	Name      types.String                      `tfsdk:"name"`
-	Rules     []JourneyCreationRequestV2Rules   `tfsdk:"rules"`
-	Settings  *JourneyCreationRequestV2Settings `tfsdk:"settings"`
-	Steps     []JourneyCreationRequestV2Steps   `tfsdk:"steps"`
+	BrandID   types.String                              `tfsdk:"brand_id"`
+	Design    *tfTypes.JourneyCreationRequestV2Design   `tfsdk:"design"`
+	JourneyID types.String                              `tfsdk:"journey_id"`
+	Logics    []tfTypes.JourneyCreationRequestV2Logics  `tfsdk:"logics"`
+	Name      types.String                              `tfsdk:"name"`
+	Rules     []tfTypes.JourneyCreationRequestV2Rules   `tfsdk:"rules"`
+	Settings  *tfTypes.JourneyCreationRequestV2Settings `tfsdk:"settings"`
+	Steps     []tfTypes.JourneyCreationRequestV2Steps   `tfsdk:"steps"`
 }
 
 // Metadata returns the data source type name.
@@ -280,6 +281,10 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {
