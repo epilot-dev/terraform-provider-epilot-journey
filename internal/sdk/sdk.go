@@ -108,16 +108,10 @@ func WithClient(client HTTPClient) SDKOption {
 	}
 }
 
-func withSecurity(security interface{}) func(context.Context) (interface{}, error) {
-	return func(context.Context) (interface{}, error) {
-		return security, nil
-	}
-}
-
 // WithSecurity configures the SDK to use the provided security details
 func WithSecurity(security shared.Security) SDKOption {
 	return func(sdk *SDK) {
-		sdk.sdkConfiguration.Security = withSecurity(security)
+		sdk.sdkConfiguration.Security = utils.AsSecuritySource(security)
 	}
 }
 
@@ -143,8 +137,8 @@ func New(opts ...SDKOption) *SDK {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.322.5",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.322.5 1.0.0 github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk",
+			GenVersion:        "2.356.0",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.356.0 1.0.0 github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}

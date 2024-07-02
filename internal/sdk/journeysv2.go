@@ -160,6 +160,7 @@ func (s *JourneysV2) CreateJourneyV2(ctx context.Context, request *shared.Journe
 	}
 
 	return res, nil
+
 }
 
 // GetJourneyV2 - getJourneyV2
@@ -285,6 +286,7 @@ func (s *JourneysV2) GetJourneyV2(ctx context.Context, request operations.GetJou
 	}
 
 	return res, nil
+
 }
 
 // PatchUpdateJourneyV2 - patchUpdateJourneyV2
@@ -420,6 +422,7 @@ func (s *JourneysV2) PatchUpdateJourneyV2(ctx context.Context, request *shared.P
 	}
 
 	return res, nil
+
 }
 
 // RemoveJourneyV2 - removeJourneyV2
@@ -538,6 +541,7 @@ func (s *JourneysV2) RemoveJourneyV2(ctx context.Context, request operations.Rem
 	}
 
 	return res, nil
+
 }
 
 // UpdateJourneyV2 - updateJourneyV2
@@ -673,4 +677,5 @@ func (s *JourneysV2) UpdateJourneyV2(ctx context.Context, request *shared.Journe
 	}
 
 	return res, nil
+
 }

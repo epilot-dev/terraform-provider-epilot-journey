@@ -16,6 +16,22 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 	} else {
 		brandID = nil
 	}
+	var contextSchema []shared.JourneyCreationRequestV2ContextSchema = []shared.JourneyCreationRequestV2ContextSchema{}
+	for _, contextSchemaItem := range r.ContextSchema {
+		isRequired := new(bool)
+		if !contextSchemaItem.IsRequired.IsUnknown() && !contextSchemaItem.IsRequired.IsNull() {
+			*isRequired = contextSchemaItem.IsRequired.ValueBool()
+		} else {
+			isRequired = nil
+		}
+		paramKey := contextSchemaItem.ParamKey.ValueString()
+		typeVar := contextSchemaItem.Type.ValueString()
+		contextSchema = append(contextSchema, shared.JourneyCreationRequestV2ContextSchema{
+			IsRequired: isRequired,
+			ParamKey:   paramKey,
+			Type:       typeVar,
+		})
+	}
 	var design *shared.JourneyCreationRequestV2Design
 	if r.Design != nil {
 		logoURL := new(string)
@@ -69,12 +85,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		source := rulesItem.Source.ValueString()
 		sourceType := shared.JourneyCreationRequestV2SourceType(rulesItem.SourceType.ValueString())
 		target := rulesItem.Target.ValueString()
-		typeVar := shared.JourneyCreationRequestV2Type(rulesItem.Type.ValueString())
+		type1 := shared.JourneyCreationRequestV2Type(rulesItem.Type.ValueString())
 		rules = append(rules, shared.JourneyCreationRequestV2Rules{
 			Source:     source,
 			SourceType: sourceType,
 			Target:     target,
-			Type:       typeVar,
+			Type:       type1,
 		})
 	}
 	var settings *shared.JourneyCreationRequestV2Settings
@@ -277,14 +293,15 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		})
 	}
 	out := shared.JourneyCreationRequestV2{
-		BrandID:   brandID,
-		Design:    design,
-		JourneyID: journeyID,
-		Logics:    logics,
-		Name:      name,
-		Rules:     rules,
-		Settings:  settings,
-		Steps:     steps,
+		BrandID:       brandID,
+		ContextSchema: contextSchema,
+		Design:        design,
+		JourneyID:     journeyID,
+		Logics:        logics,
+		Name:          name,
+		Rules:         rules,
+		Settings:      settings,
+		Steps:         steps,
 	}
 	return &out
 }
@@ -292,6 +309,23 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *shared.JourneyCreationRequestV2) {
 	if resp != nil {
 		r.BrandID = types.StringPointerValue(resp.BrandID)
+		r.ContextSchema = []tfTypes.JourneyCreationRequestV2ContextSchema{}
+		if len(r.ContextSchema) > len(resp.ContextSchema) {
+			r.ContextSchema = r.ContextSchema[:len(resp.ContextSchema)]
+		}
+		for contextSchemaCount, contextSchemaItem := range resp.ContextSchema {
+			var contextSchema1 tfTypes.JourneyCreationRequestV2ContextSchema
+			contextSchema1.IsRequired = types.BoolPointerValue(contextSchemaItem.IsRequired)
+			contextSchema1.ParamKey = types.StringValue(contextSchemaItem.ParamKey)
+			contextSchema1.Type = types.StringValue(contextSchemaItem.Type)
+			if contextSchemaCount+1 > len(r.ContextSchema) {
+				r.ContextSchema = append(r.ContextSchema, contextSchema1)
+			} else {
+				r.ContextSchema[contextSchemaCount].IsRequired = contextSchema1.IsRequired
+				r.ContextSchema[contextSchemaCount].ParamKey = contextSchema1.ParamKey
+				r.ContextSchema[contextSchemaCount].Type = contextSchema1.Type
+			}
+		}
 		if resp.Design == nil {
 			r.Design = nil
 		} else {
@@ -306,6 +340,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			}
 		}
 		r.JourneyID = types.StringPointerValue(resp.JourneyID)
+		r.Logics = []tfTypes.JourneyCreationRequestV2Logics{}
 		if len(r.Logics) > len(resp.Logics) {
 			r.Logics = r.Logics[:len(resp.Logics)]
 		}
@@ -329,6 +364,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			}
 		}
 		r.Name = types.StringValue(resp.Name)
+		r.Rules = []tfTypes.JourneyCreationRequestV2Rules{}
 		if len(r.Rules) > len(resp.Rules) {
 			r.Rules = r.Rules[:len(resp.Rules)]
 		}
@@ -400,6 +436,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			r.Settings.TargetedCustomer = types.StringPointerValue(resp.Settings.TargetedCustomer)
 			r.Settings.TemplateID = types.StringPointerValue(resp.Settings.TemplateID)
 		}
+		r.Steps = []tfTypes.JourneyCreationRequestV2Steps{}
 		if len(r.Steps) > len(resp.Steps) {
 			r.Steps = r.Steps[:len(resp.Steps)]
 		}

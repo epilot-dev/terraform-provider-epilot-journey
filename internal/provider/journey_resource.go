@@ -36,14 +36,15 @@ type JourneyResource struct {
 
 // JourneyResourceModel describes the resource data model.
 type JourneyResourceModel struct {
-	BrandID   types.String                              `tfsdk:"brand_id"`
-	Design    *tfTypes.JourneyCreationRequestV2Design   `tfsdk:"design"`
-	JourneyID types.String                              `tfsdk:"journey_id"`
-	Logics    []tfTypes.JourneyCreationRequestV2Logics  `tfsdk:"logics"`
-	Name      types.String                              `tfsdk:"name"`
-	Rules     []tfTypes.JourneyCreationRequestV2Rules   `tfsdk:"rules"`
-	Settings  *tfTypes.JourneyCreationRequestV2Settings `tfsdk:"settings"`
-	Steps     []tfTypes.JourneyCreationRequestV2Steps   `tfsdk:"steps"`
+	BrandID       types.String                                    `tfsdk:"brand_id"`
+	ContextSchema []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
+	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
+	JourneyID     types.String                                    `tfsdk:"journey_id"`
+	Logics        []tfTypes.JourneyCreationRequestV2Logics        `tfsdk:"logics"`
+	Name          types.String                                    `tfsdk:"name"`
+	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
+	Settings      *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
+	Steps         []tfTypes.JourneyCreationRequestV2Steps         `tfsdk:"steps"`
 }
 
 func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -57,6 +58,34 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 			"brand_id": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
+			},
+			"context_schema": schema.ListNestedAttribute{
+				Computed: true,
+				Optional: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"is_required": schema.BoolAttribute{
+							Computed: true,
+							Optional: true,
+						},
+						"param_key": schema.StringAttribute{
+							Computed:    true,
+							Optional:    true,
+							Description: `Not Null`,
+							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
+							},
+						},
+						"type": schema.StringAttribute{
+							Computed:    true,
+							Optional:    true,
+							Description: `Not Null`,
+							Validators: []validator.String{
+								speakeasy_stringvalidators.NotNull(),
+							},
+						},
+					},
+				},
 			},
 			"design": schema.SingleNestedAttribute{
 				Computed: true,
@@ -77,9 +106,8 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 				},
 			},
 			"journey_id": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
-				Description: `Journey ID`,
+				Computed: true,
+				Optional: true,
 			},
 			"logics": schema.ListNestedAttribute{
 				Computed: true,
@@ -399,8 +427,8 @@ func (r *JourneyResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.JourneyCreationRequestV2 == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.JourneyCreationRequestV2 != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
@@ -452,8 +480,8 @@ func (r *JourneyResource) Read(ctx context.Context, req resource.ReadRequest, re
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.JourneyCreationRequestV2 == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.JourneyCreationRequestV2 != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
@@ -493,8 +521,8 @@ func (r *JourneyResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.JourneyCreationRequestV2 == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.JourneyCreationRequestV2 != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
@@ -546,5 +574,5 @@ func (r *JourneyResource) Delete(ctx context.Context, req resource.DeleteRequest
 }
 
 func (r *JourneyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("journey_id"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("journey_id").AtName("journey_id"), req.ID)...)
 }
