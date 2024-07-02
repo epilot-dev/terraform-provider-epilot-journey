@@ -1,22 +1,24 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 25eb21ef4a0c170c431dedb3401afc84
+  docChecksum: f19214ddaa9b28c76eb5848e1086cd68
   docVersion: 1.0.0
-  speakeasyVersion: 1.280.1
-  generationVersion: 2.322.5
-  releaseVersion: 0.3.0
-  configChecksum: 91220056e36a4832e4098a1240151a7a
+  speakeasyVersion: 1.325.0
+  generationVersion: 2.356.0
+  releaseVersion: 0.4.0
+  configChecksum: f83f174849770bbe062f6cc92d3b40f9
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
 features:
   terraform:
+    additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.19.1
+    core: 3.23.0
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
+    nullables: 0.0.0
     retries: 2.81.1
 generatedFiles:
   - internal/sdk/journeys.go
@@ -110,6 +112,7 @@ generatedFiles:
   - main.go
   - terraform-registry-manifest.json
   - tools/tools.go
+  - internal/provider/types/journey_creation_request_v2_context_schema.go
   - internal/provider/types/journey_creation_request_v2_design.go
   - internal/provider/types/journey_creation_request_v2_logics.go
   - internal/provider/types/journey_creation_request_v2_rules.go

@@ -164,6 +164,7 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 	}
 
 	return res, nil
+
 }
 
 // GetJourney - getJourney
@@ -293,6 +294,7 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 	}
 
 	return res, nil
+
 }
 
 // GetJourneyProducts - getJourneyProducts
@@ -422,6 +424,7 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 	}
 
 	return res, nil
+
 }
 
 // GetJourneysByOrgID - getJourneysByOrgId
@@ -555,6 +558,7 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 	}
 
 	return res, nil
+
 }
 
 // PatchUpdateJourney - patchUpdateJourney
@@ -690,6 +694,7 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 	}
 
 	return res, nil
+
 }
 
 // RemoveJourney - removeJourney
@@ -808,6 +813,7 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 	}
 
 	return res, nil
+
 }
 
 // SearchJourneys - searchJourneys
@@ -943,6 +949,7 @@ func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJou
 	}
 
 	return res, nil
+
 }
 
 // UpdateJourney - updateJourney
@@ -1078,4 +1085,5 @@ func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCre
 	}
 
 	return res, nil
+
 }

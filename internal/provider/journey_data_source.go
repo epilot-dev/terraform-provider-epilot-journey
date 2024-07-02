@@ -29,14 +29,15 @@ type JourneyDataSource struct {
 
 // JourneyDataSourceModel describes the data model.
 type JourneyDataSourceModel struct {
-	BrandID   types.String                              `tfsdk:"brand_id"`
-	Design    *tfTypes.JourneyCreationRequestV2Design   `tfsdk:"design"`
-	JourneyID types.String                              `tfsdk:"journey_id"`
-	Logics    []tfTypes.JourneyCreationRequestV2Logics  `tfsdk:"logics"`
-	Name      types.String                              `tfsdk:"name"`
-	Rules     []tfTypes.JourneyCreationRequestV2Rules   `tfsdk:"rules"`
-	Settings  *tfTypes.JourneyCreationRequestV2Settings `tfsdk:"settings"`
-	Steps     []tfTypes.JourneyCreationRequestV2Steps   `tfsdk:"steps"`
+	BrandID       types.String                                    `tfsdk:"brand_id"`
+	ContextSchema []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
+	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
+	JourneyID     types.String                                    `tfsdk:"journey_id"`
+	Logics        []tfTypes.JourneyCreationRequestV2Logics        `tfsdk:"logics"`
+	Name          types.String                                    `tfsdk:"name"`
+	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
+	Settings      *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
+	Steps         []tfTypes.JourneyCreationRequestV2Steps         `tfsdk:"steps"`
 }
 
 // Metadata returns the data source type name.
@@ -53,6 +54,22 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"brand_id": schema.StringAttribute{
 				Computed: true,
 			},
+			"context_schema": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"is_required": schema.BoolAttribute{
+							Computed: true,
+						},
+						"param_key": schema.StringAttribute{
+							Computed: true,
+						},
+						"type": schema.StringAttribute{
+							Computed: true,
+						},
+					},
+				},
+			},
 			"design": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
@@ -66,8 +83,7 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				},
 			},
 			"journey_id": schema.StringAttribute{
-				Required:    true,
-				Description: `Journey ID`,
+				Computed: true,
 			},
 			"logics": schema.ListNestedAttribute{
 				Computed: true,
@@ -291,8 +307,8 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.JourneyCreationRequestV2 == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.JourneyCreationRequestV2 != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
