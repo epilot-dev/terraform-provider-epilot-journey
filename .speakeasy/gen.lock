@@ -1,28 +1,32 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 25eb21ef4a0c170c431dedb3401afc84
+  docChecksum: 1e0ae43372e778aa021ec2832f4182f7
   docVersion: 1.0.0
-  speakeasyVersion: 1.280.1
-  generationVersion: 2.322.5
-  releaseVersion: 0.3.0
-  configChecksum: 91220056e36a4832e4098a1240151a7a
+  speakeasyVersion: 1.355.0
+  generationVersion: 2.387.0
+  releaseVersion: 0.4.0
+  configChecksum: f83f174849770bbe062f6cc92d3b40f9
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
 features:
   terraform:
+    additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.19.1
-    globalSecurity: 2.81.6
+    core: 3.24.6
+    envVarSecurityUsage: 0.1.0
+    globalSecurity: 2.81.8
     globalServerURLs: 2.82.1
+    nullables: 0.0.0
     retries: 2.81.1
 generatedFiles:
   - internal/sdk/journeys.go
   - internal/sdk/journeysv2.go
   - internal/sdk/sdk.go
   - internal/sdk/models/errors/sdkerror.go
+  - internal/sdk/retry/config.go
   - internal/sdk/types/bigint.go
   - internal/sdk/types/date.go
   - internal/sdk/types/datetime.go
@@ -64,8 +68,8 @@ generatedFiles:
   - internal/sdk/.gitignore
   - internal/sdk/models/operations/options.go
   - internal/sdk/.gitattributes
-  - internal/sdk/internal/hooks/registration.go
   - internal/sdk/internal/hooks/hooks.go
+  - internal/sdk/CONTRIBUTING.md
   - examples/README.md
   - go.mod
   - go.sum
@@ -110,6 +114,7 @@ generatedFiles:
   - main.go
   - terraform-registry-manifest.json
   - tools/tools.go
+  - internal/provider/types/journey_creation_request_v2_context_schema.go
   - internal/provider/types/journey_creation_request_v2_design.go
   - internal/provider/types/journey_creation_request_v2_logics.go
   - internal/provider/types/journey_creation_request_v2_rules.go
@@ -128,3 +133,4 @@ generatedFiles:
   - internal/provider/journey_data_source_sdk.go
   - examples/data-sources/epilot-journey_journey/data-source.tf
   - .gitattributes
+  - CONTRIBUTING.md
