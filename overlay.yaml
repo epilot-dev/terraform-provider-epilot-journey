@@ -48,6 +48,9 @@ actions:
   - target: $["components"]["schemas"]["JourneyCreationRequestV2"]
     update:
       x-speakeasy-entity: Journey
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["steps"]
+    update:
+      x-speakeasy-type-override: any
   - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["organizationId"]
     remove: true
   - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["createdBy"]

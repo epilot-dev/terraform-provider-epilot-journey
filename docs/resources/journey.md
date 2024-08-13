@@ -15,20 +15,21 @@ Journey Resource
 ```terraform
 resource "epilot-journey_journey" "my_journey" {
   brand_id   = "...my_brand_id..."
+  id         = "509cdffe-424f-457a-95c2-9708c304ce77"
   journey_id = "...my_journey_id..."
-  name       = "Dianne Kiehn"
+  name       = "Nathaniel Von"
   steps = [
     {
-      hide_next_button    = false
-      name                = "Pearl Ondricka"
+      hide_next_button    = true
+      name                = "Devin Lehner"
       schema              = "{ \"see\": \"documentation\" }"
-      show_step_name      = true
-      show_stepper        = true
+      show_step_name      = false
+      show_stepper        = false
       show_stepper_labels = true
       show_step_subtitle  = true
       step_id             = "...my_step_id..."
       sub_title           = "...my_sub_title..."
-      title               = "Ms."
+      title               = "Dr."
       uischema            = "{ \"see\": \"documentation\" }"
     },
   ]
@@ -46,8 +47,9 @@ resource "epilot-journey_journey" "my_journey" {
 ### Optional
 
 - `brand_id` (String)
+- `context_schema` (Attributes List) (see [below for nested schema](#nestedatt--context_schema))
 - `design` (Attributes) (see [below for nested schema](#nestedatt--design))
-- `journey_id` (String) Journey ID
+- `journey_id` (String)
 - `logics` (Attributes List) (see [below for nested schema](#nestedatt--logics))
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
@@ -68,6 +70,16 @@ Optional:
 - `sub_title` (String)
 - `title` (String)
 - `uischema` (String) Parsed as JSON.
+
+
+<a id="nestedatt--context_schema"></a>
+### Nested Schema for `context_schema`
+
+Optional:
+
+- `is_required` (Boolean)
+- `param_key` (String) Not Null
+- `type` (String) Not Null
 
 
 <a id="nestedatt--design"></a>
@@ -137,4 +149,10 @@ Optional:
 - `align` (String) must be one of ["left", "center", "right"]
 - `text` (String)
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import epilot-journey_journey.my_epilot-journey_journey ""
+```
