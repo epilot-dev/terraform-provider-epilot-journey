@@ -18,7 +18,7 @@ terraform {
   required_providers {
     epilot-journey = {
       source  = "epilot-dev/epilot-journey"
-      version = "0.4.0"
+      version = "0.4.1"
     }
   }
 }
@@ -49,12 +49,6 @@ TF_REATTACH_PROVIDERS=... terraform init
 TF_REATTACH_PROVIDERS=... terraform apply
 ```
 <!-- End SDK Example Usage [usage] -->
-
-<!-- Start Available Resources and Operations [operations] -->
-## Available Resources and Operations
-
-
-<!-- End Available Resources and Operations [operations] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 
