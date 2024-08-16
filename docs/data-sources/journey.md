@@ -31,7 +31,7 @@ data "epilot-journey_journey" "my_journey" {
 - `name` (String)
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
-- `steps` (Attributes List) (see [below for nested schema](#nestedatt--steps))
+- `steps` (String) Parsed as JSON.
 
 <a id="nestedatt--context_schema"></a>
 ### Nested Schema for `context_schema`
@@ -110,25 +110,5 @@ Read-Only:
 
 - `align` (String) must be one of ["left", "center", "right"]
 - `text` (String)
-
-
-
-
-<a id="nestedatt--steps"></a>
-### Nested Schema for `steps`
-
-Read-Only:
-
-- `hide_next_button` (Boolean)
-- `name` (String)
-- `schema` (String) Parsed as JSON.
-- `show_step_name` (Boolean)
-- `show_step_subtitle` (Boolean)
-- `show_stepper` (Boolean)
-- `show_stepper_labels` (Boolean)
-- `step_id` (String)
-- `sub_title` (String)
-- `title` (String)
-- `uischema` (String) Parsed as JSON.
 
 

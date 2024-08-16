@@ -44,7 +44,7 @@ type JourneyResourceModel struct {
 	Name          types.String                                    `tfsdk:"name"`
 	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
 	Settings      *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
-	Steps         []tfTypes.JourneyCreationRequestV2Steps         `tfsdk:"steps"`
+	Steps         types.String                                    `tfsdk:"steps"`
 }
 
 func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -307,69 +307,11 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 					},
 				},
 			},
-			"steps": schema.ListNestedAttribute{
-				Required: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"hide_next_button": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"name": schema.StringAttribute{
-							Computed:    true,
-							Optional:    true,
-							Description: `Not Null`,
-							Validators: []validator.String{
-								speakeasy_stringvalidators.NotNull(),
-							},
-						},
-						"schema": schema.StringAttribute{
-							Computed:    true,
-							Optional:    true,
-							Description: `Parsed as JSON.`,
-							Validators: []validator.String{
-								speakeasy_stringvalidators.NotNull(),
-								validators.IsValidJSON(),
-							},
-						},
-						"show_step_name": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"show_stepper": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"show_stepper_labels": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"show_step_subtitle": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"step_id": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"sub_title": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"title": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"uischema": schema.StringAttribute{
-							Computed:    true,
-							Optional:    true,
-							Description: `Parsed as JSON.`,
-							Validators: []validator.String{
-								speakeasy_stringvalidators.NotNull(),
-								validators.IsValidJSON(),
-							},
-						},
-					},
+			"steps": schema.StringAttribute{
+				Required:    true,
+				Description: `Parsed as JSON.`,
+				Validators: []validator.String{
+					validators.IsValidJSON(),
 				},
 			},
 		},

@@ -449,97 +449,6 @@ func (o *JourneyCreationRequestV2Settings) GetTemplateID() *string {
 	return o.TemplateID
 }
 
-type JourneyCreationRequestV2Steps struct {
-	HideNextButton    *bool   `json:"hideNextButton,omitempty"`
-	Name              string  `json:"name"`
-	Schema            any     `json:"schema"`
-	ShowStepName      *bool   `json:"showStepName,omitempty"`
-	ShowStepSubtitle  *bool   `json:"showStepSubtitle,omitempty"`
-	ShowStepper       *bool   `json:"showStepper,omitempty"`
-	ShowStepperLabels *bool   `json:"showStepperLabels,omitempty"`
-	StepID            *string `json:"stepId,omitempty"`
-	SubTitle          *string `json:"subTitle,omitempty"`
-	Title             *string `json:"title,omitempty"`
-	Uischema          any     `json:"uischema"`
-}
-
-func (o *JourneyCreationRequestV2Steps) GetHideNextButton() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.HideNextButton
-}
-
-func (o *JourneyCreationRequestV2Steps) GetName() string {
-	if o == nil {
-		return ""
-	}
-	return o.Name
-}
-
-func (o *JourneyCreationRequestV2Steps) GetSchema() any {
-	if o == nil {
-		return nil
-	}
-	return o.Schema
-}
-
-func (o *JourneyCreationRequestV2Steps) GetShowStepName() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ShowStepName
-}
-
-func (o *JourneyCreationRequestV2Steps) GetShowStepSubtitle() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ShowStepSubtitle
-}
-
-func (o *JourneyCreationRequestV2Steps) GetShowStepper() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ShowStepper
-}
-
-func (o *JourneyCreationRequestV2Steps) GetShowStepperLabels() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ShowStepperLabels
-}
-
-func (o *JourneyCreationRequestV2Steps) GetStepID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.StepID
-}
-
-func (o *JourneyCreationRequestV2Steps) GetSubTitle() *string {
-	if o == nil {
-		return nil
-	}
-	return o.SubTitle
-}
-
-func (o *JourneyCreationRequestV2Steps) GetTitle() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Title
-}
-
-func (o *JourneyCreationRequestV2Steps) GetUischema() any {
-	if o == nil {
-		return nil
-	}
-	return o.Uischema
-}
-
 type JourneyCreationRequestV2 struct {
 	BrandID       *string                                 `json:"brandId,omitempty"`
 	ContextSchema []JourneyCreationRequestV2ContextSchema `json:"contextSchema,omitempty"`
@@ -549,7 +458,7 @@ type JourneyCreationRequestV2 struct {
 	Name          string                                  `json:"name"`
 	Rules         []JourneyCreationRequestV2Rules         `json:"rules,omitempty"`
 	Settings      *JourneyCreationRequestV2Settings       `json:"settings,omitempty"`
-	Steps         []JourneyCreationRequestV2Steps         `json:"steps"`
+	Steps         any                                     `json:"steps"`
 }
 
 func (o *JourneyCreationRequestV2) GetBrandID() *string {
@@ -608,9 +517,9 @@ func (o *JourneyCreationRequestV2) GetSettings() *JourneyCreationRequestV2Settin
 	return o.Settings
 }
 
-func (o *JourneyCreationRequestV2) GetSteps() []JourneyCreationRequestV2Steps {
+func (o *JourneyCreationRequestV2) GetSteps() any {
 	if o == nil {
-		return []JourneyCreationRequestV2Steps{}
+		return nil
 	}
 	return o.Steps
 }
