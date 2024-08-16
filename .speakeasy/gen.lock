@@ -1,27 +1,75 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 25eb21ef4a0c170c431dedb3401afc84
+  docChecksum: a2a4e6e0c5d448a2079d174f9d7ed7fe
   docVersion: 1.0.0
-  speakeasyVersion: internal
-  generationVersion: 2.230.1
-  releaseVersion: 0.2.7
-  configChecksum: ba1909901d42d5999d4327d01df604d8
+  speakeasyVersion: 1.346.0
+  generationVersion: 2.379.3
+  releaseVersion: 0.3.2
+  configChecksum: 6429bafb37993b177594dcd335dadc26
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
 features:
   terraform:
+    additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
-    constsAndDefaults: 0.1.2
-    core: 3.8.1
-    globalSecurity: 2.81.2
+    constsAndDefaults: 0.1.4
+    core: 3.24.3
+    globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
+    nullables: 0.0.0
     retries: 2.81.1
 generatedFiles:
   - internal/sdk/journeys.go
   - internal/sdk/journeysv2.go
   - internal/sdk/sdk.go
+  - internal/sdk/models/errors/sdkerror.go
+  - internal/sdk/retry/config.go
+  - internal/sdk/types/bigint.go
+  - internal/sdk/types/date.go
+  - internal/sdk/types/datetime.go
+  - internal/sdk/types/decimal.go
+  - internal/sdk/types/pointers.go
+  - internal/sdk/internal/utils/contenttype.go
+  - internal/sdk/internal/utils/form.go
+  - internal/sdk/internal/utils/headers.go
+  - internal/sdk/internal/utils/json.go
+  - internal/sdk/internal/utils/pathparams.go
+  - internal/sdk/internal/utils/queryparams.go
+  - internal/sdk/internal/utils/requestbody.go
+  - internal/sdk/internal/utils/retries.go
+  - internal/sdk/internal/utils/security.go
+  - internal/sdk/internal/utils/utils.go
+  - internal/sdk/models/operations/createjourney.go
+  - internal/sdk/models/operations/getjourney.go
+  - internal/sdk/models/operations/getjourneyproducts.go
+  - internal/sdk/models/operations/getjourneysbyorgid.go
+  - internal/sdk/models/operations/patchupdatejourney.go
+  - internal/sdk/models/operations/removejourney.go
+  - internal/sdk/models/operations/searchjourneys.go
+  - internal/sdk/models/operations/updatejourney.go
+  - internal/sdk/models/operations/createjourneyv2.go
+  - internal/sdk/models/operations/getjourneyv2.go
+  - internal/sdk/models/operations/patchupdatejourneyv2.go
+  - internal/sdk/models/operations/removejourneyv2.go
+  - internal/sdk/models/operations/updatejourneyv2.go
+  - internal/sdk/models/shared/journey.go
+  - internal/sdk/models/shared/journeycreationrequest.go
+  - internal/sdk/models/shared/journeyproductsresponse.go
+  - internal/sdk/models/shared/getjourneysresponse.go
+  - internal/sdk/models/shared/journeyresponse.go
+  - internal/sdk/models/shared/patchupdatejourneyrequest.go
+  - internal/sdk/models/shared/searchjourneysresponse.go
+  - internal/sdk/models/shared/searchjourneysqueryrequest.go
+  - internal/sdk/models/shared/journeycreationrequestv2.go
+  - internal/sdk/models/shared/security.go
+  - internal/sdk/.gitignore
+  - internal/sdk/models/operations/options.go
+  - internal/sdk/.gitattributes
+  - internal/sdk/internal/hooks/registration.go
+  - internal/sdk/internal/hooks/hooks.go
+  - internal/sdk/CONTRIBUTING.md
   - examples/README.md
   - go.mod
   - go.sum
@@ -50,22 +98,6 @@ generatedFiles:
   - internal/provider/reflect/slice.go
   - internal/provider/reflect/struct.go
   - internal/provider/utils.go
-  - internal/sdk/pkg/models/sdkerrors/sdkerror.go
-  - internal/sdk/pkg/types/bigint.go
-  - internal/sdk/pkg/types/date.go
-  - internal/sdk/pkg/types/datetime.go
-  - internal/sdk/pkg/types/decimal.go
-  - internal/sdk/pkg/types/pointers.go
-  - internal/sdk/pkg/utils/contenttype.go
-  - internal/sdk/pkg/utils/form.go
-  - internal/sdk/pkg/utils/headers.go
-  - internal/sdk/pkg/utils/json.go
-  - internal/sdk/pkg/utils/pathparams.go
-  - internal/sdk/pkg/utils/queryparams.go
-  - internal/sdk/pkg/utils/requestbody.go
-  - internal/sdk/pkg/utils/retries.go
-  - internal/sdk/pkg/utils/security.go
-  - internal/sdk/pkg/utils/utils.go
   - internal/validators/DateValidator.go
   - internal/validators/ExactlyOneChild.go
   - internal/validators/JSONParseValidator.go
@@ -82,44 +114,23 @@ generatedFiles:
   - main.go
   - terraform-registry-manifest.json
   - tools/tools.go
-  - internal/sdk/pkg/models/operations/createjourney.go
-  - internal/sdk/pkg/models/operations/getjourney.go
-  - internal/sdk/pkg/models/operations/getjourneyproducts.go
-  - internal/sdk/pkg/models/operations/getjourneysbyorgid.go
-  - internal/sdk/pkg/models/operations/patchupdatejourney.go
-  - internal/sdk/pkg/models/operations/removejourney.go
-  - internal/sdk/pkg/models/operations/searchjourneys.go
-  - internal/sdk/pkg/models/operations/updatejourney.go
-  - internal/sdk/pkg/models/operations/createjourneyv2.go
-  - internal/sdk/pkg/models/operations/getjourneyv2.go
-  - internal/sdk/pkg/models/operations/patchupdatejourneyv2.go
-  - internal/sdk/pkg/models/operations/removejourneyv2.go
-  - internal/sdk/pkg/models/operations/updatejourneyv2.go
-  - internal/sdk/pkg/models/shared/journey.go
-  - internal/sdk/pkg/models/shared/journeycreationrequest.go
-  - internal/sdk/pkg/models/shared/journeyproductsresponse.go
-  - internal/sdk/pkg/models/shared/getjourneysresponse.go
-  - internal/sdk/pkg/models/shared/journeyresponse.go
-  - internal/sdk/pkg/models/shared/patchupdatejourneyrequest.go
-  - internal/sdk/pkg/models/shared/searchjourneysresponse.go
-  - internal/sdk/pkg/models/shared/searchjourneysqueryrequest.go
-  - internal/sdk/pkg/models/shared/journeycreationrequestv2.go
-  - internal/sdk/pkg/models/shared/security.go
-  - internal/provider/type_journey_creation_request_v2_design.go
-  - internal/provider/type_journey_creation_request_v2_logics.go
-  - internal/provider/type_journey_creation_request_v2_rules.go
-  - internal/provider/type_journey_creation_request_v2_button.go
-  - internal/provider/type_journey_creation_request_v2_embed_options.go
-  - internal/provider/type_journey_creation_request_v2_settings.go
-  - internal/provider/type_journey_creation_request_v2_steps.go
+  - internal/provider/types/journey_creation_request_v2_context_schema.go
+  - internal/provider/types/journey_creation_request_v2_design.go
+  - internal/provider/types/journey_creation_request_v2_logics.go
+  - internal/provider/types/journey_creation_request_v2_rules.go
+  - internal/provider/types/journey_creation_request_v2_button.go
+  - internal/provider/types/journey_creation_request_v2_embed_options.go
+  - internal/provider/types/journey_creation_request_v2_settings.go
+  - internal/provider/types/journey_creation_request_v2_steps.go
   - USAGE.md
   - internal/provider/provider.go
   - examples/provider/provider.tf
+  - examples/resources/epilot-journey_journey/import.sh
   - internal/provider/journey_resource.go
   - internal/provider/journey_resource_sdk.go
   - examples/resources/epilot-journey_journey/resource.tf
   - internal/provider/journey_data_source.go
   - internal/provider/journey_data_source_sdk.go
   - examples/data-sources/epilot-journey_journey/data-source.tf
-  - internal/sdk/pkg/models/operations/options.go
   - .gitattributes
+  - CONTRIBUTING.md

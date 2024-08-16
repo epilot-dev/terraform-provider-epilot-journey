@@ -60,7 +60,9 @@ actions:
     remove: true
   - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["revisions"]
     remove: true
-  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["settings"]["properties"]["entityId"]
-    remove: true
+  # - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["settings"]["properties"]["entityId"]
+  #   remove: true
   - target: $["paths"]["/v2/journey/configuration"]["post"]["parameters"]
+    remove: true
+  - target: $["paths"]["/v2/journey/configuration/{id}"]["get"]["security"]
     remove: true
