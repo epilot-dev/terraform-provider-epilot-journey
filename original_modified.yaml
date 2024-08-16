@@ -648,41 +648,7 @@ components:
           type: string
         steps:
           type: array
-          items:
-            type: object
-            additionalProperties: false
-            properties:
-              showStepName:
-                type: boolean
-                nullable: true
-              title:
-                type: string
-                nullable: true
-              subTitle:
-                type: string
-                nullable: true
-              showStepSubtitle:
-                type: boolean
-                nullable: true
-              showStepper:
-                type: boolean
-                nullable: true
-              showStepperLabels:
-                type: boolean
-                nullable: true
-              hideNextButton:
-                type: boolean
-                nullable: true
-              name:
-                type: string
-              stepId:
-                type: string
-              schema: {}
-              uischema: {}
-            required:
-              - name
-              - schema
-              - uischema
+          items: {}
         design:
           type: object
           properties:

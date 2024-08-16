@@ -140,40 +140,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			r.Settings.TargetedCustomer = types.StringPointerValue(resp.Settings.TargetedCustomer)
 			r.Settings.TemplateID = types.StringPointerValue(resp.Settings.TemplateID)
 		}
-		r.Steps = []tfTypes.JourneyCreationRequestV2Steps{}
-		if len(r.Steps) > len(resp.Steps) {
-			r.Steps = r.Steps[:len(resp.Steps)]
-		}
-		for stepsCount, stepsItem := range resp.Steps {
-			var steps1 tfTypes.JourneyCreationRequestV2Steps
-			steps1.HideNextButton = types.BoolPointerValue(stepsItem.HideNextButton)
-			steps1.Name = types.StringValue(stepsItem.Name)
-			schemaResult, _ := json.Marshal(stepsItem.Schema)
-			steps1.Schema = types.StringValue(string(schemaResult))
-			steps1.ShowStepName = types.BoolPointerValue(stepsItem.ShowStepName)
-			steps1.ShowStepper = types.BoolPointerValue(stepsItem.ShowStepper)
-			steps1.ShowStepperLabels = types.BoolPointerValue(stepsItem.ShowStepperLabels)
-			steps1.ShowStepSubtitle = types.BoolPointerValue(stepsItem.ShowStepSubtitle)
-			steps1.StepID = types.StringPointerValue(stepsItem.StepID)
-			steps1.SubTitle = types.StringPointerValue(stepsItem.SubTitle)
-			steps1.Title = types.StringPointerValue(stepsItem.Title)
-			uischemaResult, _ := json.Marshal(stepsItem.Uischema)
-			steps1.Uischema = types.StringValue(string(uischemaResult))
-			if stepsCount+1 > len(r.Steps) {
-				r.Steps = append(r.Steps, steps1)
-			} else {
-				r.Steps[stepsCount].HideNextButton = steps1.HideNextButton
-				r.Steps[stepsCount].Name = steps1.Name
-				r.Steps[stepsCount].Schema = steps1.Schema
-				r.Steps[stepsCount].ShowStepName = steps1.ShowStepName
-				r.Steps[stepsCount].ShowStepper = steps1.ShowStepper
-				r.Steps[stepsCount].ShowStepperLabels = steps1.ShowStepperLabels
-				r.Steps[stepsCount].ShowStepSubtitle = steps1.ShowStepSubtitle
-				r.Steps[stepsCount].StepID = steps1.StepID
-				r.Steps[stepsCount].SubTitle = steps1.SubTitle
-				r.Steps[stepsCount].Title = steps1.Title
-				r.Steps[stepsCount].Uischema = steps1.Uischema
-			}
-		}
+		stepsResult, _ := json.Marshal(resp.Steps)
+		r.Steps = types.StringValue(string(stepsResult))
 	}
 }

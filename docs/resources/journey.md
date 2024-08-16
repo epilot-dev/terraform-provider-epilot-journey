@@ -18,21 +18,7 @@ resource "epilot-journey_journey" "my_journey" {
   id         = "509cdffe-424f-457a-95c2-9708c304ce77"
   journey_id = "...my_journey_id..."
   name       = "Nathaniel Von"
-  steps = [
-    {
-      hide_next_button    = true
-      name                = "Devin Lehner"
-      schema              = "{ \"see\": \"documentation\" }"
-      show_step_name      = false
-      show_stepper        = false
-      show_stepper_labels = true
-      show_step_subtitle  = true
-      step_id             = "...my_step_id..."
-      sub_title           = "...my_sub_title..."
-      title               = "Dr."
-      uischema            = "{ \"see\": \"documentation\" }"
-    },
-  ]
+  steps      = "{ \"see\": \"documentation\" }"
 }
 ```
 
@@ -42,7 +28,7 @@ resource "epilot-journey_journey" "my_journey" {
 ### Required
 
 - `name` (String)
-- `steps` (Attributes List) (see [below for nested schema](#nestedatt--steps))
+- `steps` (String) Parsed as JSON.
 
 ### Optional
 
@@ -53,24 +39,6 @@ resource "epilot-journey_journey" "my_journey" {
 - `logics` (Attributes List) (see [below for nested schema](#nestedatt--logics))
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
-
-<a id="nestedatt--steps"></a>
-### Nested Schema for `steps`
-
-Optional:
-
-- `hide_next_button` (Boolean)
-- `name` (String) Not Null
-- `schema` (String) Parsed as JSON.
-- `show_step_name` (Boolean)
-- `show_step_subtitle` (Boolean)
-- `show_stepper` (Boolean)
-- `show_stepper_labels` (Boolean)
-- `step_id` (String)
-- `sub_title` (String)
-- `title` (String)
-- `uischema` (String) Parsed as JSON.
-
 
 <a id="nestedatt--context_schema"></a>
 ### Nested Schema for `context_schema`

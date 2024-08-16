@@ -37,7 +37,7 @@ type JourneyDataSourceModel struct {
 	Name          types.String                                    `tfsdk:"name"`
 	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
 	Settings      *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
-	Steps         []tfTypes.JourneyCreationRequestV2Steps         `tfsdk:"steps"`
+	Steps         types.String                                    `tfsdk:"steps"`
 }
 
 // Metadata returns the data source type name.
@@ -202,47 +202,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 					},
 				},
 			},
-			"steps": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"hide_next_button": schema.BoolAttribute{
-							Computed: true,
-						},
-						"name": schema.StringAttribute{
-							Computed: true,
-						},
-						"schema": schema.StringAttribute{
-							Computed:    true,
-							Description: `Parsed as JSON.`,
-						},
-						"show_step_name": schema.BoolAttribute{
-							Computed: true,
-						},
-						"show_stepper": schema.BoolAttribute{
-							Computed: true,
-						},
-						"show_stepper_labels": schema.BoolAttribute{
-							Computed: true,
-						},
-						"show_step_subtitle": schema.BoolAttribute{
-							Computed: true,
-						},
-						"step_id": schema.StringAttribute{
-							Computed: true,
-						},
-						"sub_title": schema.StringAttribute{
-							Computed: true,
-						},
-						"title": schema.StringAttribute{
-							Computed: true,
-						},
-						"uischema": schema.StringAttribute{
-							Computed:    true,
-							Description: `Parsed as JSON.`,
-						},
-					},
-				},
+			"steps": schema.StringAttribute{
+				Computed:    true,
+				Description: `Parsed as JSON.`,
 			},
 		},
 	}
