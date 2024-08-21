@@ -40,6 +40,7 @@ Read-Only:
 
 - `is_required` (Boolean)
 - `param_key` (String)
+- `should_load_entity` (Boolean)
 - `type` (String)
 
 

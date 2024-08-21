@@ -8,9 +8,10 @@ import (
 )
 
 type JourneyCreationRequestV2ContextSchema struct {
-	IsRequired *bool  `json:"isRequired,omitempty"`
-	ParamKey   string `json:"paramKey"`
-	Type       string `json:"type"`
+	IsRequired       *bool  `json:"isRequired,omitempty"`
+	ParamKey         string `json:"paramKey"`
+	ShouldLoadEntity *bool  `json:"shouldLoadEntity,omitempty"`
+	Type             string `json:"type"`
 }
 
 func (o *JourneyCreationRequestV2ContextSchema) GetIsRequired() *bool {
@@ -25,6 +26,13 @@ func (o *JourneyCreationRequestV2ContextSchema) GetParamKey() string {
 		return ""
 	}
 	return o.ParamKey
+}
+
+func (o *JourneyCreationRequestV2ContextSchema) GetShouldLoadEntity() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.ShouldLoadEntity
 }
 
 func (o *JourneyCreationRequestV2ContextSchema) GetType() string {

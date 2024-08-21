@@ -9,9 +9,10 @@ import (
 )
 
 type ContextSchema struct {
-	IsRequired *bool  `json:"isRequired,omitempty"`
-	ParamKey   string `json:"paramKey"`
-	Type       string `json:"type"`
+	IsRequired       *bool  `json:"isRequired,omitempty"`
+	ParamKey         string `json:"paramKey"`
+	ShouldLoadEntity *bool  `json:"shouldLoadEntity,omitempty"`
+	Type             string `json:"type"`
 }
 
 func (o *ContextSchema) GetIsRequired() *bool {
@@ -26,6 +27,13 @@ func (o *ContextSchema) GetParamKey() string {
 		return ""
 	}
 	return o.ParamKey
+}
+
+func (o *ContextSchema) GetShouldLoadEntity() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.ShouldLoadEntity
 }
 
 func (o *ContextSchema) GetType() string {

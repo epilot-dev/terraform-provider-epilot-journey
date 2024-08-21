@@ -79,6 +79,7 @@ Optional:
 
 - `is_required` (Boolean)
 - `param_key` (String) Not Null
+- `should_load_entity` (Boolean)
 - `type` (String) Not Null
 
 

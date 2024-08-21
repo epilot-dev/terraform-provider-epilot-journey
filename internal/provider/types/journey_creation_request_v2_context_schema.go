@@ -5,7 +5,8 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type JourneyCreationRequestV2ContextSchema struct {
-	IsRequired types.Bool   `tfsdk:"is_required"`
-	ParamKey   types.String `tfsdk:"param_key"`
-	Type       types.String `tfsdk:"type"`
+	IsRequired       types.Bool   `tfsdk:"is_required"`
+	ParamKey         types.String `tfsdk:"param_key"`
+	ShouldLoadEntity types.Bool   `tfsdk:"should_load_entity"`
+	Type             types.String `tfsdk:"type"`
 }

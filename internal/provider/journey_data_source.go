@@ -64,6 +64,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						"param_key": schema.StringAttribute{
 							Computed: true,
 						},
+						"should_load_entity": schema.BoolAttribute{
+							Computed: true,
+						},
 						"type": schema.StringAttribute{
 							Computed: true,
 						},

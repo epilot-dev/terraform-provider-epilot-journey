@@ -76,6 +76,10 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 								speakeasy_stringvalidators.NotNull(),
 							},
 						},
+						"should_load_entity": schema.BoolAttribute{
+							Computed: true,
+							Optional: true,
+						},
 						"type": schema.StringAttribute{
 							Computed:    true,
 							Optional:    true,

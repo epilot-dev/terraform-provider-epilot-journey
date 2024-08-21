@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 1e0ae43372e778aa021ec2832f4182f7
+  docChecksum: 1c8003a6f4947f597464e37836d03a9a
   docVersion: 1.0.0
-  speakeasyVersion: 1.368.0
-  generationVersion: 2.399.0
-  releaseVersion: 0.4.1
-  configChecksum: 5de31de67908ecadb40166e6a6501125
+  speakeasyVersion: 1.376.1
+  generationVersion: 2.402.5
+  releaseVersion: 0.4.2
+  configChecksum: 32d37d80f8580d6615cf2dc4aa987f83
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true

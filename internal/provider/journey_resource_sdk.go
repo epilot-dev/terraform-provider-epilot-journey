@@ -27,13 +27,20 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		var paramKey string
 		paramKey = contextSchemaItem.ParamKey.ValueString()
 
+		shouldLoadEntity := new(bool)
+		if !contextSchemaItem.ShouldLoadEntity.IsUnknown() && !contextSchemaItem.ShouldLoadEntity.IsNull() {
+			*shouldLoadEntity = contextSchemaItem.ShouldLoadEntity.ValueBool()
+		} else {
+			shouldLoadEntity = nil
+		}
 		var typeVar string
 		typeVar = contextSchemaItem.Type.ValueString()
 
 		contextSchema = append(contextSchema, shared.JourneyCreationRequestV2ContextSchema{
-			IsRequired: isRequired,
-			ParamKey:   paramKey,
-			Type:       typeVar,
+			IsRequired:       isRequired,
+			ParamKey:         paramKey,
+			ShouldLoadEntity: shouldLoadEntity,
+			Type:             typeVar,
 		})
 	}
 	var design *shared.JourneyCreationRequestV2Design
@@ -329,12 +336,14 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			var contextSchema1 tfTypes.JourneyCreationRequestV2ContextSchema
 			contextSchema1.IsRequired = types.BoolPointerValue(contextSchemaItem.IsRequired)
 			contextSchema1.ParamKey = types.StringValue(contextSchemaItem.ParamKey)
+			contextSchema1.ShouldLoadEntity = types.BoolPointerValue(contextSchemaItem.ShouldLoadEntity)
 			contextSchema1.Type = types.StringValue(contextSchemaItem.Type)
 			if contextSchemaCount+1 > len(r.ContextSchema) {
 				r.ContextSchema = append(r.ContextSchema, contextSchema1)
 			} else {
 				r.ContextSchema[contextSchemaCount].IsRequired = contextSchema1.IsRequired
 				r.ContextSchema[contextSchemaCount].ParamKey = contextSchema1.ParamKey
+				r.ContextSchema[contextSchemaCount].ShouldLoadEntity = contextSchema1.ShouldLoadEntity
 				r.ContextSchema[contextSchemaCount].Type = contextSchema1.Type
 			}
 		}

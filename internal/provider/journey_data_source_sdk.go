@@ -20,12 +20,14 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			var contextSchema1 tfTypes.JourneyCreationRequestV2ContextSchema
 			contextSchema1.IsRequired = types.BoolPointerValue(contextSchemaItem.IsRequired)
 			contextSchema1.ParamKey = types.StringValue(contextSchemaItem.ParamKey)
+			contextSchema1.ShouldLoadEntity = types.BoolPointerValue(contextSchemaItem.ShouldLoadEntity)
 			contextSchema1.Type = types.StringValue(contextSchemaItem.Type)
 			if contextSchemaCount+1 > len(r.ContextSchema) {
 				r.ContextSchema = append(r.ContextSchema, contextSchema1)
 			} else {
 				r.ContextSchema[contextSchemaCount].IsRequired = contextSchema1.IsRequired
 				r.ContextSchema[contextSchemaCount].ParamKey = contextSchema1.ParamKey
+				r.ContextSchema[contextSchemaCount].ShouldLoadEntity = contextSchema1.ShouldLoadEntity
 				r.ContextSchema[contextSchemaCount].Type = contextSchema1.Type
 			}
 		}
