@@ -359,6 +359,10 @@ func (e *JourneyCreationRequestV2RuntimeEntities) UnmarshalJSON(data []byte) err
 }
 
 type JourneyCreationRequestV2Settings struct {
+	AddressSuggestionsFileID *string `json:"addressSuggestionsFileId,omitempty"`
+	// @deprecated Use addressSuggestionsFileId instead
+	//
+	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
 	AddressSuggestionsFileURL *string                                   `json:"addressSuggestionsFileUrl,omitempty"`
 	Description               *string                                   `json:"description,omitempty"`
 	DesignID                  *string                                   `json:"designId,omitempty"`
@@ -370,6 +374,13 @@ type JourneyCreationRequestV2Settings struct {
 	SafeModeAutomation        *bool                                     `json:"safeModeAutomation,omitempty"`
 	TargetedCustomer          *string                                   `json:"targetedCustomer,omitempty"`
 	TemplateID                *string                                   `json:"templateId,omitempty"`
+}
+
+func (o *JourneyCreationRequestV2Settings) GetAddressSuggestionsFileID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AddressSuggestionsFileID
 }
 
 func (o *JourneyCreationRequestV2Settings) GetAddressSuggestionsFileURL() *string {

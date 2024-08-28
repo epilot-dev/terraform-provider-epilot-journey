@@ -386,7 +386,11 @@ func (e *RuntimeEntities) UnmarshalJSON(data []byte) error {
 }
 
 type Settings struct {
-	AccessMode                *AccessMode       `json:"accessMode,omitempty"`
+	AccessMode               *AccessMode `json:"accessMode,omitempty"`
+	AddressSuggestionsFileID *string     `json:"addressSuggestionsFileId,omitempty"`
+	// @deprecated Use addressSuggestionsFileId instead
+	//
+	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
 	AddressSuggestionsFileURL *string           `json:"addressSuggestionsFileUrl,omitempty"`
 	Description               *string           `json:"description,omitempty"`
 	DesignID                  string            `json:"designId"`
@@ -409,6 +413,13 @@ func (o *Settings) GetAccessMode() *AccessMode {
 		return nil
 	}
 	return o.AccessMode
+}
+
+func (o *Settings) GetAddressSuggestionsFileID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AddressSuggestionsFileID
 }
 
 func (o *Settings) GetAddressSuggestionsFileURL() *string {

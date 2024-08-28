@@ -133,8 +133,12 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"settings": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
-					"address_suggestions_file_url": schema.StringAttribute{
+					"address_suggestions_file_id": schema.StringAttribute{
 						Computed: true,
+					},
+					"address_suggestions_file_url": schema.StringAttribute{
+						Computed:    true,
+						Description: `@deprecated Use addressSuggestionsFileId instead`,
 					},
 					"description": schema.StringAttribute{
 						Computed: true,

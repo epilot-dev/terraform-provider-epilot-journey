@@ -5,6 +5,7 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type JourneyCreationRequestV2Settings struct {
+	AddressSuggestionsFileID  types.String                          `tfsdk:"address_suggestions_file_id"`
 	AddressSuggestionsFileURL types.String                          `tfsdk:"address_suggestions_file_url"`
 	Description               types.String                          `tfsdk:"description"`
 	DesignID                  types.String                          `tfsdk:"design_id"`

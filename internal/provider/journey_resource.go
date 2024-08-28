@@ -199,9 +199,14 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Computed: true,
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
-					"address_suggestions_file_url": schema.StringAttribute{
+					"address_suggestions_file_id": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
+					},
+					"address_suggestions_file_url": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `@deprecated Use addressSuggestionsFileId instead`,
 					},
 					"description": schema.StringAttribute{
 						Computed: true,

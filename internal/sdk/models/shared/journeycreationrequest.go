@@ -386,7 +386,11 @@ func (e *JourneyCreationRequestRuntimeEntities) UnmarshalJSON(data []byte) error
 }
 
 type JourneyCreationRequestSettings struct {
-	AccessMode                *JourneyCreationRequestAccessMode       `json:"accessMode,omitempty"`
+	AccessMode               *JourneyCreationRequestAccessMode `json:"accessMode,omitempty"`
+	AddressSuggestionsFileID *string                           `json:"addressSuggestionsFileId,omitempty"`
+	// @deprecated Use addressSuggestionsFileId instead
+	//
+	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
 	AddressSuggestionsFileURL *string                                 `json:"addressSuggestionsFileUrl,omitempty"`
 	Description               *string                                 `json:"description,omitempty"`
 	DesignID                  string                                  `json:"designId"`
@@ -409,6 +413,13 @@ func (o *JourneyCreationRequestSettings) GetAccessMode() *JourneyCreationRequest
 		return nil
 	}
 	return o.AccessMode
+}
+
+func (o *JourneyCreationRequestSettings) GetAddressSuggestionsFileID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AddressSuggestionsFileID
 }
 
 func (o *JourneyCreationRequestSettings) GetAddressSuggestionsFileURL() *string {
