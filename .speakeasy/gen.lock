@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 86f4621c41ddb5ee806e79a60b3649f9
+  docChecksum: b9a09d98391fd5759e163be37edd17bc
   docVersion: 1.0.0
-  speakeasyVersion: 1.346.0
-  generationVersion: 2.379.3
-  releaseVersion: 0.3.4
-  configChecksum: 979fdfd27829f06418fe2be5a77bb4f5
+  speakeasyVersion: 1.381.1
+  generationVersion: 2.404.9
+  releaseVersion: 0.4.0
+  configChecksum: f83f174849770bbe062f6cc92d3b40f9
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -15,8 +15,10 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.24.3
-    globalSecurity: 2.81.6
+    core: 3.24.7
+    deprecations: 2.81.1
+    envVarSecurityUsage: 0.1.0
+    globalSecurity: 2.81.8
     globalServerURLs: 2.82.1
     nullables: 0.0.0
     retries: 2.81.1
@@ -67,7 +69,6 @@ generatedFiles:
   - internal/sdk/.gitignore
   - internal/sdk/models/operations/options.go
   - internal/sdk/.gitattributes
-  - internal/sdk/internal/hooks/registration.go
   - internal/sdk/internal/hooks/hooks.go
   - internal/sdk/CONTRIBUTING.md
   - examples/README.md

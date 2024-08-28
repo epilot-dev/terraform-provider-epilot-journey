@@ -40,6 +40,7 @@ Read-Only:
 
 - `is_required` (Boolean)
 - `param_key` (String)
+- `should_load_entity` (Boolean)
 - `type` (String)
 
 
@@ -78,7 +79,8 @@ Read-Only:
 
 Read-Only:
 
-- `address_suggestions_file_url` (String)
+- `address_suggestions_file_id` (String)
+- `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))
@@ -110,5 +112,3 @@ Read-Only:
 
 - `align` (String) must be one of ["left", "center", "right"]
 - `text` (String)
-
-

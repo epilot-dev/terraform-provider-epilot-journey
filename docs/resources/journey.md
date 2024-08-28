@@ -17,7 +17,7 @@ resource "epilot-journey_journey" "my_journey" {
   brand_id   = "...my_brand_id..."
   id         = "509cdffe-424f-457a-95c2-9708c304ce77"
   journey_id = "...my_journey_id..."
-  name       = "Nathaniel Von"
+  name       = "Tasha Macejkovic MD"
   steps      = "{ \"see\": \"documentation\" }"
 }
 ```
@@ -47,6 +47,7 @@ Optional:
 
 - `is_required` (Boolean)
 - `param_key` (String) Not Null
+- `should_load_entity` (Boolean)
 - `type` (String) Not Null
 
 
@@ -85,7 +86,8 @@ Optional:
 
 Optional:
 
-- `address_suggestions_file_url` (String)
+- `address_suggestions_file_id` (String)
+- `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))
