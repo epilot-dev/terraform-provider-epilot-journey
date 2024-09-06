@@ -8,6 +8,19 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" /></a>
 </div>
 
+<!-- Start Summary [summary] -->
+## Summary
+
+Journey API: API to configure journeys
+<!-- End Summary [summary] -->
+
+<!-- Start Table of Contents [toc] -->
+## Table of Contents
+
+* [SDK Installation](#sdk-installation)
+* [SDK Example Usage](#sdk-example-usage)
+<!-- End Table of Contents [toc] -->
+
 <!-- Start SDK Installation [installation] -->
 ## SDK Installation
 
@@ -18,7 +31,7 @@ terraform {
   required_providers {
     epilot-journey = {
       source  = "epilot-dev/epilot-journey"
-      version = "0.5.0"
+      version = "0.5.1"
     }
   }
 }

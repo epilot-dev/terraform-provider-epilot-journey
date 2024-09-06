@@ -14,7 +14,6 @@ Journey DataSource
 
 ```terraform
 data "epilot-journey_journey" "my_journey" {
-  id = "509cdffe-424f-457a-95c2-9708c304ce77"
 }
 ```
 
@@ -69,9 +68,9 @@ Read-Only:
 Read-Only:
 
 - `source` (String)
-- `source_type` (String) must be one of ["journey", "step", "block"]
+- `source_type` (String)
 - `target` (String)
-- `type` (String) must be one of ["inject", "injectWithKey"]
+- `type` (String)
 
 
 <a id="nestedatt--settings"></a>
@@ -98,8 +97,8 @@ Read-Only:
 Read-Only:
 
 - `button` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options--button))
-- `lang` (String) must be one of ["de", "en", "fr"]
-- `mode` (String) must be one of ["full-screen", "inline"]
+- `lang` (String)
+- `mode` (String)
 - `scroll_to_top` (Boolean)
 - `top_bar` (Boolean)
 - `width` (String)
@@ -109,7 +108,7 @@ Read-Only:
 
 Read-Only:
 
-- `align` (String) must be one of ["left", "center", "right"]
+- `align` (String)
 - `text` (String)
 
 
