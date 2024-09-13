@@ -25,8 +25,7 @@ func (o *CreatedBy) GetID() *string {
 type JourneyVersion string
 
 const (
-	JourneyVersionFlex   JourneyVersion = "Flex"
-	JourneyVersionWidget JourneyVersion = "Widget"
+	JourneyVersionFlex JourneyVersion = "Flex"
 )
 
 func (e JourneyVersion) ToPointer() *JourneyVersion {
@@ -39,8 +38,6 @@ func (e *JourneyVersion) UnmarshalJSON(data []byte) error {
 	}
 	switch v {
 	case "Flex":
-		fallthrough
-	case "Widget":
 		*e = JourneyVersion(v)
 		return nil
 	default:

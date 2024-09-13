@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 519552f44e4fbf907d24daff1a484524
+  docChecksum: 67fa1818abbe2a9dd866a7edfa4e0af3
   docVersion: 1.0.0
-  speakeasyVersion: 1.392.1
-  generationVersion: 2.411.9
-  releaseVersion: 0.5.2
-  configChecksum: e27f5aa24995ecaf812736d1da66d22a
+  speakeasyVersion: 1.396.6
+  generationVersion: 2.415.6
+  releaseVersion: 0.5.3
+  configChecksum: 6386c49d30bac7816c147ec3e656747b
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.24.9
+    core: 3.24.11
     deprecations: 2.81.1
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.8
@@ -141,18 +141,27 @@ examples:
       parameters:
         query:
           skipAutomation: "true"
+      responses:
+        "201":
+          application/json: {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "<value>", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<value>", "revisions": "988.35", "steps": [], "version": "5568.25"}
   getJourney:
     speakeasy-default-get-journey:
       parameters:
         path:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
         query: {}
+      responses:
+        "200":
+          application/json: {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "<value>", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<value>", "revisions": "6940.07", "steps": [], "version": "4044.02"}
   getJourneyProducts:
     speakeasy-default-get-journey-products:
       parameters:
         path:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
         query: {}
+      responses:
+        "200":
+          application/json: []
   getJourneysByOrgId:
     speakeasy-default-get-journeys-by-org-id:
       parameters:
@@ -179,20 +188,32 @@ examples:
   updateJourney:
     speakeasy-default-update-journey: {}
   createJourneyV2:
-    speakeasy-default-create-journey-v2: {}
+    speakeasy-default-create-journey-v2:
+      responses:
+        "201":
+          application/json: {"name": "<value>", "steps": []}
   getJourneyV2:
     speakeasy-default-get-journey-v2:
       parameters:
         path:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
+      responses:
+        "200":
+          application/json: {"name": "<value>", "steps": []}
   patchUpdateJourneyV2:
     "":
       requestBody:
         application/json: {"journeyId": "509cdffe-424f-457a-95c2-9708c304ce77", "name": "New Journey Name", "steps[0].uischema.elements[0].products": ["123456", "654321"]}
+      responses:
+        "200":
+          application/json: {"name": "<value>", "steps": []}
   removeJourneyV2:
     speakeasy-default-remove-journey-v2:
       parameters:
         path:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
   updateJourneyV2:
-    speakeasy-default-update-journey-v2: {}
+    speakeasy-default-update-journey-v2:
+      responses:
+        "200":
+          application/json: {"name": "<value>", "steps": []}
