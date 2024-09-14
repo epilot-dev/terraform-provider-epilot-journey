@@ -49,6 +49,8 @@ type Results struct {
 	CreatedAt *time.Time `json:"_created_at,omitempty"`
 	// Journey Entity ID
 	ID *string `json:"_id,omitempty"`
+	// Manifest ID used to create/update the entity
+	Manifest []string `json:"_manifest,omitempty"`
 	// Organization ID
 	Org *string `json:"_org,omitempty"`
 	// Entity Schema (journey always in this case)
@@ -93,6 +95,13 @@ func (o *Results) GetID() *string {
 		return nil
 	}
 	return o.ID
+}
+
+func (o *Results) GetManifest() []string {
+	if o == nil {
+		return nil
+	}
+	return o.Manifest
 }
 
 func (o *Results) GetOrg() *string {

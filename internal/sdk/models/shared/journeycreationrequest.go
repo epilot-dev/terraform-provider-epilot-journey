@@ -398,6 +398,7 @@ type JourneyCreationRequestSettings struct {
 	EntityID                  *string                                 `json:"entityId,omitempty"`
 	EntityTags                []string                                `json:"entityTags,omitempty"`
 	FilePurposes              []string                                `json:"filePurposes,omitempty"`
+	IsPublished               *bool                                   `json:"isPublished,omitempty"`
 	MappingsAutomationID      *string                                 `json:"mappingsAutomationId,omitempty"`
 	OrganizationSettings      map[string]bool                         `json:"organizationSettings,omitempty"`
 	PublicToken               *string                                 `json:"publicToken,omitempty"`
@@ -469,6 +470,13 @@ func (o *JourneyCreationRequestSettings) GetFilePurposes() []string {
 		return nil
 	}
 	return o.FilePurposes
+}
+
+func (o *JourneyCreationRequestSettings) GetIsPublished() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IsPublished
 }
 
 func (o *JourneyCreationRequestSettings) GetMappingsAutomationID() *string {
