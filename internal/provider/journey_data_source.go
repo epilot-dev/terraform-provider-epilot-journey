@@ -117,15 +117,13 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 							Computed: true,
 						},
 						"source_type": schema.StringAttribute{
-							Computed:    true,
-							Description: `must be one of ["journey", "step", "block"]`,
+							Computed: true,
 						},
 						"target": schema.StringAttribute{
 							Computed: true,
 						},
 						"type": schema.StringAttribute{
-							Computed:    true,
-							Description: `must be one of ["inject", "injectWithKey"]`,
+							Computed: true,
 						},
 					},
 				},
@@ -153,8 +151,7 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 								Computed: true,
 								Attributes: map[string]schema.Attribute{
 									"align": schema.StringAttribute{
-										Computed:    true,
-										Description: `must be one of ["left", "center", "right"]`,
+										Computed: true,
 									},
 									"text": schema.StringAttribute{
 										Computed: true,
@@ -162,12 +159,10 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 								},
 							},
 							"lang": schema.StringAttribute{
-								Computed:    true,
-								Description: `must be one of ["de", "en", "fr"]`,
+								Computed: true,
 							},
 							"mode": schema.StringAttribute{
-								Computed:    true,
-								Description: `must be one of ["full-screen", "inline"]`,
+								Computed: true,
 							},
 							"scroll_to_top": schema.BoolAttribute{
 								Computed: true,

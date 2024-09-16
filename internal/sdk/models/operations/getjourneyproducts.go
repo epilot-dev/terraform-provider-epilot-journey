@@ -12,8 +12,6 @@ type GetJourneyProductsRequest struct {
 	City *string `queryParam:"style=form,explode=true,name=city"`
 	// Journey ID
 	ID string `pathParam:"style=simple,explode=false,name=id"`
-	// Organization ID
-	OrgID *string `queryParam:"style=form,explode=true,name=orgId"`
 	// Zip Code for availibility
 	PostalCode *string `queryParam:"style=form,explode=true,name=postal_code"`
 	// What source ID. Journey or Entity ID
@@ -36,13 +34,6 @@ func (o *GetJourneyProductsRequest) GetID() string {
 		return ""
 	}
 	return o.ID
-}
-
-func (o *GetJourneyProductsRequest) GetOrgID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.OrgID
 }
 
 func (o *GetJourneyProductsRequest) GetPostalCode() *string {

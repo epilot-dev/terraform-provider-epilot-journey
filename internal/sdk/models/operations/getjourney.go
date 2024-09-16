@@ -7,6 +7,17 @@ import (
 	"net/http"
 )
 
+type GetJourneySecurity struct {
+	EpilotAuth *string `security:"scheme,type=http,subtype=bearer,name=Authorization"`
+}
+
+func (o *GetJourneySecurity) GetEpilotAuth() *string {
+	if o == nil {
+		return nil
+	}
+	return o.EpilotAuth
+}
+
 type GetJourneyRequest struct {
 	// Journey ID
 	ID string `pathParam:"style=simple,explode=false,name=id"`
