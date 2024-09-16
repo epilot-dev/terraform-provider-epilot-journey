@@ -469,6 +469,8 @@ func (o *JourneyCreationRequestV2Settings) GetTemplateID() *string {
 }
 
 type JourneyCreationRequestV2 struct {
+	// Manifest/Blueprint ID used to create/update the entity
+	Manifest      []string                                `json:"_manifest,omitempty"`
 	BrandID       *string                                 `json:"brandId,omitempty"`
 	ContextSchema []JourneyCreationRequestV2ContextSchema `json:"contextSchema,omitempty"`
 	Design        *JourneyCreationRequestV2Design         `json:"design,omitempty"`
@@ -478,6 +480,13 @@ type JourneyCreationRequestV2 struct {
 	Rules         []JourneyCreationRequestV2Rules         `json:"rules,omitempty"`
 	Settings      *JourneyCreationRequestV2Settings       `json:"settings,omitempty"`
 	Steps         any                                     `json:"steps"`
+}
+
+func (o *JourneyCreationRequestV2) GetManifest() []string {
+	if o == nil {
+		return nil
+	}
+	return o.Manifest
 }
 
 func (o *JourneyCreationRequestV2) GetBrandID() *string {

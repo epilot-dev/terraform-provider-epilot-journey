@@ -27,6 +27,7 @@ data "epilot-journey_journey" "my_journey" {
 - `design` (Attributes) (see [below for nested schema](#nestedatt--design))
 - `journey_id` (String)
 - `logics` (Attributes List) (see [below for nested schema](#nestedatt--logics))
+- `manifest` (List of String) Manifest/Blueprint ID used to create/update the entity
 - `name` (String)
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
