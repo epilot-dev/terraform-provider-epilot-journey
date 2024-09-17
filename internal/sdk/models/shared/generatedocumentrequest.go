@@ -14,34 +14,13 @@ func (o *ContextData) GetAdditionalProperties() *string {
 	return o.AdditionalProperties
 }
 
-// TemplateDocument - Input template document
-type TemplateDocument struct {
-	// Document original filename
-	Filename *string      `json:"filename,omitempty"`
-	S3ref    *S3Reference `json:"s3ref,omitempty"`
-}
-
-func (o *TemplateDocument) GetFilename() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Filename
-}
-
-func (o *TemplateDocument) GetS3ref() *S3Reference {
-	if o == nil {
-		return nil
-	}
-	return o.S3ref
-}
-
 type GenerateDocumentRequest struct {
 	// Custom values for variables in the template. Takes the higher precedence than others.
 	ContextData ContextData `json:"context_data"`
+	// Entity id for the template being used
+	FileID string `json:"file_id"`
 	// Language code for the document
 	Language *string `json:"language,omitempty"`
-	// Input template document
-	TemplateDocument TemplateDocument `json:"template_document"`
 }
 
 func (o *GenerateDocumentRequest) GetContextData() ContextData {
@@ -51,16 +30,16 @@ func (o *GenerateDocumentRequest) GetContextData() ContextData {
 	return o.ContextData
 }
 
+func (o *GenerateDocumentRequest) GetFileID() string {
+	if o == nil {
+		return ""
+	}
+	return o.FileID
+}
+
 func (o *GenerateDocumentRequest) GetLanguage() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Language
-}
-
-func (o *GenerateDocumentRequest) GetTemplateDocument() TemplateDocument {
-	if o == nil {
-		return TemplateDocument{}
-	}
-	return o.TemplateDocument
 }

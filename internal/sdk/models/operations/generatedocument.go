@@ -7,6 +7,17 @@ import (
 	"net/http"
 )
 
+type GenerateDocumentSecurity struct {
+	EpilotAuth *string `security:"scheme,type=http,subtype=bearer,name=Authorization"`
+}
+
+func (o *GenerateDocumentSecurity) GetEpilotAuth() *string {
+	if o == nil {
+		return nil
+	}
+	return o.EpilotAuth
+}
+
 type GenerateDocumentResponse struct {
 	// HTTP response content type for this operation
 	ContentType string

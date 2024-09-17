@@ -243,12 +243,12 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 //
 // Uses [Document API](https://gitlab.com/e-pilot/product/file-management/document-api) to generate the document.
 // Uses [Template Variables API](https://docs.epilot.io/api/template-variables) to replace variables in the document.
-func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.GenerateDocumentRequest, opts ...operations.Option) (*operations.GenerateDocumentResponse, error) {
+func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.GenerateDocumentRequest, security *operations.GenerateDocumentSecurity, opts ...operations.Option) (*operations.GenerateDocumentResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "generateDocument",
 		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
+		SecuritySource: utils.AsSecuritySource(security),
 	}
 
 	o := operations.Options{}
@@ -293,7 +293,7 @@ func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.Generat
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 	req.Header.Set("Content-Type", reqContentType)
 
-	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+	if err := utils.PopulateSecurity(ctx, req, utils.AsSecuritySource(security)); err != nil {
 		return nil, err
 	}
 

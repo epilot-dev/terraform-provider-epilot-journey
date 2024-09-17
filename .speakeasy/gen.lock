@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 3cd77e6521ede8bb10248acd2ffa2ddf
+  docChecksum: 55456b7ae99a2d315dfb372b408fdc33
   docVersion: 1.0.0
-  speakeasyVersion: 1.396.9
-  generationVersion: 2.415.7
-  releaseVersion: 0.6.0
-  configChecksum: c7fe6c5f0f780edb20425b498c417d57
+  speakeasyVersion: 1.398.0
+  generationVersion: 2.415.8
+  releaseVersion: 0.6.1
+  configChecksum: 6cb24f2267a84f0fac68d08055352b05
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -226,7 +226,7 @@ examples:
   generateDocument:
     speakeasy-default-generate-document:
       requestBody:
-        application/json: {"language": "de", "template_document": {"filename": "my-template.docx", "s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}}
+        application/json: {"file_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "language": "de"}
       responses:
         "200":
           application/json: {"docx_output": {"output_document": {"filename": "my-template-OR-001.docx", "s3ref": {"bucket": "document-api-preview-prod", "key": "preview/my-template.docx"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.docx"}, "pdf_output": {"output_document": {"filename": "my-template-OR-001.pdf", "s3ref": {"bucket": "document-api-preview-prod", "key": "preview/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.pdf"}, "template_settings": {"custom_margins": {"bottom": 2.54, "top": 2.54}, "display_margin_guidelines": true, "enable_data_table_margin_autofix": false, "enabled_template_settings_persistence": false, "file_entity_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "misconfigured_margins": false, "suggested_margins": {"bottom": 2.54, "top": 2.54}, "template_with_datatable": false}}
