@@ -11,6 +11,10 @@ import (
 
 func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *shared.JourneyCreationRequestV2) {
 	if resp != nil {
+		r.Manifest = []types.String{}
+		for _, v := range resp.Manifest {
+			r.Manifest = append(r.Manifest, types.StringValue(v))
+		}
 		r.BrandID = types.StringPointerValue(resp.BrandID)
 		r.ContextSchema = []tfTypes.JourneyCreationRequestV2ContextSchema{}
 		if len(r.ContextSchema) > len(resp.ContextSchema) {

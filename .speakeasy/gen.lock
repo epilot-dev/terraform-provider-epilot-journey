@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 55456b7ae99a2d315dfb372b408fdc33
+  docChecksum: 55f73fe1518ba46e70b7eb7a2c2c8069
   docVersion: 1.0.0
-  speakeasyVersion: 1.398.0
-  generationVersion: 2.415.8
-  releaseVersion: 0.6.1
-  configChecksum: 6cb24f2267a84f0fac68d08055352b05
+  speakeasyVersion: 1.399.2
+  generationVersion: 2.416.6
+  releaseVersion: 0.6.2
+  configChecksum: 5d40911bc7fc6e376cbb0582064c59dd
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -195,9 +195,11 @@ examples:
     speakeasy-default-update-journey: {}
   createJourneyV2:
     speakeasy-default-create-journey-v2:
+      requestBody:
+        application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": []}
       responses:
         "201":
-          application/json: {"name": "<value>", "steps": []}
+          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": []}
   getJourneyV2:
     speakeasy-default-get-journey-v2:
       parameters:
@@ -205,14 +207,14 @@ examples:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
       responses:
         "200":
-          application/json: {"name": "<value>", "steps": []}
+          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": []}
   patchUpdateJourneyV2:
     "":
       requestBody:
         application/json: {"journeyId": "509cdffe-424f-457a-95c2-9708c304ce77", "name": "New Journey Name", "steps[0].uischema.elements[0].products": ["123456", "654321"]}
       responses:
         "200":
-          application/json: {"name": "<value>", "steps": []}
+          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": []}
   removeJourneyV2:
     speakeasy-default-remove-journey-v2:
       parameters:
@@ -220,9 +222,11 @@ examples:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
   updateJourneyV2:
     speakeasy-default-update-journey-v2:
+      requestBody:
+        application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": []}
       responses:
         "200":
-          application/json: {"name": "<value>", "steps": []}
+          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": []}
   generateDocument:
     speakeasy-default-generate-document:
       requestBody:

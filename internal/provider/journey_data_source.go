@@ -34,6 +34,7 @@ type JourneyDataSourceModel struct {
 	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
 	JourneyID     types.String                                    `tfsdk:"journey_id"`
 	Logics        []tfTypes.JourneyCreationRequestV2Logics        `tfsdk:"logics"`
+	Manifest      []types.String                                  `tfsdk:"manifest"`
 	Name          types.String                                    `tfsdk:"name"`
 	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
 	Settings      *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
@@ -105,6 +106,11 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						},
 					},
 				},
+			},
+			"manifest": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `Manifest/Blueprint ID used to create/update the entity`,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,

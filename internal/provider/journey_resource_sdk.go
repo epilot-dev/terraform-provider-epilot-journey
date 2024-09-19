@@ -10,6 +10,10 @@ import (
 )
 
 func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
+	var manifest []string = []string{}
+	for _, manifestItem := range r.Manifest {
+		manifest = append(manifest, manifestItem.ValueString())
+	}
 	brandID := new(string)
 	if !r.BrandID.IsUnknown() && !r.BrandID.IsNull() {
 		*brandID = r.BrandID.ValueString()
@@ -319,6 +323,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		})
 	}
 	out := shared.JourneyCreationRequestV2{
+		Manifest:      manifest,
 		BrandID:       brandID,
 		ContextSchema: contextSchema,
 		Design:        design,
@@ -334,6 +339,10 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 
 func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *shared.JourneyCreationRequestV2) {
 	if resp != nil {
+		r.Manifest = []types.String{}
+		for _, v := range resp.Manifest {
+			r.Manifest = append(r.Manifest, types.StringValue(v))
+		}
 		r.BrandID = types.StringPointerValue(resp.BrandID)
 		r.ContextSchema = []tfTypes.JourneyCreationRequestV2ContextSchema{}
 		if len(r.ContextSchema) > len(resp.ContextSchema) {

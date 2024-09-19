@@ -41,6 +41,9 @@ resource "epilot-journey_journey" "my_journey" {
       ]
     }
   ]
+  manifest = [
+    "123e4567-e89b-12d3-a456-426614174000"
+  ]
   name = "...my_name..."
   rules = [
     {
@@ -113,6 +116,7 @@ resource "epilot-journey_journey" "my_journey" {
 - `design` (Attributes) (see [below for nested schema](#nestedatt--design))
 - `journey_id` (String)
 - `logics` (Attributes List) (see [below for nested schema](#nestedatt--logics))
+- `manifest` (List of String) Manifest/Blueprint ID used to create/update the entity
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
 
