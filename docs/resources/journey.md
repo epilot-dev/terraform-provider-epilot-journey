@@ -17,7 +17,7 @@ resource "epilot-journey_journey" "my_journey" {
   brand_id = "...my_brand_id..."
   context_schema = [
     {
-      is_required        = false
+      is_required        = true
       param_key          = "...my_param_key..."
       should_load_entity = false
       type               = "...my_type..."
@@ -65,8 +65,8 @@ resource "epilot-journey_journey" "my_journey" {
       }
       lang          = "en"
       mode          = "inline"
-      scroll_to_top = false
-      top_bar       = false
+      scroll_to_top = true
+      top_bar       = true
       width         = "...my_width..."
     }
     entity_tags = [
@@ -79,18 +79,18 @@ resource "epilot-journey_journey" "my_journey" {
     runtime_entities = [
       "ORDER"
     ]
-    safe_mode_automation = false
+    safe_mode_automation = true
     targeted_customer    = "...my_targeted_customer..."
     template_id          = "...my_template_id..."
   }
   steps = [
     {
-      hide_next_button    = true
+      hide_next_button    = false
       name                = "...my_name..."
       schema              = "{ \"see\": \"documentation\" }"
-      show_step_name      = true
+      show_step_name      = false
       show_step_subtitle  = true
-      show_stepper        = false
+      show_stepper        = true
       show_stepper_labels = false
       step_id             = "...my_step_id..."
       sub_title           = "...my_sub_title..."
