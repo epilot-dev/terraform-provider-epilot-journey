@@ -404,6 +404,7 @@ type JourneyCreationRequestSettings struct {
 	PublicToken               *string                                 `json:"publicToken,omitempty"`
 	RuntimeEntities           []JourneyCreationRequestRuntimeEntities `json:"runtimeEntities,omitempty"`
 	SafeModeAutomation        *bool                                   `json:"safeModeAutomation,omitempty"`
+	Status                    *string                                 `json:"status,omitempty"`
 	TargetedCustomer          *string                                 `json:"targetedCustomer,omitempty"`
 	TemplateID                *string                                 `json:"templateId,omitempty"`
 	UseNewDesign              *bool                                   `json:"useNewDesign,omitempty"`
@@ -512,6 +513,13 @@ func (o *JourneyCreationRequestSettings) GetSafeModeAutomation() *bool {
 		return nil
 	}
 	return o.SafeModeAutomation
+}
+
+func (o *JourneyCreationRequestSettings) GetStatus() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }
 
 func (o *JourneyCreationRequestSettings) GetTargetedCustomer() *string {

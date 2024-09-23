@@ -69,3 +69,8 @@ actions:
   - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]
     update:
       steps: {}
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["logics"]
+    remove: true
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]
+    update:
+      logics: {}

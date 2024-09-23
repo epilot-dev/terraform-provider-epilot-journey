@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: df07a1414838ec1c3035cc68f0a2f119
+  docChecksum: 0e536dabf767327b63b4963c5df07654
   docVersion: 1.0.0
-  speakeasyVersion: 1.393.2
-  generationVersion: 2.413.0
-  releaseVersion: 0.5.1
-  configChecksum: 65e21fddd4b20ebd767c1d1cb13406f9
+  speakeasyVersion: 1.401.3
+  generationVersion: 2.421.3
+  releaseVersion: 0.5.2
+  configChecksum: e27f5aa24995ecaf812736d1da66d22a
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.24.9
+    core: 3.24.12
     deprecations: 2.81.1
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.8
@@ -67,7 +67,6 @@ generatedFiles:
   - internal/provider/types/journey_creation_request_v2_context_schema.go
   - internal/provider/types/journey_creation_request_v2_design.go
   - internal/provider/types/journey_creation_request_v2_embed_options.go
-  - internal/provider/types/journey_creation_request_v2_logics.go
   - internal/provider/types/journey_creation_request_v2_rules.go
   - internal/provider/types/journey_creation_request_v2_settings.go
   - internal/provider/utils.go
@@ -155,7 +154,7 @@ examples:
         application/json: {"file_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "language": "de"}
       responses:
         "200":
-          application/json: {"docx_output": {"output_document": {"filename": "my-template-OR-001.docx", "s3ref": {"bucket": "document-api-preview-prod", "key": "preview/my-template.docx"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.docx"}, "pdf_output": {"output_document": {"filename": "my-template-OR-001.pdf", "s3ref": {"bucket": "document-api-preview-prod", "key": "preview/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.pdf"}, "template_settings": {"custom_margins": {"bottom": 2.54, "top": 2.54}, "display_margin_guidelines": true, "enable_data_table_margin_autofix": false, "enabled_template_settings_persistence": false, "file_entity_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "misconfigured_margins": false, "suggested_margins": {"bottom": 2.54, "top": 2.54}, "template_with_datatable": false}}
+          application/json: {"docx_output": {"output_document": {"filename": "my-template-OR-001.docx", "s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.docx"}, "pdf_output": {"output_document": {"filename": "my-template-OR-001.pdf", "s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.pdf"}, "template_settings": {"custom_margins": {"bottom": 2.54, "top": 2.54}, "display_margin_guidelines": true, "enable_data_table_margin_autofix": false, "enabled_template_settings_persistence": false, "file_entity_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "misconfigured_margins": false, "suggested_margins": {"bottom": 2.54, "top": 2.54}, "template_with_datatable": false}}
   getJourney:
     speakeasy-default-get-journey:
       parameters:

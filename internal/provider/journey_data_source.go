@@ -33,7 +33,7 @@ type JourneyDataSourceModel struct {
 	ContextSchema []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
 	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
 	JourneyID     types.String                                    `tfsdk:"journey_id"`
-	Logics        []tfTypes.JourneyCreationRequestV2Logics        `tfsdk:"logics"`
+	Logics        types.String                                    `tfsdk:"logics"`
 	Manifest      []types.String                                  `tfsdk:"manifest"`
 	Name          types.String                                    `tfsdk:"name"`
 	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
@@ -89,23 +89,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"journey_id": schema.StringAttribute{
 				Computed: true,
 			},
-			"logics": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"actions": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
-						"auto_generated_id": schema.StringAttribute{
-							Computed: true,
-						},
-						"conditions": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
-					},
-				},
+			"logics": schema.StringAttribute{
+				Computed:    true,
+				Description: `Parsed as JSON.`,
 			},
 			"manifest": schema.ListAttribute{
 				Computed:    true,

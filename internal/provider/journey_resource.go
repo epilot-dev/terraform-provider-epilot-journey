@@ -9,7 +9,6 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators"
-	speakeasy_listvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/listvalidators"
 	speakeasy_objectvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/objectvalidators"
 	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/stringvalidators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator"
@@ -41,7 +40,7 @@ type JourneyResourceModel struct {
 	ContextSchema []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
 	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
 	JourneyID     types.String                                    `tfsdk:"journey_id"`
-	Logics        []tfTypes.JourneyCreationRequestV2Logics        `tfsdk:"logics"`
+	Logics        types.String                                    `tfsdk:"logics"`
 	Manifest      []types.String                                  `tfsdk:"manifest"`
 	Name          types.String                                    `tfsdk:"name"`
 	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
@@ -118,37 +117,12 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Computed: true,
 				Optional: true,
 			},
-			"logics": schema.ListNestedAttribute{
-				Computed: true,
-				Optional: true,
-				NestedObject: schema.NestedAttributeObject{
-					Validators: []validator.Object{
-						speakeasy_objectvalidators.NotNull(),
-					},
-					Attributes: map[string]schema.Attribute{
-						"actions": schema.ListAttribute{
-							Computed:    true,
-							Optional:    true,
-							ElementType: types.StringType,
-							Description: `Not Null`,
-							Validators: []validator.List{
-								speakeasy_listvalidators.NotNull(),
-							},
-						},
-						"auto_generated_id": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"conditions": schema.ListAttribute{
-							Computed:    true,
-							Optional:    true,
-							ElementType: types.StringType,
-							Description: `Not Null`,
-							Validators: []validator.List{
-								speakeasy_listvalidators.NotNull(),
-							},
-						},
-					},
+			"logics": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Parsed as JSON.`,
+				Validators: []validator.String{
+					validators.IsValidJSON(),
 				},
 			},
 			"manifest": schema.ListAttribute{

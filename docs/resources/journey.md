@@ -17,7 +17,7 @@ resource "epilot-journey_journey" "my_journey" {
   brand_id = "...my_brand_id..."
   context_schema = [
     {
-      is_required        = false
+      is_required        = true
       param_key          = "...my_param_key..."
       should_load_entity = false
       type               = "...my_type..."
@@ -30,17 +30,7 @@ resource "epilot-journey_journey" "my_journey" {
     }
   }
   journey_id = "...my_journey_id..."
-  logics = [
-    {
-      actions = [
-        "..."
-      ]
-      auto_generated_id = "...my_auto_generated_id..."
-      conditions = [
-        "..."
-      ]
-    }
-  ]
+  logics     = "{ \"see\": \"documentation\" }"
   manifest = [
     "123e4567-e89b-12d3-a456-426614174000"
   ]
@@ -65,8 +55,8 @@ resource "epilot-journey_journey" "my_journey" {
       }
       lang          = "en"
       mode          = "inline"
-      scroll_to_top = false
-      top_bar       = false
+      scroll_to_top = true
+      top_bar       = true
       width         = "...my_width..."
     }
     entity_id = "...my_entity_id..."
@@ -80,7 +70,7 @@ resource "epilot-journey_journey" "my_journey" {
     runtime_entities = [
       "ORDER"
     ]
-    safe_mode_automation = false
+    safe_mode_automation = true
     targeted_customer    = "...my_targeted_customer..."
     template_id          = "...my_template_id..."
   }
@@ -102,7 +92,7 @@ resource "epilot-journey_journey" "my_journey" {
 - `context_schema` (Attributes List) (see [below for nested schema](#nestedatt--context_schema))
 - `design` (Attributes) (see [below for nested schema](#nestedatt--design))
 - `journey_id` (String)
-- `logics` (Attributes List) (see [below for nested schema](#nestedatt--logics))
+- `logics` (String) Parsed as JSON.
 - `manifest` (List of String) Manifest/Blueprint ID used to create/update the entity
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
@@ -125,16 +115,6 @@ Optional:
 
 - `logo_url` (String)
 - `theme` (Map of String)
-
-
-<a id="nestedatt--logics"></a>
-### Nested Schema for `logics`
-
-Optional:
-
-- `actions` (List of String) Not Null
-- `auto_generated_id` (String)
-- `conditions` (List of String) Not Null
 
 
 <a id="nestedatt--rules"></a>
