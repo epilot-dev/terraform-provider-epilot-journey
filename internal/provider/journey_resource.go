@@ -190,6 +190,17 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Computed: true,
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
+					"access_mode": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `must be one of ["PUBLIC", "PRIVATE"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"PUBLIC",
+								"PRIVATE",
+							),
+						},
+					},
 					"address_suggestions_file_id": schema.StringAttribute{
 						Computed: true,
 						Optional: true,

@@ -151,6 +151,32 @@ func (o *JourneyCreationRequestV2Rules) GetType() JourneyCreationRequestV2Type {
 	return o.Type
 }
 
+type JourneyCreationRequestV2AccessMode string
+
+const (
+	JourneyCreationRequestV2AccessModePublic  JourneyCreationRequestV2AccessMode = "PUBLIC"
+	JourneyCreationRequestV2AccessModePrivate JourneyCreationRequestV2AccessMode = "PRIVATE"
+)
+
+func (e JourneyCreationRequestV2AccessMode) ToPointer() *JourneyCreationRequestV2AccessMode {
+	return &e
+}
+func (e *JourneyCreationRequestV2AccessMode) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "PUBLIC":
+		fallthrough
+	case "PRIVATE":
+		*e = JourneyCreationRequestV2AccessMode(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for JourneyCreationRequestV2AccessMode: %v", v)
+	}
+}
+
 type JourneyCreationRequestV2Align string
 
 const (
@@ -332,7 +358,8 @@ func (e *JourneyCreationRequestV2RuntimeEntities) UnmarshalJSON(data []byte) err
 }
 
 type JourneyCreationRequestV2Settings struct {
-	AddressSuggestionsFileID *string `json:"addressSuggestionsFileId,omitempty"`
+	AccessMode               *JourneyCreationRequestV2AccessMode `json:"accessMode,omitempty"`
+	AddressSuggestionsFileID *string                             `json:"addressSuggestionsFileId,omitempty"`
 	// @deprecated Use addressSuggestionsFileId instead
 	//
 	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -348,6 +375,13 @@ type JourneyCreationRequestV2Settings struct {
 	SafeModeAutomation        *bool                                     `json:"safeModeAutomation,omitempty"`
 	TargetedCustomer          *string                                   `json:"targetedCustomer,omitempty"`
 	TemplateID                *string                                   `json:"templateId,omitempty"`
+}
+
+func (o *JourneyCreationRequestV2Settings) GetAccessMode() *JourneyCreationRequestV2AccessMode {
+	if o == nil {
+		return nil
+	}
+	return o.AccessMode
 }
 
 func (o *JourneyCreationRequestV2Settings) GetAddressSuggestionsFileID() *string {

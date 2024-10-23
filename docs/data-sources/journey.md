@@ -69,6 +69,7 @@ Read-Only:
 
 Read-Only:
 
+- `access_mode` (String)
 - `address_suggestions_file_id` (String)
 - `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)

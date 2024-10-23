@@ -44,6 +44,7 @@ resource "epilot-journey_journey" "my_journey" {
     }
   ]
   settings = {
+    access_mode                  = "PUBLIC"
     address_suggestions_file_id  = "...my_address_suggestions_file_id..."
     address_suggestions_file_url = "...my_address_suggestions_file_url..."
     description                  = "...my_description..."
@@ -133,6 +134,7 @@ Optional:
 
 Optional:
 
+- `access_mode` (String) must be one of ["PUBLIC", "PRIVATE"]
 - `address_suggestions_file_id` (String)
 - `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)

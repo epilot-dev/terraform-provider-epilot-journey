@@ -392,12 +392,14 @@ type Settings struct {
 	//
 	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
 	AddressSuggestionsFileURL *string           `json:"addressSuggestionsFileUrl,omitempty"`
+	Canary                    *bool             `json:"canary,omitempty"`
 	Description               *string           `json:"description,omitempty"`
 	DesignID                  string            `json:"designId"`
 	EmbedOptions              *EmbedOptions     `json:"embedOptions,omitempty"`
 	EntityID                  *string           `json:"entityId,omitempty"`
 	EntityTags                []string          `json:"entityTags,omitempty"`
 	FilePurposes              []string          `json:"filePurposes,omitempty"`
+	IsActive                  *bool             `json:"isActive,omitempty"`
 	IsPublished               *bool             `json:"isPublished,omitempty"`
 	MappingsAutomationID      *string           `json:"mappingsAutomationId,omitempty"`
 	OrganizationSettings      map[string]bool   `json:"organizationSettings,omitempty"`
@@ -429,6 +431,13 @@ func (o *Settings) GetAddressSuggestionsFileURL() *string {
 		return nil
 	}
 	return o.AddressSuggestionsFileURL
+}
+
+func (o *Settings) GetCanary() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Canary
 }
 
 func (o *Settings) GetDescription() *string {
@@ -471,6 +480,13 @@ func (o *Settings) GetFilePurposes() []string {
 		return nil
 	}
 	return o.FilePurposes
+}
+
+func (o *Settings) GetIsActive() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IsActive
 }
 
 func (o *Settings) GetIsPublished() *bool {

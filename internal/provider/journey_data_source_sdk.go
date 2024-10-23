@@ -79,6 +79,11 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			r.Settings = nil
 		} else {
 			r.Settings = &tfTypes.JourneyCreationRequestV2Settings{}
+			if resp.Settings.AccessMode != nil {
+				r.Settings.AccessMode = types.StringValue(string(*resp.Settings.AccessMode))
+			} else {
+				r.Settings.AccessMode = types.StringNull()
+			}
 			r.Settings.AddressSuggestionsFileID = types.StringPointerValue(resp.Settings.AddressSuggestionsFileID)
 			r.Settings.AddressSuggestionsFileURL = types.StringPointerValue(resp.Settings.AddressSuggestionsFileURL)
 			r.Settings.Description = types.StringPointerValue(resp.Settings.Description)

@@ -98,6 +98,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 	}
 	var settings *shared.JourneyCreationRequestV2Settings
 	if r.Settings != nil {
+		accessMode := new(shared.JourneyCreationRequestV2AccessMode)
+		if !r.Settings.AccessMode.IsUnknown() && !r.Settings.AccessMode.IsNull() {
+			*accessMode = shared.JourneyCreationRequestV2AccessMode(r.Settings.AccessMode.ValueString())
+		} else {
+			accessMode = nil
+		}
 		addressSuggestionsFileID := new(string)
 		if !r.Settings.AddressSuggestionsFileID.IsUnknown() && !r.Settings.AddressSuggestionsFileID.IsNull() {
 			*addressSuggestionsFileID = r.Settings.AddressSuggestionsFileID.ValueString()
@@ -225,6 +231,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 			templateID = nil
 		}
 		settings = &shared.JourneyCreationRequestV2Settings{
+			AccessMode:                accessMode,
 			AddressSuggestionsFileID:  addressSuggestionsFileID,
 			AddressSuggestionsFileURL: addressSuggestionsFileURL,
 			Description:               description,
@@ -327,6 +334,11 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			r.Settings = nil
 		} else {
 			r.Settings = &tfTypes.JourneyCreationRequestV2Settings{}
+			if resp.Settings.AccessMode != nil {
+				r.Settings.AccessMode = types.StringValue(string(*resp.Settings.AccessMode))
+			} else {
+				r.Settings.AccessMode = types.StringNull()
+			}
 			r.Settings.AddressSuggestionsFileID = types.StringPointerValue(resp.Settings.AddressSuggestionsFileID)
 			r.Settings.AddressSuggestionsFileURL = types.StringPointerValue(resp.Settings.AddressSuggestionsFileURL)
 			r.Settings.Description = types.StringPointerValue(resp.Settings.Description)

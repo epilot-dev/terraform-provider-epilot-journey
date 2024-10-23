@@ -123,6 +123,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"settings": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
+					"access_mode": schema.StringAttribute{
+						Computed: true,
+					},
 					"address_suggestions_file_id": schema.StringAttribute{
 						Computed: true,
 					},

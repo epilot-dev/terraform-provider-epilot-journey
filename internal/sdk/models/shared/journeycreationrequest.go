@@ -392,12 +392,14 @@ type JourneyCreationRequestSettings struct {
 	//
 	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
 	AddressSuggestionsFileURL *string                                 `json:"addressSuggestionsFileUrl,omitempty"`
+	Canary                    *bool                                   `json:"canary,omitempty"`
 	Description               *string                                 `json:"description,omitempty"`
 	DesignID                  string                                  `json:"designId"`
 	EmbedOptions              *JourneyCreationRequestEmbedOptions     `json:"embedOptions,omitempty"`
 	EntityID                  *string                                 `json:"entityId,omitempty"`
 	EntityTags                []string                                `json:"entityTags,omitempty"`
 	FilePurposes              []string                                `json:"filePurposes,omitempty"`
+	IsActive                  *bool                                   `json:"isActive,omitempty"`
 	IsPublished               *bool                                   `json:"isPublished,omitempty"`
 	MappingsAutomationID      *string                                 `json:"mappingsAutomationId,omitempty"`
 	OrganizationSettings      map[string]bool                         `json:"organizationSettings,omitempty"`
@@ -429,6 +431,13 @@ func (o *JourneyCreationRequestSettings) GetAddressSuggestionsFileURL() *string 
 		return nil
 	}
 	return o.AddressSuggestionsFileURL
+}
+
+func (o *JourneyCreationRequestSettings) GetCanary() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Canary
 }
 
 func (o *JourneyCreationRequestSettings) GetDescription() *string {
@@ -471,6 +480,13 @@ func (o *JourneyCreationRequestSettings) GetFilePurposes() []string {
 		return nil
 	}
 	return o.FilePurposes
+}
+
+func (o *JourneyCreationRequestSettings) GetIsActive() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IsActive
 }
 
 func (o *JourneyCreationRequestSettings) GetIsPublished() *bool {
