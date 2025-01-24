@@ -197,6 +197,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 					"template_id": schema.StringAttribute{
 						Computed: true,
 					},
+					"use_new_design": schema.BoolAttribute{
+						Computed: true,
+					},
 				},
 			},
 			"steps": schema.StringAttribute{

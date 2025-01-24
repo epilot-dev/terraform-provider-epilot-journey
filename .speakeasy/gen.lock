@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 04807008fa1d02e1883841236df05d67
+  docChecksum: c1b90542ac6f98c263596129ac680791
   docVersion: 1.0.0
-  speakeasyVersion: 1.422.1
-  generationVersion: 2.438.15
-  releaseVersion: 0.6.2
-  configChecksum: 5d40911bc7fc6e376cbb0582064c59dd
+  speakeasyVersion: 1.475.0
+  generationVersion: 2.495.1
+  releaseVersion: 0.8.1
+  configChecksum: 686b370df0fd2871c608b1edadabf696
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -14,18 +14,17 @@ features:
   terraform:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
-    constsAndDefaults: 0.1.4
-    core: 3.25.0
+    constsAndDefaults: 0.2.0
+    core: 3.28.0
     deprecations: 2.81.1
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.9
     globalServerURLs: 2.82.1
     methodSecurity: 2.82.1
     nullables: 0.0.0
-    retries: 2.81.1
+    retries: 2.81.2
 generatedFiles:
   - .gitattributes
-  - CONTRIBUTING.md
   - USAGE.md
   - examples/README.md
   - examples/data-sources/epilot-journey_journey/data-source.tf
@@ -71,10 +70,9 @@ generatedFiles:
   - internal/provider/types/journey_creation_request_v2_settings.go
   - internal/provider/utils.go
   - internal/sdk/.gitattributes
-  - internal/sdk/.gitignore
-  - internal/sdk/CONTRIBUTING.md
   - internal/sdk/internal/hooks/hooks.go
   - internal/sdk/internal/utils/contenttype.go
+  - internal/sdk/internal/utils/env.go
   - internal/sdk/internal/utils/form.go
   - internal/sdk/internal/utils/headers.go
   - internal/sdk/internal/utils/json.go
@@ -147,14 +145,14 @@ examples:
           skipAutomation: "true"
       responses:
         "201":
-          application/json: {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "<value>", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<value>", "revisions": "988.35", "steps": [], "version": "5568.25"}
+          application/json: {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "1709314658169", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<id>", "revisions": 4411.54, "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}, {"name": "<value>", "schema": "<value>", "uischema": "<value>"}], "version": 4985.89}
   generateDocument:
     speakeasy-default-generate-document:
       requestBody:
-        application/json: {"file_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "language": "de"}
+        application/json: {"context_data": {}, "file_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "language": "de"}
       responses:
         "200":
-          application/json: {"docx_output": {"output_document": {"filename": "my-template-OR-001.docx", "s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.docx"}, "pdf_output": {"output_document": {"filename": "my-template-OR-001.pdf", "s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.pdf"}, "template_settings": {"custom_margins": {"bottom": 2.54, "top": 2.54}, "display_margin_guidelines": true, "enable_data_table_margin_autofix": false, "enabled_template_settings_persistence": false, "file_entity_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "misconfigured_margins": false, "suggested_margins": {"bottom": 2.54, "top": 2.54}, "template_with_datatable": false}}
+          application/json: {"docx_output": {"output_document": {"s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.docx"}, "pdf_output": {"output_document": {"s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.pdf"}, "template_settings": {"custom_margins": {"bottom": 2.54, "top": 2.54}, "display_margin_guidelines": true, "enable_data_table_margin_autofix": false, "enabled_template_settings_persistence": false, "file_entity_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "misconfigured_margins": false, "suggested_margins": {"bottom": 2.54, "top": 2.54}, "template_with_datatable": false}}
   getJourney:
     speakeasy-default-get-journey:
       parameters:
@@ -163,7 +161,7 @@ examples:
         query: {}
       responses:
         "200":
-          application/json: {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "<value>", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<value>", "revisions": "6940.07", "steps": [], "version": "4044.02"}
+          application/json: {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "1728083977876", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<id>", "revisions": 6451.24, "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}, {"name": "<value>", "schema": "<value>", "uischema": "<value>"}, {"name": "<value>", "schema": "<value>", "uischema": "<value>"}], "version": 3426.2}
   getJourneyProducts:
     speakeasy-default-get-journey-products:
       parameters:
@@ -172,7 +170,7 @@ examples:
         query: {}
       responses:
         "200":
-          application/json: []
+          application/json: [{}, {}, {}]
   getJourneysByOrgId:
     speakeasy-default-get-journeys-by-org-id:
       parameters:
@@ -180,6 +178,9 @@ examples:
           id: "123"
         query:
           hydrate: "true"
+      responses:
+        "200":
+          application/json: {}
   patchUpdateJourney:
     "":
       requestBody:
@@ -195,9 +196,8 @@ examples:
         application/json: {"from": 0, "q": "_tags:*Flex*", "size": 25, "sort": "_created_at:desc"}
       responses:
         "200":
-          application/json: {"hits": 1, "results": []}
-  updateJourney:
-    speakeasy-default-update-journey: {}
+          application/json: {"hits": 1, "results": [{"_created_at": "2020-01-01T00:00:00.000Z", "_id": "e0f8f8f8-f8f8-f8f8-f8f8-f8f8f8f8f8f8", "_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "_org": "739224", "_schema": "journey", "_tags": ["Flex"], "_title": "Journey Entity Title", "_updated_at": "2020-01-01T00:00:00.000Z", "created_by": [{"id": "12345"}, {"id": "12345"}], "design": "Design EPILOT", "journey_id": "de7df470-253e-11ed-9174-116b8a718c0a", "journey_name": "Journey Name", "journey_type": "Sales template"}]}
+  updateJourney: {}
   createJourneyV2:
     speakeasy-default-create-journey-v2:
       requestBody:
@@ -232,3 +232,5 @@ examples:
       responses:
         "200":
           application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": "<value>"}
+examplesVersion: 1.0.0
+generatedTests: {}

@@ -69,7 +69,9 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 
 // SDK - Journey API: API to configure journeys
 type SDK struct {
-	Journeys   *Journeys
+	// Journey operations
+	Journeys *Journeys
+	// Journey V2 operations
 	JourneysV2 *JourneysV2
 
 	sdkConfiguration sdkConfiguration
@@ -148,9 +150,9 @@ func New(opts ...SDKOption) *SDK {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
-			SDKVersion:        "0.0.1",
-			GenVersion:        "2.438.15",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.438.15 1.0.0 github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk",
+			SDKVersion:        "0.8.1",
+			GenVersion:        "2.495.1",
+			UserAgent:         "speakeasy-sdk/terraform 0.8.1 2.495.1 1.0.0 github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}

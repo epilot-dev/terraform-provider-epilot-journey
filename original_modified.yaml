@@ -5,6 +5,23 @@ info:
   version: 1.0.0
 security:
   - EpilotAuth: []
+tags:
+  - name: Journeys
+    description: Journey operations
+  - name: Journeys V2
+    description: Journey V2 operations
+  - name: journey_schema
+    x-displayName: Journey
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/Journey" />
+x-tagGroups:
+  - name: APIs
+    tags:
+      - Journeys
+      - Journeys V2
+  - name: Schemas
+    tags:
+      - journey_schema
 paths:
   /v1/journey/organization/{id}:
     get:
@@ -20,21 +37,21 @@ paths:
           required: true
           schema:
             type: string
-            example: '123'
+            example: "123"
         - name: hydrate
           in: query
           description: Hydrate
           required: false
           schema:
             type: string
-            example: 'true'
+            example: "true"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetJourneysResponse'
+                $ref: "#/components/schemas/GetJourneysResponse"
   /v1/journey/configuration/{id}:
     get:
       operationId: getJourney
@@ -67,12 +84,12 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Journey'
+                $ref: "#/components/schemas/Journey"
     delete:
       operationId: removeJourney
       summary: removeJourney
@@ -89,7 +106,7 @@ paths:
             format: uuid
             example: 509cdffe-424f-457a-95c2-9708c304ce77
       responses:
-        '200':
+        "200":
           description: Success
           content: {}
   /v1/journey/products/{id}:
@@ -141,12 +158,12 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyProductsResponse'
+                $ref: "#/components/schemas/JourneyProductsResponse"
   /v1/journey/configuration:
     post:
       operationId: createJourney
@@ -158,7 +175,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JourneyCreationRequest'
+              $ref: "#/components/schemas/JourneyCreationRequest"
         description: Payload
       parameters:
         - name: skipAutomation
@@ -170,12 +187,12 @@ paths:
             format: Yn
             example: true
       responses:
-        '201':
+        "201":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Journey'
+                $ref: "#/components/schemas/Journey"
     put:
       operationId: updateJourney
       summary: updateJourney
@@ -186,16 +203,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JourneyCreationRequest'
+              $ref: "#/components/schemas/JourneyCreationRequest"
         description: Payload
       parameters: []
       responses:
-        '200':
+        "204":
           description: Success
-          content:
-            application/json:
+          headers:
+            X-Resource-Revisions:
               schema:
-                $ref: '#/components/schemas/JourneyResponse'
+                type: integer
+                minimum: 0
+              description: Last revisions number of the updated resource
+        "409":
+          description: The Journey has been modified since your last read, please refresh it and try again
     patch:
       operationId: patchUpdateJourney
       summary: patchUpdateJourney
@@ -206,22 +227,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchUpdateJourneyRequest'
+              $ref: "#/components/schemas/PatchUpdateJourneyRequest"
             example:
               journeyId: 509cdffe-424f-457a-95c2-9708c304ce77
               name: New Journey Name
               steps[0].uischema.elements[0].products:
-                - '123456'
-                - '654321'
+                - "123456"
+                - "654321"
         description: Payload
       parameters: []
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyResponse'
+                $ref: "#/components/schemas/JourneyResponse"
   /v1/journey/configuration/search:
     post:
       operationId: searchJourneys
@@ -233,16 +254,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SearchJourneysQueryRequest'
+              $ref: "#/components/schemas/SearchJourneysQueryRequest"
         description: Payload
       parameters: []
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchJourneysResponse'
+                $ref: "#/components/schemas/SearchJourneysResponse"
   /v1/journey/document:generate:
     post:
       operationId: generateDocument
@@ -268,14 +289,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GenerateDocumentRequest'
+              $ref: "#/components/schemas/GenerateDocumentRequest"
       responses:
-        '200':
+        "200":
           description: Generated document output
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenerateDocumentResponse'
+                $ref: "#/components/schemas/GenerateDocumentResponse"
   /v2/journey/configuration:
     post:
       operationId: createJourneyV2
@@ -287,15 +308,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JourneyCreationRequestV2'
+              $ref: "#/components/schemas/JourneyCreationRequestV2"
         description: Payload
       responses:
-        '201':
+        "201":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyCreationRequestV2'
+                $ref: "#/components/schemas/JourneyCreationRequestV2"
       x-speakeasy-entity-operation: Journey#create
     put:
       operationId: updateJourneyV2
@@ -307,16 +328,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JourneyCreationRequestV2'
+              $ref: "#/components/schemas/JourneyCreationRequestV2"
         description: Payload
       parameters: []
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyCreationRequestV2'
+                $ref: "#/components/schemas/JourneyCreationRequestV2"
       x-speakeasy-entity-operation: Journey#update
     patch:
       operationId: patchUpdateJourneyV2
@@ -328,22 +349,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchUpdateJourneyRequest'
+              $ref: "#/components/schemas/PatchUpdateJourneyRequest"
             example:
               journeyId: 509cdffe-424f-457a-95c2-9708c304ce77
               name: New Journey Name
               steps[0].uischema.elements[0].products:
-                - '123456'
-                - '654321'
+                - "123456"
+                - "654321"
         description: Payload
       parameters: []
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyCreationRequestV2'
+                $ref: "#/components/schemas/JourneyCreationRequestV2"
   /v2/journey/configuration/{id}:
     get:
       operationId: getJourneyV2
@@ -362,12 +383,12 @@ paths:
             example: 509cdffe-424f-457a-95c2-9708c304ce77
           x-speakeasy-match: journeyId
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JourneyCreationRequestV2'
+                $ref: "#/components/schemas/JourneyCreationRequestV2"
       x-speakeasy-entity-operation: Journey#get
     delete:
       operationId: removeJourneyV2
@@ -386,7 +407,7 @@ paths:
             example: 509cdffe-424f-457a-95c2-9708c304ce77
           x-speakeasy-match: journeyId
       responses:
-        '200':
+        "200":
           description: Success
           content: {}
       x-speakeasy-entity-operation: Journey#delete
@@ -398,7 +419,7 @@ components:
       type: object
       properties:
         createdJourney:
-          $ref: '#/components/schemas/Journey'
+          $ref: "#/components/schemas/Journey"
     JourneyProductsResponse:
       type: array
       items:
@@ -651,7 +672,7 @@ components:
               type: string
               nullable: true
               deprecated: true
-              description: '@deprecated Use addressSuggestionsFileId instead'
+              description: "@deprecated Use addressSuggestionsFileId instead"
             addressSuggestionsFileId:
               type: string
               nullable: true
@@ -668,6 +689,18 @@ components:
               type: string
             isActive:
               type: boolean
+            savingProgress:
+              type: object
+              properties:
+                savingMode:
+                  type: string
+                  enum:
+                    - auto
+                    - local
+                    - remote
+                    - none
+                supportedVersion:
+                  type: number
           required:
             - designId
           additionalProperties: false
@@ -814,15 +847,17 @@ components:
               type: string
               nullable: true
               deprecated: true
-              description: '@deprecated Use addressSuggestionsFileId instead'
+              description: "@deprecated Use addressSuggestionsFileId instead"
             addressSuggestionsFileId:
               type: string
               nullable: true
+            useNewDesign:
+              type: boolean
             accessMode:
               type: string
               enum:
                 - PUBLIC
-                - PRIVATE          
+                - PRIVATE
           additionalProperties: false
         _manifest:
           type: array
@@ -846,7 +881,7 @@ components:
             Lucene query syntax
             See https://lucene.apache.org/core/2_9_4/queryparsersyntax.html ; https://www.elastic.co/guide/en/kibana/current/lucene-query.html
           example: _tags:*Flex*
-          default: '*'
+          default: "*"
         from:
           type: integer
           description: |
@@ -898,15 +933,15 @@ components:
               _org:
                 type: string
                 description: Organization ID
-                example: '739224'
+                example: "739224"
               _created_at:
                 type: string
                 format: date-time
-                example: '2020-01-01T00:00:00.000Z'
+                example: "2020-01-01T00:00:00.000Z"
               _updated_at:
                 type: string
                 format: date-time
-                example: '2020-01-01T00:00:00.000Z'
+                example: "2020-01-01T00:00:00.000Z"
               _tags:
                 type: array
                 items:
@@ -944,7 +979,7 @@ components:
                     id:
                       type: string
                       description: User ID
-                      example: '12345'
+                      example: "12345"
               journey_version:
                 type: string
                 description: Journey Version
@@ -952,9 +987,9 @@ components:
                   - Flex
     Journey:
       allOf:
-        - $ref: '#/components/schemas/JourneyCreationRequest'
-        - $ref: '#/components/schemas/JourneyAuditInfo'
-        - $ref: '#/components/schemas/JourneyFeatureFlags'
+        - $ref: "#/components/schemas/JourneyCreationRequest"
+        - $ref: "#/components/schemas/JourneyAuditInfo"
+        - $ref: "#/components/schemas/JourneyFeatureFlags"
     JourneyFeatureFlags:
       type: object
       properties:
@@ -967,6 +1002,8 @@ components:
         createdAt:
           type: string
         lastModifiedAt:
+          type: string
+        deletedAt:
           type: string
         version:
           type: number
@@ -1074,7 +1111,7 @@ components:
                   type: string
                   example: my-template-OR-001.pdf
                 s3ref:
-                  $ref: '#/components/schemas/S3Reference'
+                  $ref: "#/components/schemas/S3Reference"
               example:
                 s3ref:
                   bucket: document-api-preview-prod
@@ -1094,7 +1131,7 @@ components:
                   type: string
                   example: my-template-OR-001.docx
                 s3ref:
-                  $ref: '#/components/schemas/S3Reference'
+                  $ref: "#/components/schemas/S3Reference"
               example:
                 s3ref:
                   bucket: document-api-preview-prod
@@ -1106,7 +1143,7 @@ components:
             additionalProperties:
               type: string
         template_settings:
-          $ref: '#/components/schemas/TemplateSettings'
+          $ref: "#/components/schemas/TemplateSettings"
     GenerateDocumentRequest:
       type: object
       properties:

@@ -385,12 +385,63 @@ func (e *RuntimeEntities) UnmarshalJSON(data []byte) error {
 	}
 }
 
+type SavingMode string
+
+const (
+	SavingModeAuto   SavingMode = "auto"
+	SavingModeLocal  SavingMode = "local"
+	SavingModeRemote SavingMode = "remote"
+	SavingModeNone   SavingMode = "none"
+)
+
+func (e SavingMode) ToPointer() *SavingMode {
+	return &e
+}
+func (e *SavingMode) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "auto":
+		fallthrough
+	case "local":
+		fallthrough
+	case "remote":
+		fallthrough
+	case "none":
+		*e = SavingMode(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for SavingMode: %v", v)
+	}
+}
+
+type SavingProgress struct {
+	SavingMode       *SavingMode `json:"savingMode,omitempty"`
+	SupportedVersion *float64    `json:"supportedVersion,omitempty"`
+}
+
+func (o *SavingProgress) GetSavingMode() *SavingMode {
+	if o == nil {
+		return nil
+	}
+	return o.SavingMode
+}
+
+func (o *SavingProgress) GetSupportedVersion() *float64 {
+	if o == nil {
+		return nil
+	}
+	return o.SupportedVersion
+}
+
 type Settings struct {
 	AccessMode               *AccessMode `json:"accessMode,omitempty"`
 	AddressSuggestionsFileID *string     `json:"addressSuggestionsFileId,omitempty"`
 	// @deprecated Use addressSuggestionsFileId instead
 	//
-	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	AddressSuggestionsFileURL *string           `json:"addressSuggestionsFileUrl,omitempty"`
 	Canary                    *bool             `json:"canary,omitempty"`
 	Description               *string           `json:"description,omitempty"`
@@ -406,6 +457,7 @@ type Settings struct {
 	PublicToken               *string           `json:"publicToken,omitempty"`
 	RuntimeEntities           []RuntimeEntities `json:"runtimeEntities,omitempty"`
 	SafeModeAutomation        *bool             `json:"safeModeAutomation,omitempty"`
+	SavingProgress            *SavingProgress   `json:"savingProgress,omitempty"`
 	Status                    *string           `json:"status,omitempty"`
 	TargetedCustomer          *string           `json:"targetedCustomer,omitempty"`
 	TemplateID                *string           `json:"templateId,omitempty"`
@@ -529,6 +581,13 @@ func (o *Settings) GetSafeModeAutomation() *bool {
 		return nil
 	}
 	return o.SafeModeAutomation
+}
+
+func (o *Settings) GetSavingProgress() *SavingProgress {
+	if o == nil {
+		return nil
+	}
+	return o.SavingProgress
 }
 
 func (o *Settings) GetStatus() *string {
@@ -658,6 +717,7 @@ type Journey struct {
 	ContextSchema   []ContextSchema `json:"contextSchema,omitempty"`
 	CreatedAt       string          `json:"createdAt"`
 	CreatedBy       *string         `json:"createdBy,omitempty"`
+	DeletedAt       *string         `json:"deletedAt,omitempty"`
 	Design          *Design         `json:"design,omitempty"`
 	FeatureFlags    map[string]any  `json:"featureFlags,omitempty"`
 	JourneyID       *string         `json:"journeyId,omitempty"`
@@ -723,6 +783,13 @@ func (o *Journey) GetCreatedBy() *string {
 		return nil
 	}
 	return o.CreatedBy
+}
+
+func (o *Journey) GetDeletedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.DeletedAt
 }
 
 func (o *Journey) GetDesign() *Design {

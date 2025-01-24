@@ -385,12 +385,63 @@ func (e *JourneyCreationRequestRuntimeEntities) UnmarshalJSON(data []byte) error
 	}
 }
 
+type JourneyCreationRequestSavingMode string
+
+const (
+	JourneyCreationRequestSavingModeAuto   JourneyCreationRequestSavingMode = "auto"
+	JourneyCreationRequestSavingModeLocal  JourneyCreationRequestSavingMode = "local"
+	JourneyCreationRequestSavingModeRemote JourneyCreationRequestSavingMode = "remote"
+	JourneyCreationRequestSavingModeNone   JourneyCreationRequestSavingMode = "none"
+)
+
+func (e JourneyCreationRequestSavingMode) ToPointer() *JourneyCreationRequestSavingMode {
+	return &e
+}
+func (e *JourneyCreationRequestSavingMode) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "auto":
+		fallthrough
+	case "local":
+		fallthrough
+	case "remote":
+		fallthrough
+	case "none":
+		*e = JourneyCreationRequestSavingMode(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for JourneyCreationRequestSavingMode: %v", v)
+	}
+}
+
+type JourneyCreationRequestSavingProgress struct {
+	SavingMode       *JourneyCreationRequestSavingMode `json:"savingMode,omitempty"`
+	SupportedVersion *float64                          `json:"supportedVersion,omitempty"`
+}
+
+func (o *JourneyCreationRequestSavingProgress) GetSavingMode() *JourneyCreationRequestSavingMode {
+	if o == nil {
+		return nil
+	}
+	return o.SavingMode
+}
+
+func (o *JourneyCreationRequestSavingProgress) GetSupportedVersion() *float64 {
+	if o == nil {
+		return nil
+	}
+	return o.SupportedVersion
+}
+
 type JourneyCreationRequestSettings struct {
 	AccessMode               *JourneyCreationRequestAccessMode `json:"accessMode,omitempty"`
 	AddressSuggestionsFileID *string                           `json:"addressSuggestionsFileId,omitempty"`
 	// @deprecated Use addressSuggestionsFileId instead
 	//
-	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	AddressSuggestionsFileURL *string                                 `json:"addressSuggestionsFileUrl,omitempty"`
 	Canary                    *bool                                   `json:"canary,omitempty"`
 	Description               *string                                 `json:"description,omitempty"`
@@ -406,6 +457,7 @@ type JourneyCreationRequestSettings struct {
 	PublicToken               *string                                 `json:"publicToken,omitempty"`
 	RuntimeEntities           []JourneyCreationRequestRuntimeEntities `json:"runtimeEntities,omitempty"`
 	SafeModeAutomation        *bool                                   `json:"safeModeAutomation,omitempty"`
+	SavingProgress            *JourneyCreationRequestSavingProgress   `json:"savingProgress,omitempty"`
 	Status                    *string                                 `json:"status,omitempty"`
 	TargetedCustomer          *string                                 `json:"targetedCustomer,omitempty"`
 	TemplateID                *string                                 `json:"templateId,omitempty"`
@@ -529,6 +581,13 @@ func (o *JourneyCreationRequestSettings) GetSafeModeAutomation() *bool {
 		return nil
 	}
 	return o.SafeModeAutomation
+}
+
+func (o *JourneyCreationRequestSettings) GetSavingProgress() *JourneyCreationRequestSavingProgress {
+	if o == nil {
+		return nil
+	}
+	return o.SavingProgress
 }
 
 func (o *JourneyCreationRequestSettings) GetStatus() *string {

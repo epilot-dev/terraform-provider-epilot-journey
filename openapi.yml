@@ -5,10 +5,25 @@ info:
   version: 1.0.0
 security:
   - EpilotAuth: []
-servers:
-  - url: https://journey-config.sls.epilot.io
+tags:
+  - name: Journeys
+    description: Journey operations
+  - name: Journeys V2
+    description: Journey V2 operations
+  - name: journey_schema
+    x-displayName: Journey
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/Journey" />
+x-tagGroups:
+  - name: APIs
+    tags:
+      - Journeys
+      - Journeys V2
+  - name: Schemas
+    tags:
+      - journey_schema
 paths:
-  "/v1/journey/organization/{id}":
+  /v1/journey/organization/{id}:
     get:
       operationId: getJourneysByOrgId
       summary: getJourneysByOrgId
@@ -37,7 +52,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GetJourneysResponse"
-  "/v1/journey/configuration/{id}":
+  /v1/journey/configuration/{id}:
     get:
       operationId: getJourney
       summary: getJourney
@@ -94,7 +109,7 @@ paths:
         "200":
           description: Success
           content: {}
-  "/v1/journey/products/{id}":
+  /v1/journey/products/{id}:
     get:
       operationId: getJourneyProducts
       summary: getJourneyProducts
@@ -192,12 +207,16 @@ paths:
         description: Payload
       parameters: []
       responses:
-        "200":
+        "204":
           description: Success
-          content:
-            application/json:
+          headers:
+            X-Resource-Revisions:
               schema:
-                $ref: "#/components/schemas/JourneyResponse"
+                type: integer
+                minimum: 0
+              description: Last revisions number of the updated resource
+        "409":
+          description: The Journey has been modified since your last read, please refresh it and try again
     patch:
       operationId: patchUpdateJourney
       summary: patchUpdateJourney
@@ -211,8 +230,10 @@ paths:
               $ref: "#/components/schemas/PatchUpdateJourneyRequest"
             example:
               journeyId: 509cdffe-424f-457a-95c2-9708c304ce77
-              name: "New Journey Name"
-              steps[0].uischema.elements[0].products: ["123456", "654321"]
+              name: New Journey Name
+              steps[0].uischema.elements[0].products:
+                - "123456"
+                - "654321"
         description: Payload
       parameters: []
       responses:
@@ -270,14 +291,12 @@ paths:
             schema:
               $ref: "#/components/schemas/GenerateDocumentRequest"
       responses:
-        200:
+        "200":
           description: Generated document output
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenerateDocumentResponse"
-
-  # Journey V2 (Restful endpoints)
   /v2/journey/configuration:
     post:
       operationId: createJourneyV2
@@ -340,8 +359,10 @@ paths:
               $ref: "#/components/schemas/PatchUpdateJourneyRequest"
             example:
               journeyId: 509cdffe-424f-457a-95c2-9708c304ce77
-              name: "New Journey Name"
-              steps[0].uischema.elements[0].products: ["123456", "654321"]
+              name: New Journey Name
+              steps[0].uischema.elements[0].products:
+                - "123456"
+                - "654321"
         description: Payload
       parameters: []
       responses:
@@ -351,7 +372,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JourneyCreationRequestV2"
-  "/v2/journey/configuration/{id}":
+  /v2/journey/configuration/{id}:
     get:
       operationId: getJourneyV2
       summary: getJourneyV2
@@ -394,7 +415,6 @@ paths:
         "200":
           description: Success
           content: {}
-
 components:
   schemas:
     GetJourneysResponse:
@@ -444,12 +464,11 @@ components:
           example: 509cdffe-424f-457a-95c2-9708c304ce77
         __lastModifiedAt:
           type: string
-          description: "If passed with value of null, the API won't modify the lastModifiedAt field on updating the journey"
+          description: If passed with value of null, the API won't modify the lastModifiedAt field on updating the journey
           nullable: true
       additionalProperties: true
-      description: >
-        Patch request to update a journey (journey id is required)
-        Support for nested properties (e.g. steps[0].uischema.elements[0].products) is supported.
+      description: |
+        Patch request to update a journey (journey id is required) Support for nested properties (e.g. steps[0].uischema.elements[0].products) is supported.
       required:
         - journeyId
     JourneyCreationRequest:
@@ -583,14 +602,14 @@ components:
                 mode:
                   type: string
                   enum:
-                    - "full-screen"
-                    - "inline"
+                    - full-screen
+                    - inline
                 lang:
                   type: string
                   enum:
-                    - "de"
-                    - "en"
-                    - "fr"
+                    - de
+                    - en
+                    - fr
                 width:
                   type: string
                 topBar:
@@ -606,9 +625,9 @@ components:
                     align:
                       type: string
                       enum:
-                        - "left"
-                        - "center"
-                        - "right"
+                        - left
+                        - center
+                        - right
             safeModeAutomation:
               type: boolean
             canary:
@@ -658,7 +677,6 @@ components:
             addressSuggestionsFileId:
               type: string
               nullable: true
-            # When useNewDesign is true, the journey uses the design provided by the concorde-elements blocks
             useNewDesign:
               type: boolean
             accessMode:
@@ -672,6 +690,18 @@ components:
               type: string
             isActive:
               type: boolean
+            savingProgress:
+              type: object
+              properties:
+                savingMode:
+                  type: string
+                  enum:
+                    - auto
+                    - local
+                    - remote
+                    - none
+                supportedVersion:
+                  type: number
           required:
             - designId
           additionalProperties: false
@@ -679,7 +709,7 @@ components:
           type: string
         __lastModifiedAt:
           type: string
-          description: "If passed with value of null, the API won't modify the lastModifiedAt field on updating the journey"
+          description: If passed with value of null, the API won't modify the lastModifiedAt field on updating the journey
           nullable: true
       required:
         - organizationId
@@ -813,14 +843,14 @@ components:
                 mode:
                   type: string
                   enum:
-                    - "full-screen"
-                    - "inline"
+                    - full-screen
+                    - inline
                 lang:
                   type: string
                   enum:
-                    - "de"
-                    - "en"
-                    - "fr"
+                    - de
+                    - en
+                    - fr
                 width:
                   type: string
                 topBar:
@@ -836,9 +866,9 @@ components:
                     align:
                       type: string
                       enum:
-                        - "left"
-                        - "center"
-                        - "right"
+                        - left
+                        - center
+                        - right
             safeModeAutomation:
               type: boolean
             designId:
@@ -878,6 +908,8 @@ components:
             addressSuggestionsFileId:
               type: string
               nullable: true
+            useNewDesign:
+              type: boolean
             accessMode:
               type: string
               enum:
@@ -899,37 +931,31 @@ components:
       properties:
         q:
           type: string
-          description: >
+          description: |
             Lucene query syntax
-
-            See https://lucene.apache.org/core/2_9_4/queryparsersyntax.html ;
-            https://www.elastic.co/guide/en/kibana/current/lucene-query.html
-          example: "_tags:*Flex*"
+            See https://lucene.apache.org/core/2_9_4/queryparsersyntax.html ; https://www.elastic.co/guide/en/kibana/current/lucene-query.html
+          example: _tags:*Flex*
           default: "*"
         from:
           type: integer
-          description: >
+          description: |
             The offset of the first result to return.
-
-            See
-            https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html
+            See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html
           example: 0
           default: 0
         size:
           type: integer
-          description: >
+          description: |
             The maximum number of results to return.
-
-            See
-            https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html
+            See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html
           example: 25
           default: 25
         sort:
           type: string
           description: |
             The sort order. Follows Lucene syntax.
-          example: "_created_at:desc"
-          default: "_created_at:desc"
+          example: _created_at:desc
+          default: _created_at:desc
     SearchJourneysResponse:
       type: object
       properties:
@@ -957,7 +983,7 @@ components:
               _title:
                 type: string
                 description: Journey Entity Title
-                example: "Journey Entity Title"
+                example: Journey Entity Title
               _org:
                 type: string
                 description: Organization ID
@@ -994,11 +1020,11 @@ components:
               journey_type:
                 type: string
                 description: Journey Template
-                example: "Sales template"
+                example: Sales template
               design:
                 type: string
                 description: Journey Design Name
-                example: "Design EPILOT"
+                example: Design EPILOT
               created_by:
                 type: array
                 items:
@@ -1006,11 +1032,11 @@ components:
                   properties:
                     id:
                       type: string
-                      description: "User ID"
+                      description: User ID
                       example: "12345"
               journey_version:
                 type: string
-                description: "Journey Version"
+                description: Journey Version
                 enum:
                   - Flex
     Journey:
@@ -1030,6 +1056,8 @@ components:
         createdAt:
           type: string
         lastModifiedAt:
+          type: string
+        deletedAt:
           type: string
         version:
           type: number
@@ -1190,10 +1218,11 @@ components:
       required:
         - file_id
         - context_data
-
   securitySchemes:
     EpilotAuth:
       type: http
       scheme: bearer
       description: Epilot Authorization Bearer Token - public access token / user token
       bearerFormat: JWT
+servers:
+  - url: https://journey-config.sls.epilot.io

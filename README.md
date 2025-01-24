@@ -18,7 +18,7 @@ terraform {
   required_providers {
     epilot-journey = {
       source  = "epilot-dev/epilot-journey"
-      version = "0.6.2"
+      version = "0.8.1"
     }
   }
 }
@@ -79,10 +79,11 @@ Journey API: API to configure journeys
 
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
+<!-- $toc-max-depth=2 -->
+  * [Installation](#installation)
+  * [Testing the provider locally](#testing-the-provider-locally)
+  * [Available Resources and Data Sources](#available-resources-and-data-sources)
 
-* [Installation](#installation)
-* [Available Resources and Data Sources](#available-resources-and-data-sources)
-* [Testing the provider locally](#testing-the-provider-locally)
 <!-- End Table of Contents [toc] -->
 
 <!-- Start Available Resources and Data Sources [operations] -->

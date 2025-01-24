@@ -3,15 +3,13 @@
 package operations
 
 import (
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
 	"net/http"
 )
 
 type UpdateJourneyResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// Success
-	JourneyResponse *shared.JourneyResponse
+	Headers     map[string][]string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
@@ -25,11 +23,11 @@ func (o *UpdateJourneyResponse) GetContentType() string {
 	return o.ContentType
 }
 
-func (o *UpdateJourneyResponse) GetJourneyResponse() *shared.JourneyResponse {
+func (o *UpdateJourneyResponse) GetHeaders() map[string][]string {
 	if o == nil {
-		return nil
+		return map[string][]string{}
 	}
-	return o.JourneyResponse
+	return o.Headers
 }
 
 func (o *UpdateJourneyResponse) GetStatusCode() int {

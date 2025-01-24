@@ -83,6 +83,7 @@ Read-Only:
 - `safe_mode_automation` (Boolean)
 - `targeted_customer` (String)
 - `template_id` (String)
+- `use_new_design` (Boolean)
 
 <a id="nestedatt--settings--embed_options"></a>
 ### Nested Schema for `settings.embed_options`

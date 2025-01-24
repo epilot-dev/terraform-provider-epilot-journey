@@ -316,6 +316,10 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Computed: true,
 						Optional: true,
 					},
+					"use_new_design": schema.BoolAttribute{
+						Computed: true,
+						Optional: true,
+					},
 				},
 			},
 			"steps": schema.StringAttribute{

@@ -230,6 +230,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		} else {
 			templateID = nil
 		}
+		useNewDesign := new(bool)
+		if !r.Settings.UseNewDesign.IsUnknown() && !r.Settings.UseNewDesign.IsNull() {
+			*useNewDesign = r.Settings.UseNewDesign.ValueBool()
+		} else {
+			useNewDesign = nil
+		}
 		settings = &shared.JourneyCreationRequestV2Settings{
 			AccessMode:                accessMode,
 			AddressSuggestionsFileID:  addressSuggestionsFileID,
@@ -245,6 +251,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 			SafeModeAutomation:        safeModeAutomation,
 			TargetedCustomer:          targetedCustomer,
 			TemplateID:                templateID,
+			UseNewDesign:              useNewDesign,
 		}
 	}
 	var steps interface{}
@@ -389,6 +396,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			r.Settings.SafeModeAutomation = types.BoolPointerValue(resp.Settings.SafeModeAutomation)
 			r.Settings.TargetedCustomer = types.StringPointerValue(resp.Settings.TargetedCustomer)
 			r.Settings.TemplateID = types.StringPointerValue(resp.Settings.TemplateID)
+			r.Settings.UseNewDesign = types.BoolPointerValue(resp.Settings.UseNewDesign)
 		}
 		stepsResult, _ := json.Marshal(resp.Steps)
 		r.Steps = types.StringValue(string(stepsResult))

@@ -134,6 +134,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			r.Settings.SafeModeAutomation = types.BoolPointerValue(resp.Settings.SafeModeAutomation)
 			r.Settings.TargetedCustomer = types.StringPointerValue(resp.Settings.TargetedCustomer)
 			r.Settings.TemplateID = types.StringPointerValue(resp.Settings.TemplateID)
+			r.Settings.UseNewDesign = types.BoolPointerValue(resp.Settings.UseNewDesign)
 		}
 		stepsResult, _ := json.Marshal(resp.Steps)
 		r.Steps = types.StringValue(string(stepsResult))

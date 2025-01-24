@@ -26,7 +26,7 @@ resource "epilot-journey_journey" "my_journey" {
   design = {
     logo_url = "...my_logo_url..."
     theme = {
-      "see" : jsonencode("documentation"),
+      key = jsonencode("value"),
     }
   }
   journey_id = "...my_journey_id..."
@@ -74,6 +74,7 @@ resource "epilot-journey_journey" "my_journey" {
     safe_mode_automation = true
     targeted_customer    = "...my_targeted_customer..."
     template_id          = "...my_template_id..."
+    use_new_design       = true
   }
   steps = "{ \"see\": \"documentation\" }"
 }
@@ -148,6 +149,7 @@ Optional:
 - `safe_mode_automation` (Boolean)
 - `targeted_customer` (String)
 - `template_id` (String)
+- `use_new_design` (Boolean)
 
 <a id="nestedatt--settings--embed_options"></a>
 ### Nested Schema for `settings.embed_options`
