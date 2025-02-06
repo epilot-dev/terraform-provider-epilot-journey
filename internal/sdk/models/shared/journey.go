@@ -43,9 +43,20 @@ func (o *ContextSchema) GetType() string {
 	return o.Type
 }
 
+type DesignTokens struct {
+}
+
 type Design struct {
-	LogoURL *string        `json:"logoUrl,omitempty"`
-	Theme   map[string]any `json:"theme"`
+	DesignTokens *DesignTokens  `json:"designTokens,omitempty"`
+	LogoURL      *string        `json:"logoUrl,omitempty"`
+	Theme        map[string]any `json:"theme"`
+}
+
+func (o *Design) GetDesignTokens() *DesignTokens {
+	if o == nil {
+		return nil
+	}
+	return o.DesignTokens
 }
 
 func (o *Design) GetLogoURL() *string {
@@ -461,7 +472,9 @@ type Settings struct {
 	Status                    *string           `json:"status,omitempty"`
 	TargetedCustomer          *string           `json:"targetedCustomer,omitempty"`
 	TemplateID                *string           `json:"templateId,omitempty"`
-	UseNewDesign              *bool             `json:"useNewDesign,omitempty"`
+	// If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
+	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
+	UseNewDesign      *bool `json:"useNewDesign,omitempty"`
 }
 
 func (o *Settings) GetAccessMode() *AccessMode {
@@ -609,6 +622,13 @@ func (o *Settings) GetTemplateID() *string {
 		return nil
 	}
 	return o.TemplateID
+}
+
+func (o *Settings) GetThirdPartyCookies() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.ThirdPartyCookies
 }
 
 func (o *Settings) GetUseNewDesign() *bool {

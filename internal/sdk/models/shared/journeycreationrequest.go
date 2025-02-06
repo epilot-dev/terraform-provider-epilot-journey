@@ -43,9 +43,20 @@ func (o *JourneyCreationRequestContextSchema) GetType() string {
 	return o.Type
 }
 
+type JourneyCreationRequestDesignTokens struct {
+}
+
 type JourneyCreationRequestDesign struct {
-	LogoURL *string        `json:"logoUrl,omitempty"`
-	Theme   map[string]any `json:"theme"`
+	DesignTokens *JourneyCreationRequestDesignTokens `json:"designTokens,omitempty"`
+	LogoURL      *string                             `json:"logoUrl,omitempty"`
+	Theme        map[string]any                      `json:"theme"`
+}
+
+func (o *JourneyCreationRequestDesign) GetDesignTokens() *JourneyCreationRequestDesignTokens {
+	if o == nil {
+		return nil
+	}
+	return o.DesignTokens
 }
 
 func (o *JourneyCreationRequestDesign) GetLogoURL() *string {
@@ -461,7 +472,9 @@ type JourneyCreationRequestSettings struct {
 	Status                    *string                                 `json:"status,omitempty"`
 	TargetedCustomer          *string                                 `json:"targetedCustomer,omitempty"`
 	TemplateID                *string                                 `json:"templateId,omitempty"`
-	UseNewDesign              *bool                                   `json:"useNewDesign,omitempty"`
+	// If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
+	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
+	UseNewDesign      *bool `json:"useNewDesign,omitempty"`
 }
 
 func (o *JourneyCreationRequestSettings) GetAccessMode() *JourneyCreationRequestAccessMode {
@@ -609,6 +622,13 @@ func (o *JourneyCreationRequestSettings) GetTemplateID() *string {
 		return nil
 	}
 	return o.TemplateID
+}
+
+func (o *JourneyCreationRequestSettings) GetThirdPartyCookies() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.ThirdPartyCookies
 }
 
 func (o *JourneyCreationRequestSettings) GetUseNewDesign() *bool {

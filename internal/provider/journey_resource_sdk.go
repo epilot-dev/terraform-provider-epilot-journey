@@ -49,6 +49,10 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 	}
 	var design *shared.JourneyCreationRequestV2Design
 	if r.Design != nil {
+		var designTokens *shared.JourneyCreationRequestV2DesignTokens
+		if r.Design.DesignTokens != nil {
+			designTokens = &shared.JourneyCreationRequestV2DesignTokens{}
+		}
 		logoURL := new(string)
 		if !r.Design.LogoURL.IsUnknown() && !r.Design.LogoURL.IsNull() {
 			*logoURL = r.Design.LogoURL.ValueString()
@@ -62,8 +66,9 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 			theme[themeKey] = themeInst
 		}
 		design = &shared.JourneyCreationRequestV2Design{
-			LogoURL: logoURL,
-			Theme:   theme,
+			DesignTokens: designTokens,
+			LogoURL:      logoURL,
+			Theme:        theme,
 		}
 	}
 	journeyID := new(string)
@@ -230,6 +235,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		} else {
 			templateID = nil
 		}
+		thirdPartyCookies := new(bool)
+		if !r.Settings.ThirdPartyCookies.IsUnknown() && !r.Settings.ThirdPartyCookies.IsNull() {
+			*thirdPartyCookies = r.Settings.ThirdPartyCookies.ValueBool()
+		} else {
+			thirdPartyCookies = nil
+		}
 		useNewDesign := new(bool)
 		if !r.Settings.UseNewDesign.IsUnknown() && !r.Settings.UseNewDesign.IsNull() {
 			*useNewDesign = r.Settings.UseNewDesign.ValueBool()
@@ -251,6 +262,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 			SafeModeAutomation:        safeModeAutomation,
 			TargetedCustomer:          targetedCustomer,
 			TemplateID:                templateID,
+			ThirdPartyCookies:         thirdPartyCookies,
 			UseNewDesign:              useNewDesign,
 		}
 	}
@@ -301,6 +313,11 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			r.Design = nil
 		} else {
 			r.Design = &tfTypes.JourneyCreationRequestV2Design{}
+			if resp.Design.DesignTokens == nil {
+				r.Design.DesignTokens = nil
+			} else {
+				r.Design.DesignTokens = &tfTypes.JourneyCreationRequestV2DesignTokens{}
+			}
 			r.Design.LogoURL = types.StringPointerValue(resp.Design.LogoURL)
 			if len(resp.Design.Theme) > 0 {
 				r.Design.Theme = make(map[string]types.String)
@@ -396,6 +413,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			r.Settings.SafeModeAutomation = types.BoolPointerValue(resp.Settings.SafeModeAutomation)
 			r.Settings.TargetedCustomer = types.StringPointerValue(resp.Settings.TargetedCustomer)
 			r.Settings.TemplateID = types.StringPointerValue(resp.Settings.TemplateID)
+			r.Settings.ThirdPartyCookies = types.BoolPointerValue(resp.Settings.ThirdPartyCookies)
 			r.Settings.UseNewDesign = types.BoolPointerValue(resp.Settings.UseNewDesign)
 		}
 		stepsResult, _ := json.Marshal(resp.Steps)

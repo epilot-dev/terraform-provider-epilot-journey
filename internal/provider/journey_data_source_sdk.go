@@ -39,6 +39,11 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			r.Design = nil
 		} else {
 			r.Design = &tfTypes.JourneyCreationRequestV2Design{}
+			if resp.Design.DesignTokens == nil {
+				r.Design.DesignTokens = nil
+			} else {
+				r.Design.DesignTokens = &tfTypes.JourneyCreationRequestV2DesignTokens{}
+			}
 			r.Design.LogoURL = types.StringPointerValue(resp.Design.LogoURL)
 			if len(resp.Design.Theme) > 0 {
 				r.Design.Theme = make(map[string]types.String)
@@ -134,6 +139,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 			r.Settings.SafeModeAutomation = types.BoolPointerValue(resp.Settings.SafeModeAutomation)
 			r.Settings.TargetedCustomer = types.StringPointerValue(resp.Settings.TargetedCustomer)
 			r.Settings.TemplateID = types.StringPointerValue(resp.Settings.TemplateID)
+			r.Settings.ThirdPartyCookies = types.BoolPointerValue(resp.Settings.ThirdPartyCookies)
 			r.Settings.UseNewDesign = types.BoolPointerValue(resp.Settings.UseNewDesign)
 		}
 		stepsResult, _ := json.Marshal(resp.Steps)

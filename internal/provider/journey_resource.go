@@ -99,6 +99,10 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Computed: true,
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
+					"design_tokens": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+					},
 					"logo_url": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
@@ -315,6 +319,11 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 					"template_id": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
+					},
+					"third_party_cookies": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.`,
 					},
 					"use_new_design": schema.BoolAttribute{
 						Computed: true,

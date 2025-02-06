@@ -77,6 +77,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"design": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
+					"design_tokens": schema.SingleNestedAttribute{
+						Computed: true,
+					},
 					"logo_url": schema.StringAttribute{
 						Computed: true,
 					},
@@ -196,6 +199,10 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 					},
 					"template_id": schema.StringAttribute{
 						Computed: true,
+					},
+					"third_party_cookies": schema.BoolAttribute{
+						Computed:    true,
+						Description: `If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.`,
 					},
 					"use_new_design": schema.BoolAttribute{
 						Computed: true,

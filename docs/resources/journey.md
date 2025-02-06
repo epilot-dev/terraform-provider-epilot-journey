@@ -24,6 +24,9 @@ resource "epilot-journey_journey" "my_journey" {
     }
   ]
   design = {
+    design_tokens = {
+      # ...
+    }
     logo_url = "...my_logo_url..."
     theme = {
       key = jsonencode("value"),
@@ -74,6 +77,7 @@ resource "epilot-journey_journey" "my_journey" {
     safe_mode_automation = true
     targeted_customer    = "...my_targeted_customer..."
     template_id          = "...my_template_id..."
+    third_party_cookies  = true
     use_new_design       = true
   }
   steps = "{ \"see\": \"documentation\" }"
@@ -115,8 +119,13 @@ Optional:
 
 Optional:
 
+- `design_tokens` (Attributes) (see [below for nested schema](#nestedatt--design--design_tokens))
 - `logo_url` (String)
 - `theme` (Map of String)
+
+<a id="nestedatt--design--design_tokens"></a>
+### Nested Schema for `design.design_tokens`
+
 
 
 <a id="nestedatt--rules"></a>
@@ -149,6 +158,7 @@ Optional:
 - `safe_mode_automation` (Boolean)
 - `targeted_customer` (String)
 - `template_id` (String)
+- `third_party_cookies` (Boolean) If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
 - `use_new_design` (Boolean)
 
 <a id="nestedatt--settings--embed_options"></a>

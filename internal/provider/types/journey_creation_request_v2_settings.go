@@ -19,5 +19,6 @@ type JourneyCreationRequestV2Settings struct {
 	SafeModeAutomation        types.Bool                            `tfsdk:"safe_mode_automation"`
 	TargetedCustomer          types.String                          `tfsdk:"targeted_customer"`
 	TemplateID                types.String                          `tfsdk:"template_id"`
+	ThirdPartyCookies         types.Bool                            `tfsdk:"third_party_cookies"`
 	UseNewDesign              types.Bool                            `tfsdk:"use_new_design"`
 }
