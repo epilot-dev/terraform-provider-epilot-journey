@@ -146,7 +146,7 @@ Optional:
 
 - `access_mode` (String) must be one of ["PUBLIC", "PRIVATE"]
 - `address_suggestions_file_id` (String)
-- `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
+- `address_suggestions_file_url` (String, Deprecated) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))
