@@ -30,13 +30,6 @@ func newJourneys(sdkConfig sdkConfiguration) *Journeys {
 // CreateJourney - createJourney
 // Create a Journey
 func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJourneyRequest, opts ...operations.Option) (*operations.CreateJourneyResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createJourney",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -60,6 +53,13 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "JourneyCreationRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -246,13 +246,6 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 // Uses [Document API](https://gitlab.com/e-pilot/product/file-management/document-api) to generate the document.
 // Uses [Template Variables API](https://docs.epilot.io/api/template-variables) to replace variables in the document.
 func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.GenerateDocumentRequest, security *operations.GenerateDocumentSecurity, opts ...operations.Option) (*operations.GenerateDocumentResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "generateDocument",
-		OAuth2Scopes:   []string{},
-		SecuritySource: utils.AsSecuritySource(security),
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -276,6 +269,13 @@ func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.Generat
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "generateDocument",
+		OAuth2Scopes:   []string{},
+		SecuritySource: utils.AsSecuritySource(security),
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -448,13 +448,6 @@ func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.Generat
 // GetJourney - getJourney
 // Get journey by id. Private journeys requires valid private token to be passed
 func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourneyRequest, security *operations.GetJourneySecurity, opts ...operations.Option) (*operations.GetJourneyResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getJourney",
-		OAuth2Scopes:   []string{},
-		SecuritySource: utils.AsSecuritySource(security),
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -476,6 +469,14 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/configuration/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: utils.AsSecuritySource(security),
 	}
 
 	timeout := o.Timeout
@@ -646,13 +647,6 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 // GetJourneyProducts - getJourneyProducts
 // Get products available in the journey by id. requires public journey token to be passed.
 func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.GetJourneyProductsRequest, opts ...operations.Option) (*operations.GetJourneyProductsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getJourneyProducts",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -674,6 +668,14 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/products/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getJourneyProducts",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -844,13 +846,6 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 // GetJourneysByOrgID - getJourneysByOrgId
 // Get all journeys by organization id
 func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.GetJourneysByOrgIDRequest, opts ...operations.Option) (*operations.GetJourneysByOrgIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getJourneysByOrgId",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -872,6 +867,14 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/organization/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getJourneysByOrgId",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1042,13 +1045,6 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 // PatchUpdateJourney - patchUpdateJourney
 // Update a Journey (partially / patch). Support for nested properties updates (e.g. "property[0].name").
 func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.PatchUpdateJourneyRequest, opts ...operations.Option) (*operations.PatchUpdateJourneyResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "patchUpdateJourney",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1072,6 +1068,13 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "patchUpdateJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -1244,13 +1247,6 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 // RemoveJourney - removeJourney
 // Remove journey by id
 func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJourneyRequest, opts ...operations.Option) (*operations.RemoveJourneyResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "removeJourney",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1272,6 +1268,14 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/journey/configuration/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "removeJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1418,13 +1422,6 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 // SearchJourneys - searchJourneys
 // Search Journeys
 func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJourneysQueryRequest, opts ...operations.Option) (*operations.SearchJourneysResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "searchJourneys",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1448,6 +1445,13 @@ func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJou
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "searchJourneys",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -1620,13 +1624,6 @@ func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJou
 // UpdateJourney - updateJourney
 // Update a Journey
 func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCreationRequest, opts ...operations.Option) (*operations.UpdateJourneyResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateJourney",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1650,6 +1647,13 @@ func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCre
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateJourney",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

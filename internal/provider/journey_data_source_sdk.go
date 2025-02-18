@@ -11,7 +11,7 @@ import (
 
 func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *shared.JourneyCreationRequestV2) {
 	if resp != nil {
-		r.Manifest = []types.String{}
+		r.Manifest = make([]types.String, 0, len(resp.Manifest))
 		for _, v := range resp.Manifest {
 			r.Manifest = append(r.Manifest, types.StringValue(v))
 		}
@@ -123,16 +123,16 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 				r.Settings.EmbedOptions.Width = types.StringPointerValue(resp.Settings.EmbedOptions.Width)
 			}
 			r.Settings.EntityID = types.StringPointerValue(resp.Settings.EntityID)
-			r.Settings.EntityTags = []types.String{}
+			r.Settings.EntityTags = make([]types.String, 0, len(resp.Settings.EntityTags))
 			for _, v := range resp.Settings.EntityTags {
 				r.Settings.EntityTags = append(r.Settings.EntityTags, types.StringValue(v))
 			}
-			r.Settings.FilePurposes = []types.String{}
+			r.Settings.FilePurposes = make([]types.String, 0, len(resp.Settings.FilePurposes))
 			for _, v := range resp.Settings.FilePurposes {
 				r.Settings.FilePurposes = append(r.Settings.FilePurposes, types.StringValue(v))
 			}
 			r.Settings.MappingsAutomationID = types.StringPointerValue(resp.Settings.MappingsAutomationID)
-			r.Settings.RuntimeEntities = []types.String{}
+			r.Settings.RuntimeEntities = make([]types.String, 0, len(resp.Settings.RuntimeEntities))
 			for _, v := range resp.Settings.RuntimeEntities {
 				r.Settings.RuntimeEntities = append(r.Settings.RuntimeEntities, types.StringValue(string(v)))
 			}

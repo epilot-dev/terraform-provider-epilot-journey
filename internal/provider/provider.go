@@ -25,8 +25,8 @@ type EpilotJourneyProvider struct {
 
 // EpilotJourneyProviderModel describes the provider data model.
 type EpilotJourneyProviderModel struct {
-	ServerURL  types.String `tfsdk:"server_url"`
 	EpilotAuth types.String `tfsdk:"epilot_auth"`
+	ServerURL  types.String `tfsdk:"server_url"`
 }
 
 func (p *EpilotJourneyProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -36,18 +36,17 @@ func (p *EpilotJourneyProvider) Metadata(ctx context.Context, req provider.Metad
 
 func (p *EpilotJourneyProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: `Journey API: API to configure journeys`,
 		Attributes: map[string]schema.Attribute{
-			"server_url": schema.StringAttribute{
-				MarkdownDescription: "Server URL (defaults to https://journey-config.sls.epilot.io)",
-				Optional:            true,
-				Required:            false,
-			},
 			"epilot_auth": schema.StringAttribute{
-				Sensitive: true,
 				Optional:  true,
+				Sensitive: true,
+			},
+			"server_url": schema.StringAttribute{
+				Description: `Server URL (defaults to https://journey-config.sls.epilot.io)`,
+				Optional:    true,
 			},
 		},
+		MarkdownDescription: `Journey API: API to configure journeys`,
 	}
 }
 
@@ -76,8 +75,13 @@ func (p *EpilotJourneyProvider) Configure(ctx context.Context, req provider.Conf
 		EpilotAuth: epilotAuth,
 	}
 
+	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
+		SetHeaders: make(map[string]string),
+		Transport:  http.DefaultTransport,
+	}
+
 	httpClient := http.DefaultClient
-	httpClient.Transport = NewLoggingHTTPTransport(http.DefaultTransport)
+	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
 
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),
