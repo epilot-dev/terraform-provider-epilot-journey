@@ -510,11 +510,13 @@ type JourneyCreationRequestV2 struct {
 	ContextSchema []JourneyCreationRequestV2ContextSchema `json:"contextSchema,omitempty"`
 	Design        *JourneyCreationRequestV2Design         `json:"design,omitempty"`
 	JourneyID     *string                                 `json:"journeyId,omitempty"`
-	Logics        any                                     `json:"logics,omitempty"`
-	Name          string                                  `json:"name"`
-	Rules         []JourneyCreationRequestV2Rules         `json:"rules,omitempty"`
-	Settings      *JourneyCreationRequestV2Settings       `json:"settings,omitempty"`
-	Steps         any                                     `json:"steps"`
+	// Journey Template
+	JourneyType *string                           `json:"journey_type,omitempty"`
+	Logics      any                               `json:"logics,omitempty"`
+	Name        string                            `json:"name"`
+	Rules       []JourneyCreationRequestV2Rules   `json:"rules,omitempty"`
+	Settings    *JourneyCreationRequestV2Settings `json:"settings,omitempty"`
+	Steps       any                               `json:"steps"`
 }
 
 func (o *JourneyCreationRequestV2) GetManifest() []string {
@@ -550,6 +552,13 @@ func (o *JourneyCreationRequestV2) GetJourneyID() *string {
 		return nil
 	}
 	return o.JourneyID
+}
+
+func (o *JourneyCreationRequestV2) GetJourneyType() *string {
+	if o == nil {
+		return nil
+	}
+	return o.JourneyType
 }
 
 func (o *JourneyCreationRequestV2) GetLogics() any {

@@ -32,8 +32,9 @@ resource "epilot-journey_journey" "my_journey" {
       key = jsonencode("value"),
     }
   }
-  journey_id = "...my_journey_id..."
-  logics     = "{ \"see\": \"documentation\" }"
+  journey_id   = "...my_journey_id..."
+  journey_type = "Sales template (Premium)"
+  logics       = "{ \"see\": \"documentation\" }"
   manifest = [
     "123e4567-e89b-12d3-a456-426614174000"
   ]
@@ -98,6 +99,7 @@ resource "epilot-journey_journey" "my_journey" {
 - `context_schema` (Attributes List) (see [below for nested schema](#nestedatt--context_schema))
 - `design` (Attributes) (see [below for nested schema](#nestedatt--design))
 - `journey_id` (String)
+- `journey_type` (String) Journey Template
 - `logics` (String) Parsed as JSON.
 - `manifest` (List of String) Manifest/Blueprint ID used to create/update the entity
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))

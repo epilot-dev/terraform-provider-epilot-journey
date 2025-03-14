@@ -453,25 +453,28 @@ type Settings struct {
 	// @deprecated Use addressSuggestionsFileId instead
 	//
 	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
-	AddressSuggestionsFileURL *string           `json:"addressSuggestionsFileUrl,omitempty"`
-	Canary                    *bool             `json:"canary,omitempty"`
-	Description               *string           `json:"description,omitempty"`
-	DesignID                  string            `json:"designId"`
-	EmbedOptions              *EmbedOptions     `json:"embedOptions,omitempty"`
-	EntityID                  *string           `json:"entityId,omitempty"`
-	EntityTags                []string          `json:"entityTags,omitempty"`
-	FilePurposes              []string          `json:"filePurposes,omitempty"`
-	IsActive                  *bool             `json:"isActive,omitempty"`
-	IsPublished               *bool             `json:"isPublished,omitempty"`
-	MappingsAutomationID      *string           `json:"mappingsAutomationId,omitempty"`
-	OrganizationSettings      map[string]bool   `json:"organizationSettings,omitempty"`
-	PublicToken               *string           `json:"publicToken,omitempty"`
-	RuntimeEntities           []RuntimeEntities `json:"runtimeEntities,omitempty"`
-	SafeModeAutomation        *bool             `json:"safeModeAutomation,omitempty"`
-	SavingProgress            *SavingProgress   `json:"savingProgress,omitempty"`
-	Status                    *string           `json:"status,omitempty"`
-	TargetedCustomer          *string           `json:"targetedCustomer,omitempty"`
-	TemplateID                *string           `json:"templateId,omitempty"`
+	AddressSuggestionsFileURL *string `json:"addressSuggestionsFileUrl,omitempty"`
+	// DEPRECATED - This API will return hardcoded value of false. Please note that this field is internal to epilot and should not be used by external clients. If you wish to get the canary flag, please use the /v1/journey/{id}/settings API.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+	Canary               *bool             `json:"canary,omitempty"`
+	Description          *string           `json:"description,omitempty"`
+	DesignID             string            `json:"designId"`
+	EmbedOptions         *EmbedOptions     `json:"embedOptions,omitempty"`
+	EntityID             *string           `json:"entityId,omitempty"`
+	EntityTags           []string          `json:"entityTags,omitempty"`
+	FilePurposes         []string          `json:"filePurposes,omitempty"`
+	IsActive             *bool             `json:"isActive,omitempty"`
+	IsPublished          *bool             `json:"isPublished,omitempty"`
+	MappingsAutomationID *string           `json:"mappingsAutomationId,omitempty"`
+	OrganizationSettings map[string]bool   `json:"organizationSettings,omitempty"`
+	PublicToken          *string           `json:"publicToken,omitempty"`
+	RuntimeEntities      []RuntimeEntities `json:"runtimeEntities,omitempty"`
+	SafeModeAutomation   *bool             `json:"safeModeAutomation,omitempty"`
+	SavingProgress       *SavingProgress   `json:"savingProgress,omitempty"`
+	Status               *string           `json:"status,omitempty"`
+	TargetedCustomer     *string           `json:"targetedCustomer,omitempty"`
+	TemplateID           *string           `json:"templateId,omitempty"`
 	// If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
 	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
 	UseNewDesign      *bool `json:"useNewDesign,omitempty"`
@@ -732,24 +735,26 @@ func (o *Steps) GetUischema() any {
 type Journey struct {
 	AdditionalProperties any `additionalProperties:"true" json:"-"`
 	// If passed with value of null, the API won't modify the lastModifiedAt field on updating the journey
-	LastModifiedAt  *string         `json:"__lastModifiedAt,omitempty"`
-	BrandID         *string         `json:"brandId,omitempty"`
-	ContextSchema   []ContextSchema `json:"contextSchema,omitempty"`
-	CreatedAt       string          `json:"createdAt"`
-	CreatedBy       *string         `json:"createdBy,omitempty"`
-	DeletedAt       *string         `json:"deletedAt,omitempty"`
-	Design          *Design         `json:"design,omitempty"`
-	FeatureFlags    map[string]any  `json:"featureFlags,omitempty"`
-	JourneyID       *string         `json:"journeyId,omitempty"`
-	LastModifiedAt1 string          `json:"lastModifiedAt"`
-	Logics          []Logics        `json:"logics,omitempty"`
-	Name            string          `json:"name"`
-	OrganizationID  string          `json:"organizationId"`
-	Revisions       float64         `json:"revisions"`
-	Rules           []Rules         `json:"rules,omitempty"`
-	Settings        *Settings       `json:"settings,omitempty"`
-	Steps           []Steps         `json:"steps"`
-	Version         float64         `json:"version"`
+	LastModifiedAt *string         `json:"__lastModifiedAt,omitempty"`
+	BrandID        *string         `json:"brandId,omitempty"`
+	ContextSchema  []ContextSchema `json:"contextSchema,omitempty"`
+	CreatedAt      string          `json:"createdAt"`
+	CreatedBy      *string         `json:"createdBy,omitempty"`
+	DeletedAt      *string         `json:"deletedAt,omitempty"`
+	Design         *Design         `json:"design,omitempty"`
+	FeatureFlags   map[string]any  `json:"featureFlags,omitempty"`
+	JourneyID      *string         `json:"journeyId,omitempty"`
+	// Journey Template
+	JourneyType     *string   `json:"journey_type,omitempty"`
+	LastModifiedAt1 string    `json:"lastModifiedAt"`
+	Logics          []Logics  `json:"logics,omitempty"`
+	Name            string    `json:"name"`
+	OrganizationID  string    `json:"organizationId"`
+	Revisions       float64   `json:"revisions"`
+	Rules           []Rules   `json:"rules,omitempty"`
+	Settings        *Settings `json:"settings,omitempty"`
+	Steps           []Steps   `json:"steps"`
+	Version         float64   `json:"version"`
 }
 
 func (j Journey) MarshalJSON() ([]byte, error) {
@@ -831,6 +836,13 @@ func (o *Journey) GetJourneyID() *string {
 		return nil
 	}
 	return o.JourneyID
+}
+
+func (o *Journey) GetJourneyType() *string {
+	if o == nil {
+		return nil
+	}
+	return o.JourneyType
 }
 
 func (o *Journey) GetLastModifiedAt1() string {

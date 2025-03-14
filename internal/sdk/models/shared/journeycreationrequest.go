@@ -453,25 +453,28 @@ type JourneyCreationRequestSettings struct {
 	// @deprecated Use addressSuggestionsFileId instead
 	//
 	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
-	AddressSuggestionsFileURL *string                                 `json:"addressSuggestionsFileUrl,omitempty"`
-	Canary                    *bool                                   `json:"canary,omitempty"`
-	Description               *string                                 `json:"description,omitempty"`
-	DesignID                  string                                  `json:"designId"`
-	EmbedOptions              *JourneyCreationRequestEmbedOptions     `json:"embedOptions,omitempty"`
-	EntityID                  *string                                 `json:"entityId,omitempty"`
-	EntityTags                []string                                `json:"entityTags,omitempty"`
-	FilePurposes              []string                                `json:"filePurposes,omitempty"`
-	IsActive                  *bool                                   `json:"isActive,omitempty"`
-	IsPublished               *bool                                   `json:"isPublished,omitempty"`
-	MappingsAutomationID      *string                                 `json:"mappingsAutomationId,omitempty"`
-	OrganizationSettings      map[string]bool                         `json:"organizationSettings,omitempty"`
-	PublicToken               *string                                 `json:"publicToken,omitempty"`
-	RuntimeEntities           []JourneyCreationRequestRuntimeEntities `json:"runtimeEntities,omitempty"`
-	SafeModeAutomation        *bool                                   `json:"safeModeAutomation,omitempty"`
-	SavingProgress            *JourneyCreationRequestSavingProgress   `json:"savingProgress,omitempty"`
-	Status                    *string                                 `json:"status,omitempty"`
-	TargetedCustomer          *string                                 `json:"targetedCustomer,omitempty"`
-	TemplateID                *string                                 `json:"templateId,omitempty"`
+	AddressSuggestionsFileURL *string `json:"addressSuggestionsFileUrl,omitempty"`
+	// DEPRECATED - This API will return hardcoded value of false. Please note that this field is internal to epilot and should not be used by external clients. If you wish to get the canary flag, please use the /v1/journey/{id}/settings API.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+	Canary               *bool                                   `json:"canary,omitempty"`
+	Description          *string                                 `json:"description,omitempty"`
+	DesignID             string                                  `json:"designId"`
+	EmbedOptions         *JourneyCreationRequestEmbedOptions     `json:"embedOptions,omitempty"`
+	EntityID             *string                                 `json:"entityId,omitempty"`
+	EntityTags           []string                                `json:"entityTags,omitempty"`
+	FilePurposes         []string                                `json:"filePurposes,omitempty"`
+	IsActive             *bool                                   `json:"isActive,omitempty"`
+	IsPublished          *bool                                   `json:"isPublished,omitempty"`
+	MappingsAutomationID *string                                 `json:"mappingsAutomationId,omitempty"`
+	OrganizationSettings map[string]bool                         `json:"organizationSettings,omitempty"`
+	PublicToken          *string                                 `json:"publicToken,omitempty"`
+	RuntimeEntities      []JourneyCreationRequestRuntimeEntities `json:"runtimeEntities,omitempty"`
+	SafeModeAutomation   *bool                                   `json:"safeModeAutomation,omitempty"`
+	SavingProgress       *JourneyCreationRequestSavingProgress   `json:"savingProgress,omitempty"`
+	Status               *string                                 `json:"status,omitempty"`
+	TargetedCustomer     *string                                 `json:"targetedCustomer,omitempty"`
+	TemplateID           *string                                 `json:"templateId,omitempty"`
 	// If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
 	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
 	UseNewDesign      *bool `json:"useNewDesign,omitempty"`
@@ -738,12 +741,14 @@ type JourneyCreationRequest struct {
 	CreatedBy      *string                               `json:"createdBy,omitempty"`
 	Design         *JourneyCreationRequestDesign         `json:"design,omitempty"`
 	JourneyID      *string                               `json:"journeyId,omitempty"`
-	Logics         []JourneyCreationRequestLogics        `json:"logics,omitempty"`
-	Name           string                                `json:"name"`
-	OrganizationID string                                `json:"organizationId"`
-	Rules          []JourneyCreationRequestRules         `json:"rules,omitempty"`
-	Settings       *JourneyCreationRequestSettings       `json:"settings,omitempty"`
-	Steps          []JourneyCreationRequestSteps         `json:"steps"`
+	// Journey Template
+	JourneyType    *string                         `json:"journey_type,omitempty"`
+	Logics         []JourneyCreationRequestLogics  `json:"logics,omitempty"`
+	Name           string                          `json:"name"`
+	OrganizationID string                          `json:"organizationId"`
+	Rules          []JourneyCreationRequestRules   `json:"rules,omitempty"`
+	Settings       *JourneyCreationRequestSettings `json:"settings,omitempty"`
+	Steps          []JourneyCreationRequestSteps   `json:"steps"`
 }
 
 func (j JourneyCreationRequest) MarshalJSON() ([]byte, error) {
@@ -804,6 +809,13 @@ func (o *JourneyCreationRequest) GetJourneyID() *string {
 		return nil
 	}
 	return o.JourneyID
+}
+
+func (o *JourneyCreationRequest) GetJourneyType() *string {
+	if o == nil {
+		return nil
+	}
+	return o.JourneyType
 }
 
 func (o *JourneyCreationRequest) GetLogics() []JourneyCreationRequestLogics {

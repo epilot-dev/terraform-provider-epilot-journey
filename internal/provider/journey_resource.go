@@ -40,6 +40,7 @@ type JourneyResourceModel struct {
 	ContextSchema []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
 	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
 	JourneyID     types.String                                    `tfsdk:"journey_id"`
+	JourneyType   types.String                                    `tfsdk:"journey_type"`
 	Logics        types.String                                    `tfsdk:"logics"`
 	Manifest      []types.String                                  `tfsdk:"manifest"`
 	Name          types.String                                    `tfsdk:"name"`
@@ -120,6 +121,11 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 			"journey_id": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
+			},
+			"journey_type": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Journey Template`,
 			},
 			"logics": schema.StringAttribute{
 				Computed:    true,

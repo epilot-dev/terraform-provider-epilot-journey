@@ -77,6 +77,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 	} else {
 		journeyID = nil
 	}
+	journeyType := new(string)
+	if !r.JourneyType.IsUnknown() && !r.JourneyType.IsNull() {
+		*journeyType = r.JourneyType.ValueString()
+	} else {
+		journeyType = nil
+	}
 	var logics interface{}
 	if !r.Logics.IsUnknown() && !r.Logics.IsNull() {
 		_ = json.Unmarshal([]byte(r.Logics.ValueString()), &logics)
@@ -274,6 +280,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		ContextSchema: contextSchema,
 		Design:        design,
 		JourneyID:     journeyID,
+		JourneyType:   journeyType,
 		Logics:        logics,
 		Name:          name,
 		Rules:         rules,
@@ -327,6 +334,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 				}
 			}
 		}
+		r.JourneyType = types.StringPointerValue(resp.JourneyType)
 		r.JourneyID = types.StringPointerValue(resp.JourneyID)
 		if resp.Logics == nil {
 			r.Logics = types.StringNull()

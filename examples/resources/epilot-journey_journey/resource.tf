@@ -17,8 +17,9 @@ resource "epilot-journey_journey" "my_journey" {
       key = jsonencode("value"),
     }
   }
-  journey_id = "...my_journey_id..."
-  logics     = "{ \"see\": \"documentation\" }"
+  journey_id   = "...my_journey_id..."
+  journey_type = "Sales template (Premium)"
+  logics       = "{ \"see\": \"documentation\" }"
   manifest = [
     "123e4567-e89b-12d3-a456-426614174000"
   ]

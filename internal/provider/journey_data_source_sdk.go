@@ -53,6 +53,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 				}
 			}
 		}
+		r.JourneyType = types.StringPointerValue(resp.JourneyType)
 		r.JourneyID = types.StringPointerValue(resp.JourneyID)
 		if resp.Logics == nil {
 			r.Logics = types.StringNull()

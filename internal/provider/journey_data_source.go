@@ -33,6 +33,7 @@ type JourneyDataSourceModel struct {
 	ContextSchema []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
 	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
 	JourneyID     types.String                                    `tfsdk:"journey_id"`
+	JourneyType   types.String                                    `tfsdk:"journey_type"`
 	Logics        types.String                                    `tfsdk:"logics"`
 	Manifest      []types.String                                  `tfsdk:"manifest"`
 	Name          types.String                                    `tfsdk:"name"`
@@ -91,6 +92,10 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			},
 			"journey_id": schema.StringAttribute{
 				Computed: true,
+			},
+			"journey_type": schema.StringAttribute{
+				Computed:    true,
+				Description: `Journey Template`,
 			},
 			"logics": schema.StringAttribute{
 				Computed:    true,
