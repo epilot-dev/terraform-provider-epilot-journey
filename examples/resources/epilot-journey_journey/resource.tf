@@ -14,7 +14,7 @@ resource "epilot-journey_journey" "my_journey" {
     }
     logo_url = "...my_logo_url..."
     theme = {
-      key = jsonencode("value"),
+      key = jsonencode("value")
     }
   }
   journey_id   = "...my_journey_id..."
