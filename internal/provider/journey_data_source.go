@@ -7,7 +7,6 @@ import (
 	"fmt"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-journey/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -138,8 +137,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						Computed: true,
 					},
 					"address_suggestions_file_url": schema.StringAttribute{
-						Computed:    true,
-						Description: `@deprecated Use addressSuggestionsFileId instead`,
+						Computed:           true,
+						DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+						Description:        `@deprecated Use addressSuggestionsFileId instead`,
 					},
 					"description": schema.StringAttribute{
 						Computed: true,
@@ -260,13 +260,13 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	var id string
-	id = data.JourneyID.ValueString()
+	request, requestDiags := data.ToOperationsGetJourneyV2Request(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetJourneyV2Request{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.JourneysV2.GetJourneyV2(ctx, request)
+	res, err := r.client.JourneysV2.GetJourneyV2(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -278,10 +278,6 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -290,7 +286,11 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
+	resp.Diagnostics.Append(data.RefreshFromSharedJourneyCreationRequestV2(ctx, res.JourneyCreationRequestV2)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

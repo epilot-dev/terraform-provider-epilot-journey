@@ -641,18 +641,51 @@ func (o *JourneyCreationRequestSettings) GetUseNewDesign() *bool {
 	return o.UseNewDesign
 }
 
+type JourneyCreationRequestMaxWidth string
+
+const (
+	JourneyCreationRequestMaxWidthSmall      JourneyCreationRequestMaxWidth = "small"
+	JourneyCreationRequestMaxWidthMedium     JourneyCreationRequestMaxWidth = "medium"
+	JourneyCreationRequestMaxWidthLarge      JourneyCreationRequestMaxWidth = "large"
+	JourneyCreationRequestMaxWidthExtraLarge JourneyCreationRequestMaxWidth = "extra large"
+)
+
+func (e JourneyCreationRequestMaxWidth) ToPointer() *JourneyCreationRequestMaxWidth {
+	return &e
+}
+func (e *JourneyCreationRequestMaxWidth) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "small":
+		fallthrough
+	case "medium":
+		fallthrough
+	case "large":
+		fallthrough
+	case "extra large":
+		*e = JourneyCreationRequestMaxWidth(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for JourneyCreationRequestMaxWidth: %v", v)
+	}
+}
+
 type JourneyCreationRequestSteps struct {
-	HideNextButton    *bool   `json:"hideNextButton,omitempty"`
-	Name              string  `json:"name"`
-	Schema            any     `json:"schema"`
-	ShowStepName      *bool   `json:"showStepName,omitempty"`
-	ShowStepSubtitle  *bool   `json:"showStepSubtitle,omitempty"`
-	ShowStepper       *bool   `json:"showStepper,omitempty"`
-	ShowStepperLabels *bool   `json:"showStepperLabels,omitempty"`
-	StepID            *string `json:"stepId,omitempty"`
-	SubTitle          *string `json:"subTitle,omitempty"`
-	Title             *string `json:"title,omitempty"`
-	Uischema          any     `json:"uischema"`
+	HideNextButton    *bool                           `json:"hideNextButton,omitempty"`
+	MaxWidth          *JourneyCreationRequestMaxWidth `json:"maxWidth,omitempty"`
+	Name              string                          `json:"name"`
+	Schema            any                             `json:"schema"`
+	ShowStepName      *bool                           `json:"showStepName,omitempty"`
+	ShowStepSubtitle  *bool                           `json:"showStepSubtitle,omitempty"`
+	ShowStepper       *bool                           `json:"showStepper,omitempty"`
+	ShowStepperLabels *bool                           `json:"showStepperLabels,omitempty"`
+	StepID            *string                         `json:"stepId,omitempty"`
+	SubTitle          *string                         `json:"subTitle,omitempty"`
+	Title             *string                         `json:"title,omitempty"`
+	Uischema          any                             `json:"uischema"`
 }
 
 func (o *JourneyCreationRequestSteps) GetHideNextButton() *bool {
@@ -660,6 +693,13 @@ func (o *JourneyCreationRequestSteps) GetHideNextButton() *bool {
 		return nil
 	}
 	return o.HideNextButton
+}
+
+func (o *JourneyCreationRequestSteps) GetMaxWidth() *JourneyCreationRequestMaxWidth {
+	if o == nil {
+		return nil
+	}
+	return o.MaxWidth
 }
 
 func (o *JourneyCreationRequestSteps) GetName() string {

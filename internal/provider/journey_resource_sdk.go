@@ -3,14 +3,19 @@
 package provider
 
 import (
+	"context"
 	"encoding/json"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-journey/internal/provider/types"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
-	var manifest []string = []string{}
+func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Context) (*shared.JourneyCreationRequestV2, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	manifest := make([]string, 0, len(r.Manifest))
 	for _, manifestItem := range r.Manifest {
 		manifest = append(manifest, manifestItem.ValueString())
 	}
@@ -20,7 +25,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 	} else {
 		brandID = nil
 	}
-	var contextSchema []shared.JourneyCreationRequestV2ContextSchema = []shared.JourneyCreationRequestV2ContextSchema{}
+	contextSchema := make([]shared.JourneyCreationRequestV2ContextSchema, 0, len(r.ContextSchema))
 	for _, contextSchemaItem := range r.ContextSchema {
 		isRequired := new(bool)
 		if !contextSchemaItem.IsRequired.IsUnknown() && !contextSchemaItem.IsRequired.IsNull() {
@@ -90,7 +95,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 	var name string
 	name = r.Name.ValueString()
 
-	var rules []shared.JourneyCreationRequestV2Rules = []shared.JourneyCreationRequestV2Rules{}
+	rules := make([]shared.JourneyCreationRequestV2Rules, 0, len(r.Rules))
 	for _, rulesItem := range r.Rules {
 		var source string
 		source = rulesItem.Source.ValueString()
@@ -205,11 +210,11 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		} else {
 			entityID = nil
 		}
-		var entityTags []string = []string{}
+		entityTags := make([]string, 0, len(r.Settings.EntityTags))
 		for _, entityTagsItem := range r.Settings.EntityTags {
 			entityTags = append(entityTags, entityTagsItem.ValueString())
 		}
-		var filePurposes []string = []string{}
+		filePurposes := make([]string, 0, len(r.Settings.FilePurposes))
 		for _, filePurposesItem := range r.Settings.FilePurposes {
 			filePurposes = append(filePurposes, filePurposesItem.ValueString())
 		}
@@ -219,7 +224,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		} else {
 			mappingsAutomationID = nil
 		}
-		var runtimeEntities []shared.JourneyCreationRequestV2RuntimeEntities = []shared.JourneyCreationRequestV2RuntimeEntities{}
+		runtimeEntities := make([]shared.JourneyCreationRequestV2RuntimeEntities, 0, len(r.Settings.RuntimeEntities))
 		for _, runtimeEntitiesItem := range r.Settings.RuntimeEntities {
 			runtimeEntities = append(runtimeEntities, shared.JourneyCreationRequestV2RuntimeEntities(runtimeEntitiesItem.ValueString()))
 		}
@@ -287,12 +292,41 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 		Settings:      settings,
 		Steps:         steps,
 	}
-	return &out
+
+	return &out, diags
 }
 
-func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *shared.JourneyCreationRequestV2) {
+func (r *JourneyResourceModel) ToOperationsGetJourneyV2Request(ctx context.Context) (*operations.GetJourneyV2Request, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.JourneyID.ValueString()
+
+	out := operations.GetJourneyV2Request{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *JourneyResourceModel) ToOperationsRemoveJourneyV2Request(ctx context.Context) (*operations.RemoveJourneyV2Request, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.JourneyID.ValueString()
+
+	out := operations.RemoveJourneyV2Request{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(ctx context.Context, resp *shared.JourneyCreationRequestV2) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
-		r.Manifest = []types.String{}
+		r.Manifest = make([]types.String, 0, len(resp.Manifest))
 		for _, v := range resp.Manifest {
 			r.Manifest = append(r.Manifest, types.StringValue(v))
 		}
@@ -302,18 +336,18 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			r.ContextSchema = r.ContextSchema[:len(resp.ContextSchema)]
 		}
 		for contextSchemaCount, contextSchemaItem := range resp.ContextSchema {
-			var contextSchema1 tfTypes.JourneyCreationRequestV2ContextSchema
-			contextSchema1.IsRequired = types.BoolPointerValue(contextSchemaItem.IsRequired)
-			contextSchema1.ParamKey = types.StringValue(contextSchemaItem.ParamKey)
-			contextSchema1.ShouldLoadEntity = types.BoolPointerValue(contextSchemaItem.ShouldLoadEntity)
-			contextSchema1.Type = types.StringValue(contextSchemaItem.Type)
+			var contextSchema tfTypes.JourneyCreationRequestV2ContextSchema
+			contextSchema.IsRequired = types.BoolPointerValue(contextSchemaItem.IsRequired)
+			contextSchema.ParamKey = types.StringValue(contextSchemaItem.ParamKey)
+			contextSchema.ShouldLoadEntity = types.BoolPointerValue(contextSchemaItem.ShouldLoadEntity)
+			contextSchema.Type = types.StringValue(contextSchemaItem.Type)
 			if contextSchemaCount+1 > len(r.ContextSchema) {
-				r.ContextSchema = append(r.ContextSchema, contextSchema1)
+				r.ContextSchema = append(r.ContextSchema, contextSchema)
 			} else {
-				r.ContextSchema[contextSchemaCount].IsRequired = contextSchema1.IsRequired
-				r.ContextSchema[contextSchemaCount].ParamKey = contextSchema1.ParamKey
-				r.ContextSchema[contextSchemaCount].ShouldLoadEntity = contextSchema1.ShouldLoadEntity
-				r.ContextSchema[contextSchemaCount].Type = contextSchema1.Type
+				r.ContextSchema[contextSchemaCount].IsRequired = contextSchema.IsRequired
+				r.ContextSchema[contextSchemaCount].ParamKey = contextSchema.ParamKey
+				r.ContextSchema[contextSchemaCount].ShouldLoadEntity = contextSchema.ShouldLoadEntity
+				r.ContextSchema[contextSchemaCount].Type = contextSchema.Type
 			}
 		}
 		if resp.Design == nil {
@@ -327,7 +361,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			}
 			r.Design.LogoURL = types.StringPointerValue(resp.Design.LogoURL)
 			if len(resp.Design.Theme) > 0 {
-				r.Design.Theme = make(map[string]types.String)
+				r.Design.Theme = make(map[string]types.String, len(resp.Design.Theme))
 				for key, value := range resp.Design.Theme {
 					result, _ := json.Marshal(value)
 					r.Design.Theme[key] = types.StringValue(string(result))
@@ -348,18 +382,18 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 			r.Rules = r.Rules[:len(resp.Rules)]
 		}
 		for rulesCount, rulesItem := range resp.Rules {
-			var rules1 tfTypes.JourneyCreationRequestV2Rules
-			rules1.Source = types.StringValue(rulesItem.Source)
-			rules1.SourceType = types.StringValue(string(rulesItem.SourceType))
-			rules1.Target = types.StringValue(rulesItem.Target)
-			rules1.Type = types.StringValue(string(rulesItem.Type))
+			var rules tfTypes.JourneyCreationRequestV2Rules
+			rules.Source = types.StringValue(rulesItem.Source)
+			rules.SourceType = types.StringValue(string(rulesItem.SourceType))
+			rules.Target = types.StringValue(rulesItem.Target)
+			rules.Type = types.StringValue(string(rulesItem.Type))
 			if rulesCount+1 > len(r.Rules) {
-				r.Rules = append(r.Rules, rules1)
+				r.Rules = append(r.Rules, rules)
 			} else {
-				r.Rules[rulesCount].Source = rules1.Source
-				r.Rules[rulesCount].SourceType = rules1.SourceType
-				r.Rules[rulesCount].Target = rules1.Target
-				r.Rules[rulesCount].Type = rules1.Type
+				r.Rules[rulesCount].Source = rules.Source
+				r.Rules[rulesCount].SourceType = rules.SourceType
+				r.Rules[rulesCount].Target = rules.Target
+				r.Rules[rulesCount].Type = rules.Type
 			}
 		}
 		if resp.Settings == nil {
@@ -405,16 +439,16 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 				r.Settings.EmbedOptions.Width = types.StringPointerValue(resp.Settings.EmbedOptions.Width)
 			}
 			r.Settings.EntityID = types.StringPointerValue(resp.Settings.EntityID)
-			r.Settings.EntityTags = []types.String{}
+			r.Settings.EntityTags = make([]types.String, 0, len(resp.Settings.EntityTags))
 			for _, v := range resp.Settings.EntityTags {
 				r.Settings.EntityTags = append(r.Settings.EntityTags, types.StringValue(v))
 			}
-			r.Settings.FilePurposes = []types.String{}
+			r.Settings.FilePurposes = make([]types.String, 0, len(resp.Settings.FilePurposes))
 			for _, v := range resp.Settings.FilePurposes {
 				r.Settings.FilePurposes = append(r.Settings.FilePurposes, types.StringValue(v))
 			}
 			r.Settings.MappingsAutomationID = types.StringPointerValue(resp.Settings.MappingsAutomationID)
-			r.Settings.RuntimeEntities = []types.String{}
+			r.Settings.RuntimeEntities = make([]types.String, 0, len(resp.Settings.RuntimeEntities))
 			for _, v := range resp.Settings.RuntimeEntities {
 				r.Settings.RuntimeEntities = append(r.Settings.RuntimeEntities, types.StringValue(string(v)))
 			}
@@ -427,4 +461,6 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 		stepsResult, _ := json.Marshal(resp.Steps)
 		r.Steps = types.StringValue(string(stepsResult))
 	}
+
+	return diags
 }
