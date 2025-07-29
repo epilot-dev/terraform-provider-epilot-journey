@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type JourneyCreationRequestV2Design struct {
 	DesignTokens *JourneyCreationRequestV2DesignTokens `tfsdk:"design_tokens"`

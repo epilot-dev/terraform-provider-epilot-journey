@@ -477,6 +477,7 @@ type Settings struct {
 	TemplateID           *string           `json:"templateId,omitempty"`
 	// If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
 	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
+	UseAustrianLabels *bool `json:"useAustrianLabels,omitempty"`
 	UseNewDesign      *bool `json:"useNewDesign,omitempty"`
 }
 
@@ -634,6 +635,13 @@ func (o *Settings) GetThirdPartyCookies() *bool {
 	return o.ThirdPartyCookies
 }
 
+func (o *Settings) GetUseAustrianLabels() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.UseAustrianLabels
+}
+
 func (o *Settings) GetUseNewDesign() *bool {
 	if o == nil {
 		return nil
@@ -641,18 +649,51 @@ func (o *Settings) GetUseNewDesign() *bool {
 	return o.UseNewDesign
 }
 
+type MaxWidth string
+
+const (
+	MaxWidthSmall      MaxWidth = "small"
+	MaxWidthMedium     MaxWidth = "medium"
+	MaxWidthLarge      MaxWidth = "large"
+	MaxWidthExtraLarge MaxWidth = "extra large"
+)
+
+func (e MaxWidth) ToPointer() *MaxWidth {
+	return &e
+}
+func (e *MaxWidth) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "small":
+		fallthrough
+	case "medium":
+		fallthrough
+	case "large":
+		fallthrough
+	case "extra large":
+		*e = MaxWidth(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for MaxWidth: %v", v)
+	}
+}
+
 type Steps struct {
-	HideNextButton    *bool   `json:"hideNextButton,omitempty"`
-	Name              string  `json:"name"`
-	Schema            any     `json:"schema"`
-	ShowStepName      *bool   `json:"showStepName,omitempty"`
-	ShowStepSubtitle  *bool   `json:"showStepSubtitle,omitempty"`
-	ShowStepper       *bool   `json:"showStepper,omitempty"`
-	ShowStepperLabels *bool   `json:"showStepperLabels,omitempty"`
-	StepID            *string `json:"stepId,omitempty"`
-	SubTitle          *string `json:"subTitle,omitempty"`
-	Title             *string `json:"title,omitempty"`
-	Uischema          any     `json:"uischema"`
+	HideNextButton    *bool     `json:"hideNextButton,omitempty"`
+	MaxWidth          *MaxWidth `json:"maxWidth,omitempty"`
+	Name              string    `json:"name"`
+	Schema            any       `json:"schema"`
+	ShowStepName      *bool     `json:"showStepName,omitempty"`
+	ShowStepSubtitle  *bool     `json:"showStepSubtitle,omitempty"`
+	ShowStepper       *bool     `json:"showStepper,omitempty"`
+	ShowStepperLabels *bool     `json:"showStepperLabels,omitempty"`
+	StepID            *string   `json:"stepId,omitempty"`
+	SubTitle          *string   `json:"subTitle,omitempty"`
+	Title             *string   `json:"title,omitempty"`
+	Uischema          any       `json:"uischema"`
 }
 
 func (o *Steps) GetHideNextButton() *bool {
@@ -660,6 +701,13 @@ func (o *Steps) GetHideNextButton() *bool {
 		return nil
 	}
 	return o.HideNextButton
+}
+
+func (o *Steps) GetMaxWidth() *MaxWidth {
+	if o == nil {
+		return nil
+	}
+	return o.MaxWidth
 }
 
 func (o *Steps) GetName() string {

@@ -2,9 +2,12 @@
 
 package sdk
 
+// Generated from OpenAPI doc version 1.0.0 and generator version 2.667.0
+
 import (
 	"context"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/internal/config"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/internal/hooks"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/internal/utils"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
@@ -18,7 +21,7 @@ var ServerList = []string{
 	"https://journey-config.sls.epilot.io",
 }
 
-// HTTPClient provides an interface for suplying the SDK with a custom HTTP client
+// HTTPClient provides an interface for supplying the SDK with a custom HTTP client
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
@@ -44,37 +47,16 @@ func Float64(f float64) *float64 { return &f }
 // Pointer provides a helper function to return a pointer to a type
 func Pointer[T any](v T) *T { return &v }
 
-type sdkConfiguration struct {
-	Client            HTTPClient
-	Security          func(context.Context) (interface{}, error)
-	ServerURL         string
-	ServerIndex       int
-	Language          string
-	OpenAPIDocVersion string
-	SDKVersion        string
-	GenVersion        string
-	UserAgent         string
-	RetryConfig       *retry.Config
-	Hooks             *hooks.Hooks
-	Timeout           *time.Duration
-}
-
-func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
-	if c.ServerURL != "" {
-		return c.ServerURL, nil
-	}
-
-	return ServerList[c.ServerIndex], nil
-}
-
 // SDK - Journey API: API to configure journeys
 type SDK struct {
+	SDKVersion string
 	// Journey operations
 	Journeys *Journeys
 	// Journey V2 operations
 	JourneysV2 *JourneysV2
 
-	sdkConfiguration sdkConfiguration
+	sdkConfiguration config.SDKConfiguration
+	hooks            *hooks.Hooks
 }
 
 type SDKOption func(*SDK)
@@ -147,14 +129,12 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *SDK {
 	sdk := &SDK{
-		sdkConfiguration: sdkConfiguration{
-			Language:          "go",
-			OpenAPIDocVersion: "1.0.0",
-			SDKVersion:        "0.9.3",
-			GenVersion:        "2.497.0",
-			UserAgent:         "speakeasy-sdk/terraform 0.9.3 2.497.0 1.0.0 github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk",
-			Hooks:             hooks.New(),
+		SDKVersion: "0.10.0",
+		sdkConfiguration: config.SDKConfiguration{
+			UserAgent:  "speakeasy-sdk/terraform 0.10.0 2.667.0 1.0.0 github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk",
+			ServerList: ServerList,
 		},
+		hooks: hooks.New(),
 	}
 	for _, opt := range opts {
 		opt(sdk)
@@ -167,14 +147,13 @@ func New(opts ...SDKOption) *SDK {
 
 	currentServerURL, _ := sdk.sdkConfiguration.GetServerDetails()
 	serverURL := currentServerURL
-	serverURL, sdk.sdkConfiguration.Client = sdk.sdkConfiguration.Hooks.SDKInit(currentServerURL, sdk.sdkConfiguration.Client)
-	if serverURL != currentServerURL {
+	serverURL, sdk.sdkConfiguration.Client = sdk.hooks.SDKInit(currentServerURL, sdk.sdkConfiguration.Client)
+	if currentServerURL != serverURL {
 		sdk.sdkConfiguration.ServerURL = serverURL
 	}
 
-	sdk.Journeys = newJourneys(sdk.sdkConfiguration)
-
-	sdk.JourneysV2 = newJourneysV2(sdk.sdkConfiguration)
+	sdk.Journeys = newJourneys(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.JourneysV2 = newJourneysV2(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }
