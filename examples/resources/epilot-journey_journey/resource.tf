@@ -49,7 +49,8 @@ resource "epilot-journey_journey" "my_journey" {
       top_bar       = true
       width         = "...my_width..."
     }
-    entity_id = "...my_entity_id..."
+    enable_dark_mode = false
+    entity_id        = "...my_entity_id..."
     entity_tags = [
       "..."
     ]
@@ -57,6 +58,7 @@ resource "epilot-journey_journey" "my_journey" {
       "..."
     ]
     mappings_automation_id = "...my_mappings_automation_id..."
+    public_token           = "...my_public_token..."
     runtime_entities = [
       "ORDER"
     ]

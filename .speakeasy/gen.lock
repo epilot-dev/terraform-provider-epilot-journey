@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 724ae5d47948cef6896352bc1ce1b0ae
+  docChecksum: 56b18d96fef71c947dfbf156659dee9a
   docVersion: 1.0.0
   speakeasyVersion: 1.477.0
   generationVersion: 2.497.0
-  releaseVersion: 0.9.3
-  configChecksum: 2db41926b6090983cabcc6c1b7fc619e
+  releaseVersion: 0.9.8
+  configChecksum: 0e1fddde224b258daccf00d87b786de9
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -89,6 +89,7 @@ generatedFiles:
   - internal/sdk/models/operations/createjourney.go
   - internal/sdk/models/operations/createjourneyv2.go
   - internal/sdk/models/operations/generatedocument.go
+  - internal/sdk/models/operations/getbuttonoptions.go
   - internal/sdk/models/operations/getjourney.go
   - internal/sdk/models/operations/getjourneyproducts.go
   - internal/sdk/models/operations/getjourneysbyorgid.go
@@ -102,6 +103,7 @@ generatedFiles:
   - internal/sdk/models/operations/searchjourneys.go
   - internal/sdk/models/operations/updatejourney.go
   - internal/sdk/models/operations/updatejourneyv2.go
+  - internal/sdk/models/shared/buttonoption.go
   - internal/sdk/models/shared/generatedocumentrequest.go
   - internal/sdk/models/shared/generatedocumentresponse.go
   - internal/sdk/models/shared/getjourneysresponse.go
@@ -251,6 +253,20 @@ examples:
       responses:
         "200":
           application/json: {"canary": true, "organizationId": "739224"}
+        "404":
+          application/json: {"message": "journey not found"}
+        "500":
+          application/json: {"message": "Unknown API Error"}
+  getButtonOptions:
+    speakeasy-default-get-button-options:
+      parameters:
+        query:
+          fileId: "535ef74a-dd66-4d01-94a9-725016e70d1c"
+      responses:
+        "200":
+          application/json: [{"label": "Button Label", "value": "Button Hidden Value"}, {"label": "Button Label", "value": "Button Hidden Value"}]
+        "400":
+          application/json: {"details": "Please ensure your CSV file is properly encoded in UTF-8 format", "message": "UTF-8 encoding error while processing CSV content"}
         "404":
           application/json: {"message": "journey not found"}
         "500":

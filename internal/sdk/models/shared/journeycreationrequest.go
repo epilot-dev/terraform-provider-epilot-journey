@@ -457,10 +457,12 @@ type JourneyCreationRequestSettings struct {
 	// DEPRECATED - This API will return hardcoded value of false. Please note that this field is internal to epilot and should not be used by external clients. If you wish to get the canary flag, please use the /v1/journey/{id}/settings API.
 	//
 	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
-	Canary               *bool                                   `json:"canary,omitempty"`
-	Description          *string                                 `json:"description,omitempty"`
-	DesignID             string                                  `json:"designId"`
-	EmbedOptions         *JourneyCreationRequestEmbedOptions     `json:"embedOptions,omitempty"`
+	Canary       *bool                               `json:"canary,omitempty"`
+	Description  *string                             `json:"description,omitempty"`
+	DesignID     string                              `json:"designId"`
+	EmbedOptions *JourneyCreationRequestEmbedOptions `json:"embedOptions,omitempty"`
+	// If true, the journey shows an icon to toggle dark mode
+	EnableDarkMode       *bool                                   `json:"enableDarkMode,omitempty"`
 	EntityID             *string                                 `json:"entityId,omitempty"`
 	EntityTags           []string                                `json:"entityTags,omitempty"`
 	FilePurposes         []string                                `json:"filePurposes,omitempty"`
@@ -477,7 +479,12 @@ type JourneyCreationRequestSettings struct {
 	TemplateID           *string                                 `json:"templateId,omitempty"`
 	// If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
 	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
-	UseNewDesign      *bool `json:"useNewDesign,omitempty"`
+	// If true, some journey input labels are in Austrian format
+	UseAustrianLabels *bool `json:"useAustrianLabels,omitempty"`
+	// This property is deprecated and will be removed in a future version
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+	UseNewDesign *bool `json:"useNewDesign,omitempty"`
 }
 
 func (o *JourneyCreationRequestSettings) GetAccessMode() *JourneyCreationRequestAccessMode {
@@ -527,6 +534,13 @@ func (o *JourneyCreationRequestSettings) GetEmbedOptions() *JourneyCreationReque
 		return nil
 	}
 	return o.EmbedOptions
+}
+
+func (o *JourneyCreationRequestSettings) GetEnableDarkMode() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.EnableDarkMode
 }
 
 func (o *JourneyCreationRequestSettings) GetEntityID() *string {
@@ -634,6 +648,13 @@ func (o *JourneyCreationRequestSettings) GetThirdPartyCookies() *bool {
 	return o.ThirdPartyCookies
 }
 
+func (o *JourneyCreationRequestSettings) GetUseAustrianLabels() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.UseAustrianLabels
+}
+
 func (o *JourneyCreationRequestSettings) GetUseNewDesign() *bool {
 	if o == nil {
 		return nil
@@ -641,18 +662,51 @@ func (o *JourneyCreationRequestSettings) GetUseNewDesign() *bool {
 	return o.UseNewDesign
 }
 
+type JourneyCreationRequestMaxWidth string
+
+const (
+	JourneyCreationRequestMaxWidthSmall      JourneyCreationRequestMaxWidth = "small"
+	JourneyCreationRequestMaxWidthMedium     JourneyCreationRequestMaxWidth = "medium"
+	JourneyCreationRequestMaxWidthLarge      JourneyCreationRequestMaxWidth = "large"
+	JourneyCreationRequestMaxWidthExtraLarge JourneyCreationRequestMaxWidth = "extra large"
+)
+
+func (e JourneyCreationRequestMaxWidth) ToPointer() *JourneyCreationRequestMaxWidth {
+	return &e
+}
+func (e *JourneyCreationRequestMaxWidth) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "small":
+		fallthrough
+	case "medium":
+		fallthrough
+	case "large":
+		fallthrough
+	case "extra large":
+		*e = JourneyCreationRequestMaxWidth(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for JourneyCreationRequestMaxWidth: %v", v)
+	}
+}
+
 type JourneyCreationRequestSteps struct {
-	HideNextButton    *bool   `json:"hideNextButton,omitempty"`
-	Name              string  `json:"name"`
-	Schema            any     `json:"schema"`
-	ShowStepName      *bool   `json:"showStepName,omitempty"`
-	ShowStepSubtitle  *bool   `json:"showStepSubtitle,omitempty"`
-	ShowStepper       *bool   `json:"showStepper,omitempty"`
-	ShowStepperLabels *bool   `json:"showStepperLabels,omitempty"`
-	StepID            *string `json:"stepId,omitempty"`
-	SubTitle          *string `json:"subTitle,omitempty"`
-	Title             *string `json:"title,omitempty"`
-	Uischema          any     `json:"uischema"`
+	HideNextButton    *bool                           `json:"hideNextButton,omitempty"`
+	MaxWidth          *JourneyCreationRequestMaxWidth `json:"maxWidth,omitempty"`
+	Name              string                          `json:"name"`
+	Schema            any                             `json:"schema"`
+	ShowStepName      *bool                           `json:"showStepName,omitempty"`
+	ShowStepSubtitle  *bool                           `json:"showStepSubtitle,omitempty"`
+	ShowStepper       *bool                           `json:"showStepper,omitempty"`
+	ShowStepperLabels *bool                           `json:"showStepperLabels,omitempty"`
+	StepID            *string                         `json:"stepId,omitempty"`
+	SubTitle          *string                         `json:"subTitle,omitempty"`
+	Title             *string                         `json:"title,omitempty"`
+	Uischema          any                             `json:"uischema"`
 }
 
 func (o *JourneyCreationRequestSteps) GetHideNextButton() *bool {
@@ -660,6 +714,13 @@ func (o *JourneyCreationRequestSteps) GetHideNextButton() *bool {
 		return nil
 	}
 	return o.HideNextButton
+}
+
+func (o *JourneyCreationRequestSteps) GetMaxWidth() *JourneyCreationRequestMaxWidth {
+	if o == nil {
+		return nil
+	}
+	return o.MaxWidth
 }
 
 func (o *JourneyCreationRequestSteps) GetName() string {

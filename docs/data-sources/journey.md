@@ -81,16 +81,18 @@ Read-Only:
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))
+- `enable_dark_mode` (Boolean) If true, the journey shows an icon to toggle dark mode
 - `entity_id` (String)
 - `entity_tags` (List of String)
 - `file_purposes` (List of String)
 - `mappings_automation_id` (String)
+- `public_token` (String)
 - `runtime_entities` (List of String)
 - `safe_mode_automation` (Boolean)
 - `targeted_customer` (String)
 - `template_id` (String)
 - `third_party_cookies` (Boolean) If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
-- `use_new_design` (Boolean)
+- `use_new_design` (Boolean) This property is deprecated and will be removed in a future version
 
 <a id="nestedatt--settings--embed_options"></a>
 ### Nested Schema for `settings.embed_options`

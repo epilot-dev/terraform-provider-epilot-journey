@@ -199,6 +199,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 				Width:       width,
 			}
 		}
+		enableDarkMode := new(bool)
+		if !r.Settings.EnableDarkMode.IsUnknown() && !r.Settings.EnableDarkMode.IsNull() {
+			*enableDarkMode = r.Settings.EnableDarkMode.ValueBool()
+		} else {
+			enableDarkMode = nil
+		}
 		entityID := new(string)
 		if !r.Settings.EntityID.IsUnknown() && !r.Settings.EntityID.IsNull() {
 			*entityID = r.Settings.EntityID.ValueString()
@@ -218,6 +224,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 			*mappingsAutomationID = r.Settings.MappingsAutomationID.ValueString()
 		} else {
 			mappingsAutomationID = nil
+		}
+		publicToken := new(string)
+		if !r.Settings.PublicToken.IsUnknown() && !r.Settings.PublicToken.IsNull() {
+			*publicToken = r.Settings.PublicToken.ValueString()
+		} else {
+			publicToken = nil
 		}
 		var runtimeEntities []shared.JourneyCreationRequestV2RuntimeEntities = []shared.JourneyCreationRequestV2RuntimeEntities{}
 		for _, runtimeEntitiesItem := range r.Settings.RuntimeEntities {
@@ -260,10 +272,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2() *shared.Journe
 			Description:               description,
 			DesignID:                  designID,
 			EmbedOptions:              embedOptions,
+			EnableDarkMode:            enableDarkMode,
 			EntityID:                  entityID,
 			EntityTags:                entityTags,
 			FilePurposes:              filePurposes,
 			MappingsAutomationID:      mappingsAutomationID,
+			PublicToken:               publicToken,
 			RuntimeEntities:           runtimeEntities,
 			SafeModeAutomation:        safeModeAutomation,
 			TargetedCustomer:          targetedCustomer,
@@ -404,6 +418,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 				r.Settings.EmbedOptions.TopBar = types.BoolPointerValue(resp.Settings.EmbedOptions.TopBar)
 				r.Settings.EmbedOptions.Width = types.StringPointerValue(resp.Settings.EmbedOptions.Width)
 			}
+			r.Settings.EnableDarkMode = types.BoolPointerValue(resp.Settings.EnableDarkMode)
 			r.Settings.EntityID = types.StringPointerValue(resp.Settings.EntityID)
 			r.Settings.EntityTags = []types.String{}
 			for _, v := range resp.Settings.EntityTags {
@@ -414,6 +429,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(resp *s
 				r.Settings.FilePurposes = append(r.Settings.FilePurposes, types.StringValue(v))
 			}
 			r.Settings.MappingsAutomationID = types.StringPointerValue(resp.Settings.MappingsAutomationID)
+			r.Settings.PublicToken = types.StringPointerValue(resp.Settings.PublicToken)
 			r.Settings.RuntimeEntities = []types.String{}
 			for _, v := range resp.Settings.RuntimeEntities {
 				r.Settings.RuntimeEntities = append(r.Settings.RuntimeEntities, types.StringValue(string(v)))

@@ -123,6 +123,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 				r.Settings.EmbedOptions.TopBar = types.BoolPointerValue(resp.Settings.EmbedOptions.TopBar)
 				r.Settings.EmbedOptions.Width = types.StringPointerValue(resp.Settings.EmbedOptions.Width)
 			}
+			r.Settings.EnableDarkMode = types.BoolPointerValue(resp.Settings.EnableDarkMode)
 			r.Settings.EntityID = types.StringPointerValue(resp.Settings.EntityID)
 			r.Settings.EntityTags = []types.String{}
 			for _, v := range resp.Settings.EntityTags {
@@ -133,6 +134,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(resp 
 				r.Settings.FilePurposes = append(r.Settings.FilePurposes, types.StringValue(v))
 			}
 			r.Settings.MappingsAutomationID = types.StringPointerValue(resp.Settings.MappingsAutomationID)
+			r.Settings.PublicToken = types.StringPointerValue(resp.Settings.PublicToken)
 			r.Settings.RuntimeEntities = []types.String{}
 			for _, v := range resp.Settings.RuntimeEntities {
 				r.Settings.RuntimeEntities = append(r.Settings.RuntimeEntities, types.StringValue(string(v)))

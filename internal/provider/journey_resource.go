@@ -291,6 +291,11 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 							},
 						},
 					},
+					"enable_dark_mode": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `If true, the journey shows an icon to toggle dark mode`,
+					},
 					"entity_id": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
@@ -306,6 +311,10 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						ElementType: types.StringType,
 					},
 					"mappings_automation_id": schema.StringAttribute{
+						Computed: true,
+						Optional: true,
+					},
+					"public_token": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
 					},
@@ -332,8 +341,9 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Description: `If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.`,
 					},
 					"use_new_design": schema.BoolAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:    true,
+						Optional:    true,
+						Description: `This property is deprecated and will be removed in a future version`,
 					},
 				},
 			},

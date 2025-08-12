@@ -17,7 +17,7 @@ terraform {
   required_providers {
     epilot-journey = {
       source  = "epilot-dev/epilot-journey"
-      version = "0.9.3"
+      version = "0.9.8"
     }
   }
 }

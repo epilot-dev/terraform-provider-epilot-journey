@@ -374,21 +374,27 @@ type JourneyCreationRequestV2Settings struct {
 	// @deprecated Use addressSuggestionsFileId instead
 	//
 	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
-	AddressSuggestionsFileURL *string                                   `json:"addressSuggestionsFileUrl,omitempty"`
-	Description               *string                                   `json:"description,omitempty"`
-	DesignID                  *string                                   `json:"designId,omitempty"`
-	EmbedOptions              *JourneyCreationRequestV2EmbedOptions     `json:"embedOptions,omitempty"`
-	EntityID                  *string                                   `json:"entityId,omitempty"`
-	EntityTags                []string                                  `json:"entityTags,omitempty"`
-	FilePurposes              []string                                  `json:"filePurposes,omitempty"`
-	MappingsAutomationID      *string                                   `json:"mappingsAutomationId,omitempty"`
-	RuntimeEntities           []JourneyCreationRequestV2RuntimeEntities `json:"runtimeEntities,omitempty"`
-	SafeModeAutomation        *bool                                     `json:"safeModeAutomation,omitempty"`
-	TargetedCustomer          *string                                   `json:"targetedCustomer,omitempty"`
-	TemplateID                *string                                   `json:"templateId,omitempty"`
+	AddressSuggestionsFileURL *string                               `json:"addressSuggestionsFileUrl,omitempty"`
+	Description               *string                               `json:"description,omitempty"`
+	DesignID                  *string                               `json:"designId,omitempty"`
+	EmbedOptions              *JourneyCreationRequestV2EmbedOptions `json:"embedOptions,omitempty"`
+	// If true, the journey shows an icon to toggle dark mode
+	EnableDarkMode       *bool                                     `json:"enableDarkMode,omitempty"`
+	EntityID             *string                                   `json:"entityId,omitempty"`
+	EntityTags           []string                                  `json:"entityTags,omitempty"`
+	FilePurposes         []string                                  `json:"filePurposes,omitempty"`
+	MappingsAutomationID *string                                   `json:"mappingsAutomationId,omitempty"`
+	PublicToken          *string                                   `json:"publicToken,omitempty"`
+	RuntimeEntities      []JourneyCreationRequestV2RuntimeEntities `json:"runtimeEntities,omitempty"`
+	SafeModeAutomation   *bool                                     `json:"safeModeAutomation,omitempty"`
+	TargetedCustomer     *string                                   `json:"targetedCustomer,omitempty"`
+	TemplateID           *string                                   `json:"templateId,omitempty"`
 	// If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
 	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
-	UseNewDesign      *bool `json:"useNewDesign,omitempty"`
+	// This property is deprecated and will be removed in a future version
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+	UseNewDesign *bool `json:"useNewDesign,omitempty"`
 }
 
 func (o *JourneyCreationRequestV2Settings) GetAccessMode() *JourneyCreationRequestV2AccessMode {
@@ -433,6 +439,13 @@ func (o *JourneyCreationRequestV2Settings) GetEmbedOptions() *JourneyCreationReq
 	return o.EmbedOptions
 }
 
+func (o *JourneyCreationRequestV2Settings) GetEnableDarkMode() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.EnableDarkMode
+}
+
 func (o *JourneyCreationRequestV2Settings) GetEntityID() *string {
 	if o == nil {
 		return nil
@@ -459,6 +472,13 @@ func (o *JourneyCreationRequestV2Settings) GetMappingsAutomationID() *string {
 		return nil
 	}
 	return o.MappingsAutomationID
+}
+
+func (o *JourneyCreationRequestV2Settings) GetPublicToken() *string {
+	if o == nil {
+		return nil
+	}
+	return o.PublicToken
 }
 
 func (o *JourneyCreationRequestV2Settings) GetRuntimeEntities() []JourneyCreationRequestV2RuntimeEntities {
