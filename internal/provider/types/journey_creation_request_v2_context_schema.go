@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type JourneyCreationRequestV2ContextSchema struct {
 	IsRequired       types.Bool   `tfsdk:"is_required"`

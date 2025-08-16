@@ -7,10 +7,10 @@ import (
 	"fmt"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-journey/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators"
 	speakeasy_objectvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/objectvalidators"
 	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-journey/internal/validators/stringvalidators"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -31,6 +31,7 @@ func NewJourneyResource() resource.Resource {
 
 // JourneyResource defines the resource implementation.
 type JourneyResource struct {
+	// Provider configured SDK client.
 	client *sdk.SDK
 }
 
@@ -41,12 +42,12 @@ type JourneyResourceModel struct {
 	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
 	JourneyID     types.String                                    `tfsdk:"journey_id"`
 	JourneyType   types.String                                    `tfsdk:"journey_type"`
-	Logics        types.String                                    `tfsdk:"logics"`
+	Logics        jsontypes.Normalized                            `tfsdk:"logics"`
 	Manifest      []types.String                                  `tfsdk:"manifest"`
 	Name          types.String                                    `tfsdk:"name"`
 	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
 	Settings      *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
-	Steps         types.String                                    `tfsdk:"steps"`
+	Steps         jsontypes.Normalized                            `tfsdk:"steps"`
 }
 
 func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -111,7 +112,7 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 					"theme": schema.MapAttribute{
 						Computed:    true,
 						Optional:    true,
-						ElementType: types.StringType,
+						ElementType: jsontypes.NormalizedType{},
 						Validators: []validator.Map{
 							mapvalidator.ValueStringsAre(validators.IsValidJSON()),
 						},
@@ -128,12 +129,10 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Description: `Journey Template`,
 			},
 			"logics": schema.StringAttribute{
+				CustomType:  jsontypes.NormalizedType{},
 				Computed:    true,
 				Optional:    true,
 				Description: `Parsed as JSON.`,
-				Validators: []validator.String{
-					validators.IsValidJSON(),
-				},
 			},
 			"manifest": schema.ListAttribute{
 				Computed:    true,
@@ -216,9 +215,10 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Optional: true,
 					},
 					"address_suggestions_file_url": schema.StringAttribute{
-						Computed:    true,
-						Optional:    true,
-						Description: `@deprecated Use addressSuggestionsFileId instead`,
+						Computed:           true,
+						Optional:           true,
+						DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+						Description:        `@deprecated Use addressSuggestionsFileId instead`,
 					},
 					"description": schema.StringAttribute{
 						Computed: true,
@@ -341,18 +341,17 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Description: `If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.`,
 					},
 					"use_new_design": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
-						Description: `This property is deprecated and will be removed in a future version`,
+						Computed:           true,
+						Optional:           true,
+						DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+						Description:        `This property is deprecated and will be removed in a future version`,
 					},
 				},
 			},
 			"steps": schema.StringAttribute{
+				CustomType:  jsontypes.NormalizedType{},
 				Required:    true,
 				Description: `Parsed as JSON.`,
-				Validators: []validator.String{
-					validators.IsValidJSON(),
-				},
 			},
 		},
 	}
@@ -396,7 +395,12 @@ func (r *JourneyResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
-	request := data.ToSharedJourneyCreationRequestV2()
+	request, requestDiags := data.ToSharedJourneyCreationRequestV2(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	res, err := r.client.JourneysV2.CreateJourneyV2(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -417,8 +421,17 @@ func (r *JourneyResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedJourneyCreationRequestV2(ctx, res.JourneyCreationRequestV2)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -442,13 +455,13 @@ func (r *JourneyResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
-	var id string
-	id = data.JourneyID.ValueString()
+	request, requestDiags := data.ToOperationsGetJourneyV2Request(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetJourneyV2Request{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.JourneysV2.GetJourneyV2(ctx, request)
+	res, err := r.client.JourneysV2.GetJourneyV2(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -472,7 +485,11 @@ func (r *JourneyResource) Read(ctx context.Context, req resource.ReadRequest, re
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
+	resp.Diagnostics.Append(data.RefreshFromSharedJourneyCreationRequestV2(ctx, res.JourneyCreationRequestV2)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -492,7 +509,12 @@ func (r *JourneyResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 
-	request := data.ToSharedJourneyCreationRequestV2()
+	request, requestDiags := data.ToSharedJourneyCreationRequestV2(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	res, err := r.client.JourneysV2.UpdateJourneyV2(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -513,8 +535,17 @@ func (r *JourneyResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedJourneyCreationRequestV2(ctx, res.JourneyCreationRequestV2)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -538,13 +569,13 @@ func (r *JourneyResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	var id string
-	id = data.JourneyID.ValueString()
+	request, requestDiags := data.ToOperationsRemoveJourneyV2Request(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.RemoveJourneyV2Request{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.JourneysV2.RemoveJourneyV2(ctx, request)
+	res, err := r.client.JourneysV2.RemoveJourneyV2(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

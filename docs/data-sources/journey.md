@@ -77,7 +77,7 @@ Read-Only:
 
 - `access_mode` (String)
 - `address_suggestions_file_id` (String)
-- `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
+- `address_suggestions_file_url` (String, Deprecated) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))
@@ -92,7 +92,7 @@ Read-Only:
 - `targeted_customer` (String)
 - `template_id` (String)
 - `third_party_cookies` (Boolean) If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
-- `use_new_design` (Boolean) This property is deprecated and will be removed in a future version
+- `use_new_design` (Boolean, Deprecated) This property is deprecated and will be removed in a future version
 
 <a id="nestedatt--settings--embed_options"></a>
 ### Nested Schema for `settings.embed_options`
