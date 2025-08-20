@@ -2,10 +2,13 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type JourneyCreationRequestV2Design struct {
 	DesignTokens *JourneyCreationRequestV2DesignTokens `tfsdk:"design_tokens"`
 	LogoURL      types.String                          `tfsdk:"logo_url"`
-	Theme        map[string]types.String               `tfsdk:"theme"`
+	Theme        map[string]jsontypes.Normalized       `tfsdk:"theme"`
 }

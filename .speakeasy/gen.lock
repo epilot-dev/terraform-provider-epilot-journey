@@ -3,10 +3,10 @@ id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
   docChecksum: 56b18d96fef71c947dfbf156659dee9a
   docVersion: 1.0.0
-  speakeasyVersion: 1.477.0
-  generationVersion: 2.497.0
-  releaseVersion: 0.9.8
-  configChecksum: 0e1fddde224b258daccf00d87b786de9
+  speakeasyVersion: 1.606.0
+  generationVersion: 2.686.7
+  releaseVersion: 0.10.0
+  configChecksum: fbdf82f177622e00126681de6f79746f
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -14,27 +14,29 @@ features:
   terraform:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
-    constsAndDefaults: 0.2.0
-    core: 3.29.0
-    deprecations: 2.81.1
-    envVarSecurityUsage: 0.1.0
-    globalSecurity: 2.81.9
-    globalServerURLs: 2.82.1
-    methodSecurity: 2.82.1
+    constsAndDefaults: 0.2.1
+    core: 3.44.1
+    deprecations: 2.82.0
+    globalSecurity: 2.81.12
+    globalServerURLs: 2.83.0
+    methodSecurity: 2.82.2
     nullables: 0.0.0
-    retries: 2.81.2
+    retries: 2.81.4
 generatedFiles:
   - .gitattributes
   - USAGE.md
   - examples/README.md
   - examples/data-sources/epilot-journey_journey/data-source.tf
   - examples/provider/provider.tf
+  - examples/resources/epilot-journey_journey/import-by-string-id.tf
   - examples/resources/epilot-journey_journey/import.sh
   - examples/resources/epilot-journey_journey/resource.tf
   - go.mod
   - go.sum
   - internal/planmodifiers/boolplanmodifier/suppress_diff.go
+  - internal/planmodifiers/float32planmodifier/suppress_diff.go
   - internal/planmodifiers/float64planmodifier/suppress_diff.go
+  - internal/planmodifiers/int32planmodifier/suppress_diff.go
   - internal/planmodifiers/int64planmodifier/suppress_diff.go
   - internal/planmodifiers/listplanmodifier/suppress_diff.go
   - internal/planmodifiers/mapplanmodifier/suppress_diff.go
@@ -62,6 +64,9 @@ generatedFiles:
   - internal/provider/reflect/primitive.go
   - internal/provider/reflect/slice.go
   - internal/provider/reflect/struct.go
+  - internal/provider/typeconvert/date.go
+  - internal/provider/typeconvert/datetime.go
+  - internal/provider/typeconvert/int.go
   - internal/provider/types/journey_creation_request_v2_button.go
   - internal/provider/types/journey_creation_request_v2_context_schema.go
   - internal/provider/types/journey_creation_request_v2_design.go
@@ -71,6 +76,8 @@ generatedFiles:
   - internal/provider/types/journey_creation_request_v2_settings.go
   - internal/provider/utils.go
   - internal/sdk/.gitattributes
+  - internal/sdk/docs/models/operations/option.md
+  - internal/sdk/internal/config/sdkconfiguration.go
   - internal/sdk/internal/hooks/hooks.go
   - internal/sdk/internal/utils/contenttype.go
   - internal/sdk/internal/utils/env.go
@@ -131,7 +138,9 @@ generatedFiles:
   - internal/validators/JSONParseValidator.go
   - internal/validators/RFC3339Validator.go
   - internal/validators/boolvalidators/not_null.go
+  - internal/validators/float32validators/not_null.go
   - internal/validators/float64validators/not_null.go
+  - internal/validators/int32validators/not_null.go
   - internal/validators/int64validators/not_null.go
   - internal/validators/listvalidators/not_null.go
   - internal/validators/mapvalidators/not_null.go
@@ -152,32 +161,44 @@ examples:
         application/json: {"journey_type": "Sales template (Premium)", "name": "<value>", "organizationId": "<id>", "steps": []}
       responses:
         "201":
-          application/json: {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "1709314658169", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<id>", "revisions": 4411.54, "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}, {"name": "<value>", "schema": "<value>", "uischema": "<value>"}], "version": 4985.89}
+          application/json: {"createdAt": "1729847636917", "journey_type": "Sales template (Premium)", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<id>", "revisions": 6078.58, "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}], "version": 9247.99}
   generateDocument:
     speakeasy-default-generate-document:
       requestBody:
         application/json: {"context_data": {}, "file_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "language": "de"}
       responses:
         "200":
-          application/json: {"docx_output": {"output_document": {"s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.docx"}, "pdf_output": {"output_document": {"s3ref": {"bucket": "document-api-prod", "key": "uploads/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.pdf"}, "template_settings": {"custom_margins": {"bottom": 2.54, "top": 2.54}, "display_margin_guidelines": true, "enable_data_table_margin_autofix": false, "enabled_template_settings_persistence": false, "file_entity_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "misconfigured_margins": false, "suggested_margins": {"bottom": 2.54, "top": 2.54}, "template_with_datatable": false}}
+          application/json: {"docx_output": {"output_document": {"s3ref": {"bucket": "document-api-preview-prod", "key": "preview/my-template.docx"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.docx"}, "pdf_output": {"output_document": {"s3ref": {"bucket": "document-api-preview-prod", "key": "preview/my-template.pdf"}}, "preview_url": "https://document-api-prod.s3.eu-central-1.amazonaws.com/preview/my-template-OR-001.pdf"}, "template_settings": {"custom_margins": {"bottom": 2.54, "top": 2.54}, "display_margin_guidelines": true, "enable_data_table_margin_autofix": false, "enabled_template_settings_persistence": false, "file_entity_id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "misconfigured_margins": false, "suggested_margins": {"bottom": 2.54, "top": 2.54}, "template_with_datatable": false}}
+  getButtonOptions:
+    speakeasy-default-get-button-options:
+      parameters:
+        query:
+          fileId: "535ef74a-dd66-4d01-94a9-725016e70d1c"
+      responses:
+        "200":
+          application/json: [{"label": "Button Label", "value": "Button Hidden Value"}]
+        "400":
+          application/json: {"details": "Please ensure your CSV file is properly encoded in UTF-8 format", "message": "UTF-8 encoding error while processing CSV content"}
+        "404":
+          application/json: {"message": "journey not found"}
+        "500":
+          application/json: {"message": "Unknown API Error"}
   getJourney:
     speakeasy-default-get-journey:
       parameters:
         path:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
-        query: {}
       responses:
         "200":
-          application/json: {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "1728083977876", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<id>", "revisions": 6451.24, "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}, {"name": "<value>", "schema": "<value>", "uischema": "<value>"}, {"name": "<value>", "schema": "<value>", "uischema": "<value>"}], "version": 3426.2}
+          application/json: {"createdAt": "1727633097744", "journey_type": "Sales template (Premium)", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<id>", "revisions": 6707.32, "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}], "version": 1167.65}
   getJourneyProducts:
     speakeasy-default-get-journey-products:
       parameters:
         path:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
-        query: {}
       responses:
         "200":
-          application/json: [{}, {}, {}]
+          application/json: [{}]
   getJourneysByOrgId:
     speakeasy-default-get-journeys-by-org-id:
       parameters:
@@ -188,63 +209,6 @@ examples:
       responses:
         "200":
           application/json: {}
-  patchUpdateJourney:
-    "":
-      requestBody:
-        application/json: {"journeyId": "509cdffe-424f-457a-95c2-9708c304ce77", "name": "New Journey Name", "steps[0].uischema.elements[0].products": ["123456", "654321"]}
-      responses:
-        "200":
-          application/json: {"createdJourney": {"0": "<", "1": "v", "2": "a", "3": "l", "4": "u", "5": "e", "6": ">", "createdAt": "1712183871282", "journey_type": "Sales template (Premium)", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<id>", "revisions": 8805.09, "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}, {"name": "<value>", "schema": "<value>", "uischema": "<value>"}], "version": 3005.6}}
-  removeJourney:
-    speakeasy-default-remove-journey:
-      parameters:
-        path:
-          id: "509cdffe-424f-457a-95c2-9708c304ce77"
-  searchJourneys:
-    speakeasy-default-search-journeys:
-      requestBody:
-        application/json: {"from": 0, "q": "_tags:*Flex*", "size": 25, "sort": "_created_at:desc"}
-      responses:
-        "200":
-          application/json: {"hits": 1, "results": [{"_created_at": "2020-01-01T00:00:00.000Z", "_id": "e0f8f8f8-f8f8-f8f8-f8f8-f8f8f8f8f8f8", "_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "_org": "739224", "_schema": "journey", "_tags": ["Flex"], "_title": "Journey Entity Title", "_updated_at": "2020-01-01T00:00:00.000Z", "created_by": [{"id": "12345"}, {"id": "12345"}], "design": "Design EPILOT", "journey_id": "de7df470-253e-11ed-9174-116b8a718c0a", "journey_name": "Journey Name", "journey_type": "Sales template"}]}
-  updateJourney:
-    speakeasy-default-update-journey:
-      requestBody:
-        application/json: {"journey_type": "Sales template (Premium)", "name": "<value>", "organizationId": "<id>", "steps": []}
-  createJourneyV2:
-    speakeasy-default-create-journey-v2:
-      requestBody:
-        application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": "<value>"}
-      responses:
-        "201":
-          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": "<value>"}
-  getJourneyV2:
-    speakeasy-default-get-journey-v2:
-      parameters:
-        path:
-          id: "509cdffe-424f-457a-95c2-9708c304ce77"
-      responses:
-        "200":
-          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": "<value>"}
-  patchUpdateJourneyV2:
-    "":
-      requestBody:
-        application/json: {"journeyId": "509cdffe-424f-457a-95c2-9708c304ce77", "name": "New Journey Name", "steps[0].uischema.elements[0].products": ["123456", "654321"]}
-      responses:
-        "200":
-          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": "<value>"}
-  removeJourneyV2:
-    speakeasy-default-remove-journey-v2:
-      parameters:
-        path:
-          id: "509cdffe-424f-457a-95c2-9708c304ce77"
-  updateJourneyV2:
-    speakeasy-default-update-journey-v2:
-      requestBody:
-        application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": "<value>"}
-      responses:
-        "200":
-          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "name": "<value>", "steps": "<value>"}
   getSettingsForJourney:
     speakeasy-default-get-settings-for-journey:
       parameters:
@@ -257,19 +221,62 @@ examples:
           application/json: {"message": "journey not found"}
         "500":
           application/json: {"message": "Unknown API Error"}
-  getButtonOptions:
-    speakeasy-default-get-button-options:
-      parameters:
-        query:
-          fileId: "535ef74a-dd66-4d01-94a9-725016e70d1c"
+  patchUpdateJourney:
+    speakeasy-default-patch-update-journey:
+      requestBody:
+        application/json: {"journeyId": "509cdffe-424f-457a-95c2-9708c304ce77"}
       responses:
         "200":
-          application/json: [{"label": "Button Label", "value": "Button Hidden Value"}, {"label": "Button Label", "value": "Button Hidden Value"}]
-        "400":
-          application/json: {"details": "Please ensure your CSV file is properly encoded in UTF-8 format", "message": "UTF-8 encoding error while processing CSV content"}
-        "404":
-          application/json: {"message": "journey not found"}
-        "500":
-          application/json: {"message": "Unknown API Error"}
-examplesVersion: 1.0.0
+          application/json: {"createdJourney": {"createdAt": "1721120820491", "journey_type": "Sales template (Premium)", "lastModifiedAt": "<value>", "name": "<value>", "organizationId": "<id>", "revisions": 8793.32, "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}], "version": 3283.38}}
+  removeJourney:
+    speakeasy-default-remove-journey:
+      parameters:
+        path:
+          id: "509cdffe-424f-457a-95c2-9708c304ce77"
+  searchJourneys:
+    speakeasy-default-search-journeys:
+      requestBody:
+        application/json: {"from": 0, "q": "_tags:*Flex*", "size": 25, "sort": "_created_at:desc"}
+      responses:
+        "200":
+          application/json: {"hits": 1, "results": [{"_created_at": "2020-01-01T00:00:00.000Z", "_id": "e0f8f8f8-f8f8-f8f8-f8f8-f8f8f8f8f8f8", "_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "_org": "739224", "_schema": "journey", "_tags": ["Flex"], "_title": "Journey Entity Title", "_updated_at": "2020-01-01T00:00:00.000Z", "created_by": [{"id": "12345"}], "design": "Design EPILOT", "journey_id": "de7df470-253e-11ed-9174-116b8a718c0a", "journey_name": "Journey Name", "journey_type": "Sales template"}]}
+  updateJourney:
+    speakeasy-default-update-journey:
+      requestBody:
+        application/json: {"journey_type": "Sales template (Premium)", "name": "<value>", "organizationId": "<id>", "steps": [{"name": "<value>", "schema": "<value>", "uischema": "<value>"}]}
+  createJourneyV2:
+    speakeasy-default-create-journey-v2:
+      requestBody:
+        application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "journey_type": "Sales template (Premium)", "name": "<value>", "steps": "<value>"}
+      responses:
+        "201":
+          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "journey_type": "Sales template (Premium)", "name": "<value>", "steps": "<value>"}
+  getJourneyV2:
+    speakeasy-default-get-journey-v2:
+      parameters:
+        path:
+          id: "509cdffe-424f-457a-95c2-9708c304ce77"
+      responses:
+        "200":
+          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "journey_type": "Sales template (Premium)", "name": "<value>", "steps": "<value>"}
+  patchUpdateJourneyV2:
+    speakeasy-default-patch-update-journey-v2:
+      requestBody:
+        application/json: {"journeyId": "509cdffe-424f-457a-95c2-9708c304ce77"}
+      responses:
+        "200":
+          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "journey_type": "Sales template (Premium)", "name": "<value>", "steps": "<value>"}
+  removeJourneyV2:
+    speakeasy-default-remove-journey-v2:
+      parameters:
+        path:
+          id: "509cdffe-424f-457a-95c2-9708c304ce77"
+  updateJourneyV2:
+    speakeasy-default-update-journey-v2:
+      requestBody:
+        application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "journey_type": "Sales template (Premium)", "name": "<value>", "steps": "<value>"}
+      responses:
+        "200":
+          application/json: {"_manifest": ["123e4567-e89b-12d3-a456-426614174000"], "journey_type": "Sales template (Premium)", "name": "<value>", "steps": "<value>"}
+examplesVersion: 1.0.2
 generatedTests: {}

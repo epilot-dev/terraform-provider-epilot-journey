@@ -29,7 +29,7 @@ resource "epilot-journey_journey" "my_journey" {
     }
     logo_url = "...my_logo_url..."
     theme = {
-      key = jsonencode("value"),
+      key = jsonencode("value")
     }
   }
   journey_id   = "...my_journey_id..."
@@ -150,7 +150,7 @@ Optional:
 
 - `access_mode` (String) must be one of ["PUBLIC", "PRIVATE"]
 - `address_suggestions_file_id` (String)
-- `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
+- `address_suggestions_file_url` (String, Deprecated) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))
@@ -165,7 +165,7 @@ Optional:
 - `targeted_customer` (String)
 - `template_id` (String)
 - `third_party_cookies` (Boolean) If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
-- `use_new_design` (Boolean) This property is deprecated and will be removed in a future version
+- `use_new_design` (Boolean, Deprecated) This property is deprecated and will be removed in a future version
 
 <a id="nestedatt--settings--embed_options"></a>
 ### Nested Schema for `settings.embed_options`
@@ -191,6 +191,17 @@ Optional:
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = epilot-journey_journey.my_epilot-journey_journey
+  id = "..."
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
-terraform import epilot-journey_journey.my_epilot-journey_journey ""
+terraform import epilot-journey_journey.my_epilot-journey_journey "..."
 ```
