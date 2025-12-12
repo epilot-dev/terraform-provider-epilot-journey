@@ -17,6 +17,7 @@ resource "epilot-journey_journey" "my_journey" {
   brand_id = "...my_brand_id..."
   context_schema = [
     {
+      id                 = "7cd62f37-ff45-4376-b1ec-760ff1032112"
       is_required        = true
       param_key          = "...my_param_key..."
       should_load_entity = false
@@ -29,12 +30,13 @@ resource "epilot-journey_journey" "my_journey" {
     }
     logo_url = "...my_logo_url..."
     theme = {
-      key = jsonencode("value"),
+      key = jsonencode("value")
     }
   }
   journey_id   = "...my_journey_id..."
   journey_type = "Sales template (Premium)"
   logics       = "{ \"see\": \"documentation\" }"
+  logics_v4    = "{ \"see\": \"documentation\" }"
   manifest = [
     "123e4567-e89b-12d3-a456-426614174000"
   ]
@@ -83,7 +85,8 @@ resource "epilot-journey_journey" "my_journey" {
     third_party_cookies  = true
     use_new_design       = true
   }
-  steps = "{ \"see\": \"documentation\" }"
+  steps            = "{ \"see\": \"documentation\" }"
+  validation_rules = "{ \"see\": \"documentation\" }"
 }
 ```
 
@@ -103,19 +106,22 @@ resource "epilot-journey_journey" "my_journey" {
 - `journey_id` (String)
 - `journey_type` (String) Journey Template
 - `logics` (String) Parsed as JSON.
+- `logics_v4` (String) Parsed as JSON.
 - `manifest` (List of String) Manifest/Blueprint ID used to create/update the entity
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
+- `validation_rules` (String) Parsed as JSON.
 
 <a id="nestedatt--context_schema"></a>
 ### Nested Schema for `context_schema`
 
 Optional:
 
-- `is_required` (Boolean)
-- `param_key` (String) Not Null
-- `should_load_entity` (Boolean)
-- `type` (String) Not Null
+- `id` (String) Unique identifier for the context schema item
+- `is_required` (Boolean) Indicates if a value is expected to be provided
+- `param_key` (String) Expected key to be received in the context. Not Null
+- `should_load_entity` (Boolean) If type is not text, we can instruct the journey to fetch the entity id we receive as value
+- `type` (String) Type of the parameter. It could be either an entity slug, or a text. Not Null
 
 
 <a id="nestedatt--design"></a>
@@ -150,7 +156,7 @@ Optional:
 
 - `access_mode` (String) must be one of ["PUBLIC", "PRIVATE"]
 - `address_suggestions_file_id` (String)
-- `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
+- `address_suggestions_file_url` (String, Deprecated) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))
@@ -165,7 +171,7 @@ Optional:
 - `targeted_customer` (String)
 - `template_id` (String)
 - `third_party_cookies` (Boolean) If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
-- `use_new_design` (Boolean) This property is deprecated and will be removed in a future version
+- `use_new_design` (Boolean, Deprecated) This property is deprecated and will be removed in a future version
 
 <a id="nestedatt--settings--embed_options"></a>
 ### Nested Schema for `settings.embed_options`
@@ -191,6 +197,17 @@ Optional:
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = epilot-journey_journey.my_epilot-journey_journey
+  id = "..."
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
-terraform import epilot-journey_journey.my_epilot-journey_journey ""
+terraform import epilot-journey_journey.my_epilot-journey_journey "..."
 ```

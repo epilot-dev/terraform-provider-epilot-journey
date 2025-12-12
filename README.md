@@ -18,7 +18,7 @@ terraform {
   required_providers {
     epilot-journey = {
       source  = "epilot-dev/epilot-journey"
-      version = "0.9.8"
+      version = "0.11.0"
     }
   }
 }
@@ -82,9 +82,22 @@ Journey API: API to configure journeys
 <!-- $toc-max-depth=2 -->
   * [Installation](#installation)
   * [Testing the provider locally](#testing-the-provider-locally)
+  * [Authentication](#authentication)
   * [Available Resources and Data Sources](#available-resources-and-data-sources)
 
 <!-- End Table of Contents [toc] -->
+
+<!-- Start Authentication [security] -->
+## Authentication
+
+This provider supports authentication configuration via provider configuration.
+
+Available configuration:
+
+| Provider Attribute | Description |
+|---|---|
+| `epilot_auth` | Epilot Authorization Bearer Token - public access token / user token. |
+<!-- End Authentication [security] -->
 
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources

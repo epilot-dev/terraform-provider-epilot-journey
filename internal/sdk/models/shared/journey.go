@@ -9,10 +9,23 @@ import (
 )
 
 type ContextSchema struct {
-	IsRequired       *bool  `json:"isRequired,omitempty"`
-	ParamKey         string `json:"paramKey"`
-	ShouldLoadEntity *bool  `json:"shouldLoadEntity,omitempty"`
-	Type             string `json:"type"`
+	// Unique identifier for the context schema item
+	ID *string `json:"id,omitempty"`
+	// Indicates if a value is expected to be provided
+	IsRequired *bool `json:"isRequired,omitempty"`
+	// Expected key to be received in the context
+	ParamKey string `json:"paramKey"`
+	// If type is not text, we can instruct the journey to fetch the entity id we receive as value
+	ShouldLoadEntity *bool `json:"shouldLoadEntity,omitempty"`
+	// Type of the parameter. It could be either an entity slug, or a text
+	Type string `json:"type"`
+}
+
+func (o *ContextSchema) GetID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ID
 }
 
 func (o *ContextSchema) GetIsRequired() *bool {
@@ -49,7 +62,7 @@ type DesignTokens struct {
 type Design struct {
 	DesignTokens *DesignTokens  `json:"designTokens,omitempty"`
 	LogoURL      *string        `json:"logoUrl,omitempty"`
-	Theme        map[string]any `json:"theme"`
+	Theme        map[string]any `json:"theme,omitempty"`
 }
 
 func (o *Design) GetDesignTokens() *DesignTokens {
@@ -68,7 +81,7 @@ func (o *Design) GetLogoURL() *string {
 
 func (o *Design) GetTheme() map[string]any {
 	if o == nil {
-		return map[string]any{}
+		return nil
 	}
 	return o.Theme
 }
@@ -809,12 +822,14 @@ type Journey struct {
 	JourneyType     *string   `json:"journey_type,omitempty"`
 	LastModifiedAt1 string    `json:"lastModifiedAt"`
 	Logics          []Logics  `json:"logics,omitempty"`
+	LogicsV4        any       `json:"logicsV4,omitempty"`
 	Name            string    `json:"name"`
 	OrganizationID  string    `json:"organizationId"`
 	Revisions       float64   `json:"revisions"`
 	Rules           []Rules   `json:"rules,omitempty"`
 	Settings        *Settings `json:"settings,omitempty"`
 	Steps           []Steps   `json:"steps"`
+	ValidationRules any       `json:"validationRules,omitempty"`
 	Version         float64   `json:"version"`
 }
 
@@ -823,7 +838,7 @@ func (j Journey) MarshalJSON() ([]byte, error) {
 }
 
 func (j *Journey) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &j, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &j, "", false, []string{"createdAt", "lastModifiedAt", "name", "organizationId", "revisions", "steps", "version"}); err != nil {
 		return err
 	}
 	return nil
@@ -920,6 +935,13 @@ func (o *Journey) GetLogics() []Logics {
 	return o.Logics
 }
 
+func (o *Journey) GetLogicsV4() any {
+	if o == nil {
+		return nil
+	}
+	return o.LogicsV4
+}
+
 func (o *Journey) GetName() string {
 	if o == nil {
 		return ""
@@ -960,6 +982,13 @@ func (o *Journey) GetSteps() []Steps {
 		return []Steps{}
 	}
 	return o.Steps
+}
+
+func (o *Journey) GetValidationRules() any {
+	if o == nil {
+		return nil
+	}
+	return o.ValidationRules
 }
 
 func (o *Journey) GetVersion() float64 {

@@ -19,7 +19,7 @@ func (p PatchUpdateJourneyRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PatchUpdateJourneyRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &p, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &p, "", false, []string{"journeyId"}); err != nil {
 		return err
 	}
 	return nil

@@ -28,21 +28,24 @@ data "epilot-journey_journey" "my_journey" {
 - `journey_id` (String)
 - `journey_type` (String) Journey Template
 - `logics` (String) Parsed as JSON.
+- `logics_v4` (String) Parsed as JSON.
 - `manifest` (List of String) Manifest/Blueprint ID used to create/update the entity
 - `name` (String)
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
 - `steps` (String) Parsed as JSON.
+- `validation_rules` (String) Parsed as JSON.
 
 <a id="nestedatt--context_schema"></a>
 ### Nested Schema for `context_schema`
 
 Read-Only:
 
-- `is_required` (Boolean)
-- `param_key` (String)
-- `should_load_entity` (Boolean)
-- `type` (String)
+- `id` (String) Unique identifier for the context schema item
+- `is_required` (Boolean) Indicates if a value is expected to be provided
+- `param_key` (String) Expected key to be received in the context
+- `should_load_entity` (Boolean) If type is not text, we can instruct the journey to fetch the entity id we receive as value
+- `type` (String) Type of the parameter. It could be either an entity slug, or a text
 
 
 <a id="nestedatt--design"></a>
@@ -77,7 +80,7 @@ Read-Only:
 
 - `access_mode` (String)
 - `address_suggestions_file_id` (String)
-- `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
+- `address_suggestions_file_url` (String, Deprecated) @deprecated Use addressSuggestionsFileId instead
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))
@@ -92,7 +95,7 @@ Read-Only:
 - `targeted_customer` (String)
 - `template_id` (String)
 - `third_party_cookies` (Boolean) If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
-- `use_new_design` (Boolean) This property is deprecated and will be removed in a future version
+- `use_new_design` (Boolean, Deprecated) This property is deprecated and will be removed in a future version
 
 <a id="nestedatt--settings--embed_options"></a>
 ### Nested Schema for `settings.embed_options`

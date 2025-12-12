@@ -8,10 +8,23 @@ import (
 )
 
 type JourneyCreationRequestV2ContextSchema struct {
-	IsRequired       *bool  `json:"isRequired,omitempty"`
-	ParamKey         string `json:"paramKey"`
-	ShouldLoadEntity *bool  `json:"shouldLoadEntity,omitempty"`
-	Type             string `json:"type"`
+	// Unique identifier for the context schema item
+	ID *string `json:"id,omitempty"`
+	// Indicates if a value is expected to be provided
+	IsRequired *bool `json:"isRequired,omitempty"`
+	// Expected key to be received in the context
+	ParamKey string `json:"paramKey"`
+	// If type is not text, we can instruct the journey to fetch the entity id we receive as value
+	ShouldLoadEntity *bool `json:"shouldLoadEntity,omitempty"`
+	// Type of the parameter. It could be either an entity slug, or a text
+	Type string `json:"type"`
+}
+
+func (o *JourneyCreationRequestV2ContextSchema) GetID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ID
 }
 
 func (o *JourneyCreationRequestV2ContextSchema) GetIsRequired() *bool {
@@ -531,12 +544,14 @@ type JourneyCreationRequestV2 struct {
 	Design        *JourneyCreationRequestV2Design         `json:"design,omitempty"`
 	JourneyID     *string                                 `json:"journeyId,omitempty"`
 	// Journey Template
-	JourneyType *string                           `json:"journey_type,omitempty"`
-	Logics      any                               `json:"logics,omitempty"`
-	Name        string                            `json:"name"`
-	Rules       []JourneyCreationRequestV2Rules   `json:"rules,omitempty"`
-	Settings    *JourneyCreationRequestV2Settings `json:"settings,omitempty"`
-	Steps       any                               `json:"steps"`
+	JourneyType     *string                           `json:"journey_type,omitempty"`
+	Logics          any                               `json:"logics,omitempty"`
+	LogicsV4        any                               `json:"logicsV4,omitempty"`
+	Name            string                            `json:"name"`
+	Rules           []JourneyCreationRequestV2Rules   `json:"rules,omitempty"`
+	Settings        *JourneyCreationRequestV2Settings `json:"settings,omitempty"`
+	Steps           any                               `json:"steps"`
+	ValidationRules any                               `json:"validationRules,omitempty"`
 }
 
 func (o *JourneyCreationRequestV2) GetManifest() []string {
@@ -588,6 +603,13 @@ func (o *JourneyCreationRequestV2) GetLogics() any {
 	return o.Logics
 }
 
+func (o *JourneyCreationRequestV2) GetLogicsV4() any {
+	if o == nil {
+		return nil
+	}
+	return o.LogicsV4
+}
+
 func (o *JourneyCreationRequestV2) GetName() string {
 	if o == nil {
 		return ""
@@ -614,4 +636,11 @@ func (o *JourneyCreationRequestV2) GetSteps() any {
 		return nil
 	}
 	return o.Steps
+}
+
+func (o *JourneyCreationRequestV2) GetValidationRules() any {
+	if o == nil {
+		return nil
+	}
+	return o.ValidationRules
 }

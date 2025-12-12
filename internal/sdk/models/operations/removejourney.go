@@ -18,6 +18,18 @@ func (o *RemoveJourneyRequest) GetID() string {
 	return o.ID
 }
 
+// RemoveJourneyResponseBody - Journey not found
+type RemoveJourneyResponseBody struct {
+	Message *string `json:"message,omitempty"`
+}
+
+func (o *RemoveJourneyResponseBody) GetMessage() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Message
+}
+
 type RemoveJourneyResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -25,6 +37,8 @@ type RemoveJourneyResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+	// Journey not found
+	Object *RemoveJourneyResponseBody
 }
 
 func (o *RemoveJourneyResponse) GetContentType() string {
@@ -46,4 +60,11 @@ func (o *RemoveJourneyResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *RemoveJourneyResponse) GetObject() *RemoveJourneyResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
 }

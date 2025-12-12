@@ -7,6 +7,18 @@ import (
 	"net/http"
 )
 
+// PatchUpdateJourneyV2ResponseBody - Journey or associated entity not found
+type PatchUpdateJourneyV2ResponseBody struct {
+	Message *string `json:"message,omitempty"`
+}
+
+func (o *PatchUpdateJourneyV2ResponseBody) GetMessage() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Message
+}
+
 type PatchUpdateJourneyV2Response struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -16,6 +28,8 @@ type PatchUpdateJourneyV2Response struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+	// Journey or associated entity not found
+	Object *PatchUpdateJourneyV2ResponseBody
 }
 
 func (o *PatchUpdateJourneyV2Response) GetContentType() string {
@@ -44,4 +58,11 @@ func (o *PatchUpdateJourneyV2Response) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PatchUpdateJourneyV2Response) GetObject() *PatchUpdateJourneyV2ResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
 }

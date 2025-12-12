@@ -2,6 +2,7 @@ resource "epilot-journey_journey" "my_journey" {
   brand_id = "...my_brand_id..."
   context_schema = [
     {
+      id                 = "7cd62f37-ff45-4376-b1ec-760ff1032112"
       is_required        = true
       param_key          = "...my_param_key..."
       should_load_entity = false
@@ -14,12 +15,13 @@ resource "epilot-journey_journey" "my_journey" {
     }
     logo_url = "...my_logo_url..."
     theme = {
-      key = jsonencode("value"),
+      key = jsonencode("value")
     }
   }
   journey_id   = "...my_journey_id..."
   journey_type = "Sales template (Premium)"
   logics       = "{ \"see\": \"documentation\" }"
+  logics_v4    = "{ \"see\": \"documentation\" }"
   manifest = [
     "123e4567-e89b-12d3-a456-426614174000"
   ]
@@ -68,5 +70,6 @@ resource "epilot-journey_journey" "my_journey" {
     third_party_cookies  = true
     use_new_design       = true
   }
-  steps = "{ \"see\": \"documentation\" }"
+  steps            = "{ \"see\": \"documentation\" }"
+  validation_rules = "{ \"see\": \"documentation\" }"
 }

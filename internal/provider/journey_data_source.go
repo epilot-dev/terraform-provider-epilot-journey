@@ -7,7 +7,7 @@ import (
 	"fmt"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-journey/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/operations"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -24,22 +24,25 @@ func NewJourneyDataSource() datasource.DataSource {
 
 // JourneyDataSource is the data source implementation.
 type JourneyDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.SDK
 }
 
 // JourneyDataSourceModel describes the data model.
 type JourneyDataSourceModel struct {
-	BrandID       types.String                                    `tfsdk:"brand_id"`
-	ContextSchema []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
-	Design        *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
-	JourneyID     types.String                                    `tfsdk:"journey_id"`
-	JourneyType   types.String                                    `tfsdk:"journey_type"`
-	Logics        types.String                                    `tfsdk:"logics"`
-	Manifest      []types.String                                  `tfsdk:"manifest"`
-	Name          types.String                                    `tfsdk:"name"`
-	Rules         []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
-	Settings      *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
-	Steps         types.String                                    `tfsdk:"steps"`
+	BrandID         types.String                                    `tfsdk:"brand_id"`
+	ContextSchema   []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
+	Design          *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
+	JourneyID       types.String                                    `tfsdk:"journey_id"`
+	JourneyType     types.String                                    `tfsdk:"journey_type"`
+	Logics          jsontypes.Normalized                            `tfsdk:"logics"`
+	LogicsV4        jsontypes.Normalized                            `tfsdk:"logics_v4"`
+	Manifest        []types.String                                  `tfsdk:"manifest"`
+	Name            types.String                                    `tfsdk:"name"`
+	Rules           []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
+	Settings        *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
+	Steps           jsontypes.Normalized                            `tfsdk:"steps"`
+	ValidationRules jsontypes.Normalized                            `tfsdk:"validation_rules"`
 }
 
 // Metadata returns the data source type name.
@@ -60,17 +63,25 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							Computed:    true,
+							Description: `Unique identifier for the context schema item`,
+						},
 						"is_required": schema.BoolAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: `Indicates if a value is expected to be provided`,
 						},
 						"param_key": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: `Expected key to be received in the context`,
 						},
 						"should_load_entity": schema.BoolAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: `If type is not text, we can instruct the journey to fetch the entity id we receive as value`,
 						},
 						"type": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: `Type of the parameter. It could be either an entity slug, or a text`,
 						},
 					},
 				},
@@ -86,7 +97,7 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 					},
 					"theme": schema.MapAttribute{
 						Computed:    true,
-						ElementType: types.StringType,
+						ElementType: jsontypes.NormalizedType{},
 					},
 				},
 			},
@@ -98,6 +109,12 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Description: `Journey Template`,
 			},
 			"logics": schema.StringAttribute{
+				CustomType:  jsontypes.NormalizedType{},
+				Computed:    true,
+				Description: `Parsed as JSON.`,
+			},
+			"logics_v4": schema.StringAttribute{
+				CustomType:  jsontypes.NormalizedType{},
 				Computed:    true,
 				Description: `Parsed as JSON.`,
 			},
@@ -138,8 +155,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						Computed: true,
 					},
 					"address_suggestions_file_url": schema.StringAttribute{
-						Computed:    true,
-						Description: `@deprecated Use addressSuggestionsFileId instead`,
+						Computed:           true,
+						DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+						Description:        `@deprecated Use addressSuggestionsFileId instead`,
 					},
 					"description": schema.StringAttribute{
 						Computed: true,
@@ -217,12 +235,19 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						Description: `If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.`,
 					},
 					"use_new_design": schema.BoolAttribute{
-						Computed:    true,
-						Description: `This property is deprecated and will be removed in a future version`,
+						Computed:           true,
+						DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+						Description:        `This property is deprecated and will be removed in a future version`,
 					},
 				},
 			},
 			"steps": schema.StringAttribute{
+				CustomType:  jsontypes.NormalizedType{},
+				Computed:    true,
+				Description: `Parsed as JSON.`,
+			},
+			"validation_rules": schema.StringAttribute{
+				CustomType:  jsontypes.NormalizedType{},
 				Computed:    true,
 				Description: `Parsed as JSON.`,
 			},
@@ -268,13 +293,13 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	var id string
-	id = data.JourneyID.ValueString()
+	request, requestDiags := data.ToOperationsGetJourneyV2Request(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetJourneyV2Request{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.JourneysV2.GetJourneyV2(ctx, request)
+	res, err := r.client.JourneysV2.GetJourneyV2(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -286,10 +311,6 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -298,7 +319,11 @@ func (r *JourneyDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedJourneyCreationRequestV2(res.JourneyCreationRequestV2)
+	resp.Diagnostics.Append(data.RefreshFromSharedJourneyCreationRequestV2(ctx, res.JourneyCreationRequestV2)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

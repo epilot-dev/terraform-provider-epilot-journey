@@ -74,3 +74,24 @@ actions:
   - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]
     update:
       logics: {}
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["logicsV4"]
+    remove: true
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]
+    update:
+      logicsV4: {}
+
+  - target: $["components"]["schemas"]["JourneyCreationRequest"]["properties"]["logicsV4"]
+    remove: true
+  - target: $["components"]["schemas"]["JourneyCreationRequest"]["properties"]
+    update:
+      logicsV4: {}
+  - target: $["components"]["schemas"]["JourneyCreationRequest"]["properties"]["validationRules"]
+    remove: true
+  - target: $["components"]["schemas"]["JourneyCreationRequest"]["properties"]
+    update:
+      validationRules: {}
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["validationRules"]
+    remove: true
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]
+    update:
+      validationRules: {}

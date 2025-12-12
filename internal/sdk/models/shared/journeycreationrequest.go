@@ -9,10 +9,23 @@ import (
 )
 
 type JourneyCreationRequestContextSchema struct {
-	IsRequired       *bool  `json:"isRequired,omitempty"`
-	ParamKey         string `json:"paramKey"`
-	ShouldLoadEntity *bool  `json:"shouldLoadEntity,omitempty"`
-	Type             string `json:"type"`
+	// Unique identifier for the context schema item
+	ID *string `json:"id,omitempty"`
+	// Indicates if a value is expected to be provided
+	IsRequired *bool `json:"isRequired,omitempty"`
+	// Expected key to be received in the context
+	ParamKey string `json:"paramKey"`
+	// If type is not text, we can instruct the journey to fetch the entity id we receive as value
+	ShouldLoadEntity *bool `json:"shouldLoadEntity,omitempty"`
+	// Type of the parameter. It could be either an entity slug, or a text
+	Type string `json:"type"`
+}
+
+func (o *JourneyCreationRequestContextSchema) GetID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ID
 }
 
 func (o *JourneyCreationRequestContextSchema) GetIsRequired() *bool {
@@ -49,7 +62,7 @@ type JourneyCreationRequestDesignTokens struct {
 type JourneyCreationRequestDesign struct {
 	DesignTokens *JourneyCreationRequestDesignTokens `json:"designTokens,omitempty"`
 	LogoURL      *string                             `json:"logoUrl,omitempty"`
-	Theme        map[string]any                      `json:"theme"`
+	Theme        map[string]any                      `json:"theme,omitempty"`
 }
 
 func (o *JourneyCreationRequestDesign) GetDesignTokens() *JourneyCreationRequestDesignTokens {
@@ -68,7 +81,7 @@ func (o *JourneyCreationRequestDesign) GetLogoURL() *string {
 
 func (o *JourneyCreationRequestDesign) GetTheme() map[string]any {
 	if o == nil {
-		return map[string]any{}
+		return nil
 	}
 	return o.Theme
 }
@@ -803,13 +816,15 @@ type JourneyCreationRequest struct {
 	Design         *JourneyCreationRequestDesign         `json:"design,omitempty"`
 	JourneyID      *string                               `json:"journeyId,omitempty"`
 	// Journey Template
-	JourneyType    *string                         `json:"journey_type,omitempty"`
-	Logics         []JourneyCreationRequestLogics  `json:"logics,omitempty"`
-	Name           string                          `json:"name"`
-	OrganizationID string                          `json:"organizationId"`
-	Rules          []JourneyCreationRequestRules   `json:"rules,omitempty"`
-	Settings       *JourneyCreationRequestSettings `json:"settings,omitempty"`
-	Steps          []JourneyCreationRequestSteps   `json:"steps"`
+	JourneyType     *string                         `json:"journey_type,omitempty"`
+	Logics          []JourneyCreationRequestLogics  `json:"logics,omitempty"`
+	LogicsV4        any                             `json:"logicsV4,omitempty"`
+	Name            string                          `json:"name"`
+	OrganizationID  string                          `json:"organizationId"`
+	Rules           []JourneyCreationRequestRules   `json:"rules,omitempty"`
+	Settings        *JourneyCreationRequestSettings `json:"settings,omitempty"`
+	Steps           []JourneyCreationRequestSteps   `json:"steps"`
+	ValidationRules any                             `json:"validationRules,omitempty"`
 }
 
 func (j JourneyCreationRequest) MarshalJSON() ([]byte, error) {
@@ -817,7 +832,7 @@ func (j JourneyCreationRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (j *JourneyCreationRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &j, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &j, "", false, []string{"name", "organizationId", "steps"}); err != nil {
 		return err
 	}
 	return nil
@@ -886,6 +901,13 @@ func (o *JourneyCreationRequest) GetLogics() []JourneyCreationRequestLogics {
 	return o.Logics
 }
 
+func (o *JourneyCreationRequest) GetLogicsV4() any {
+	if o == nil {
+		return nil
+	}
+	return o.LogicsV4
+}
+
 func (o *JourneyCreationRequest) GetName() string {
 	if o == nil {
 		return ""
@@ -919,4 +941,11 @@ func (o *JourneyCreationRequest) GetSteps() []JourneyCreationRequestSteps {
 		return []JourneyCreationRequestSteps{}
 	}
 	return o.Steps
+}
+
+func (o *JourneyCreationRequest) GetValidationRules() any {
+	if o == nil {
+		return nil
+	}
+	return o.ValidationRules
 }
