@@ -385,8 +385,6 @@ type JourneyCreationRequestV2Settings struct {
 	AccessMode               *JourneyCreationRequestV2AccessMode `json:"accessMode,omitempty"`
 	AddressSuggestionsFileID *string                             `json:"addressSuggestionsFileId,omitempty"`
 	// @deprecated Use addressSuggestionsFileId instead
-	//
-	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	AddressSuggestionsFileURL *string                               `json:"addressSuggestionsFileUrl,omitempty"`
 	Description               *string                               `json:"description,omitempty"`
 	DesignID                  *string                               `json:"designId,omitempty"`
@@ -405,8 +403,6 @@ type JourneyCreationRequestV2Settings struct {
 	// If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.
 	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
 	// This property is deprecated and will be removed in a future version
-	//
-	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	UseNewDesign *bool `json:"useNewDesign,omitempty"`
 }
 

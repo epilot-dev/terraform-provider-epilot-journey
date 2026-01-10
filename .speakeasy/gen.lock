@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 1afd37bc-cea9-4679-ac40-35ad5de414fc
 management:
-  docChecksum: 899dae4ef828720ac11f83ce5571a28a
+  docChecksum: 27212faf52d804233ce25d265385e228
   docVersion: 1.1.0
   speakeasyVersion: 1.611.0
   generationVersion: 2.694.1
-  releaseVersion: 0.11.0
-  configChecksum: d797120ee5305e0956be387973381f1f
+  releaseVersion: 0.13.0
+  configChecksum: af8995ce2a7fdc7faa0c476040a99d80
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-journey.git
   repoSubDirectory: .
   published: true
@@ -216,7 +216,7 @@ examples:
           id: "509cdffe-424f-457a-95c2-9708c304ce77"
       responses:
         "200":
-          application/json: {"canary": true, "organizationId": "739224"}
+          application/json: {"canary": true, "organizationId": "739224", "thirdPartyCookies": true}
         "404":
           application/json: {"message": "journey not found"}
         "500":

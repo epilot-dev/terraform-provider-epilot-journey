@@ -95,3 +95,14 @@ actions:
   - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]
     update:
       validationRules: {}
+
+
+# Remove deprecated field from all properties that have it in JourneyCreationRequestV2
+# why: Terraform import block generation is experimental and assumes a property as required if its deprecated. 💩
+# error: Plan failed: Error: attribute "settings": attributes "address_suggestions_file_url" and "use_new_design" are required
+
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["settings"]["properties"]["useNewDesign"]["deprecated"]
+    remove: true
+  - target: $["components"]["schemas"]["JourneyCreationRequestV2"]["properties"]["settings"]["properties"]["addressSuggestionsFileUrl"]["deprecated"]
+    remove: true
+

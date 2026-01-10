@@ -155,9 +155,8 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						Computed: true,
 					},
 					"address_suggestions_file_url": schema.StringAttribute{
-						Computed:           true,
-						DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
-						Description:        `@deprecated Use addressSuggestionsFileId instead`,
+						Computed:    true,
+						Description: `@deprecated Use addressSuggestionsFileId instead`,
 					},
 					"description": schema.StringAttribute{
 						Computed: true,
@@ -235,9 +234,8 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						Description: `If false, third-party cookies are disabled to comply with GDPR regulations without asking for consent.`,
 					},
 					"use_new_design": schema.BoolAttribute{
-						Computed:           true,
-						DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
-						Description:        `This property is deprecated and will be removed in a future version`,
+						Computed:    true,
+						Description: `This property is deprecated and will be removed in a future version`,
 					},
 				},
 			},

@@ -1,4 +1,18 @@
-import {
-  to = epilot-journey_journey.my_epilot-journey_journey
-  id = "..."
+# import {
+#   to = epilot-journey_journey.my_epilot-journey_journeydnj
+#   id = "097f8aa0-ea42-11f0-9355-89b4ae9410b3"
+# }
+
+terraform {
+  required_providers {
+    epilot-journey = {
+      source  = "epilot-dev/epilot-journey"
+      version = "0.11.1"
+    }
+  }
+}
+
+provider "epilot-journey" {
+  # Configuration options
+  epilot_auth = "eyJraWQiOiJ2ZFR0MGQrK1RMc2FQZ2tsQ3AzMDVGbEMxc1lOUCtUOXpsaElzMkJ3WERrPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxNzEyMTkwMy1kM2JlLTRhZTktODZiZS04YjhkZDRmYzY0ZTYiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmV1LWNlbnRyYWwtMS5hbWF6b25hd3MuY29tXC9ldS1jZW50cmFsLTFfaGh6MnVJQ2xIIiwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjp0cnVlLCJjdXN0b206aXZ5X29yZ19pZCI6IjY2IiwiY29nbml0bzp1c2VybmFtZSI6Im4uZ29lbEBlcGlsb3QuY2xvdWQiLCJjdXN0b206aXZ5X3VzZXJfaWQiOiI4MjYwMiIsImF1ZCI6ImdqOXAwanJlaWh0cTAwY3JpNmEwZmUzMDYiLCJldmVudF9pZCI6IjJmYWM4NDVhLTAzNmItNGMzOS1hMDk5LTVkNGVkMWJiMDE3OCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNzY4MDgxNjA1LCJleHAiOjE3NjgwODUyMDksImlhdCI6MTc2ODA4MTYwOSwiZW1haWwiOiJuLmdvZWxAZXBpbG90LmNsb3VkIn0.gBr-zZxINjxF-fkF2_4dM0bUA7D3oPwkyedK9bZWzTjwYBLuVStVKLuH2iI4AqxJeEfJUFlI-eUCwywBe_HVAxzcNAKyNjVQqq7HDYjXclmFBEk-491ie83QYs8I6Wf_eub8uouRQZe95qgkz4Z9m6y501dzg9tC_Ey2LoPbsyUu_5VE9_4o01HssFX8CvhCel00y-aJxkxHnIc-rkD8MF_rBrGhNKfJbeZev62dYqtT_kUAq1SMmPuaoxVp1eArORXSDPVkGBU38jEiJ6wpMb3VzeYRDwfK-NrRX2qWpI5FqIbwOKxs9D4Lh7oV0QHFjl1Ul-B8MkprOasG1YdOeg"
 }

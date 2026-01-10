@@ -7,6 +7,8 @@ type GetSettingsForJourney struct {
 	Canary *bool `json:"canary,omitempty"`
 	// ID of an organization in epilot platform
 	OrganizationID *string `json:"organizationId,omitempty"`
+	// When set to false, third-party cookies and resources should be completely disabled to comply with GDPR regulations.
+	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
 }
 
 func (o *GetSettingsForJourney) GetCanary() *bool {
@@ -21,4 +23,11 @@ func (o *GetSettingsForJourney) GetOrganizationID() *string {
 		return nil
 	}
 	return o.OrganizationID
+}
+
+func (o *GetSettingsForJourney) GetThirdPartyCookies() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.ThirdPartyCookies
 }
