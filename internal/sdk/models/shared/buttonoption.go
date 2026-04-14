@@ -10,16 +10,16 @@ type ButtonOption struct {
 	Value *string `json:"value,omitempty"`
 }
 
-func (o *ButtonOption) GetLabel() *string {
-	if o == nil {
+func (b *ButtonOption) GetLabel() *string {
+	if b == nil {
 		return nil
 	}
-	return o.Label
+	return b.Label
 }
 
-func (o *ButtonOption) GetValue() *string {
-	if o == nil {
+func (b *ButtonOption) GetValue() *string {
+	if b == nil {
 		return nil
 	}
-	return o.Value
+	return b.Value
 }

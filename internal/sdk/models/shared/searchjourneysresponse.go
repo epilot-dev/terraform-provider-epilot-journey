@@ -14,11 +14,11 @@ type CreatedBy struct {
 	ID *string `json:"id,omitempty"`
 }
 
-func (o *CreatedBy) GetID() *string {
-	if o == nil {
+func (c *CreatedBy) GetID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.ID
+	return c.ID
 }
 
 // JourneyVersion - Journey Version
@@ -83,102 +83,102 @@ func (r *Results) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Results) GetCreatedAt() *time.Time {
-	if o == nil {
+func (r *Results) GetCreatedAt() *time.Time {
+	if r == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return r.CreatedAt
 }
 
-func (o *Results) GetID() *string {
-	if o == nil {
+func (r *Results) GetID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.ID
+	return r.ID
 }
 
-func (o *Results) GetManifest() []string {
-	if o == nil {
+func (r *Results) GetManifest() []string {
+	if r == nil {
 		return nil
 	}
-	return o.Manifest
+	return r.Manifest
 }
 
-func (o *Results) GetOrg() *string {
-	if o == nil {
+func (r *Results) GetOrg() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Org
+	return r.Org
 }
 
-func (o *Results) GetSchema() *string {
-	if o == nil {
+func (r *Results) GetSchema() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Schema
+	return r.Schema
 }
 
-func (o *Results) GetTags() []string {
-	if o == nil {
+func (r *Results) GetTags() []string {
+	if r == nil {
 		return nil
 	}
-	return o.Tags
+	return r.Tags
 }
 
-func (o *Results) GetTitle() *string {
-	if o == nil {
+func (r *Results) GetTitle() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Title
+	return r.Title
 }
 
-func (o *Results) GetUpdatedAt() *time.Time {
-	if o == nil {
+func (r *Results) GetUpdatedAt() *time.Time {
+	if r == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return r.UpdatedAt
 }
 
-func (o *Results) GetCreatedBy() []CreatedBy {
-	if o == nil {
+func (r *Results) GetCreatedBy() []CreatedBy {
+	if r == nil {
 		return nil
 	}
-	return o.CreatedBy
+	return r.CreatedBy
 }
 
-func (o *Results) GetDesign() *string {
-	if o == nil {
+func (r *Results) GetDesign() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Design
+	return r.Design
 }
 
-func (o *Results) GetJourneyID() *string {
-	if o == nil {
+func (r *Results) GetJourneyID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.JourneyID
+	return r.JourneyID
 }
 
-func (o *Results) GetJourneyName() *string {
-	if o == nil {
+func (r *Results) GetJourneyName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.JourneyName
+	return r.JourneyName
 }
 
-func (o *Results) GetJourneyType() *string {
-	if o == nil {
+func (r *Results) GetJourneyType() *string {
+	if r == nil {
 		return nil
 	}
-	return o.JourneyType
+	return r.JourneyType
 }
 
-func (o *Results) GetJourneyVersion() *JourneyVersion {
-	if o == nil {
+func (r *Results) GetJourneyVersion() *JourneyVersion {
+	if r == nil {
 		return nil
 	}
-	return o.JourneyVersion
+	return r.JourneyVersion
 }
 
 type SearchJourneysResponse struct {
@@ -190,16 +190,16 @@ type SearchJourneysResponse struct {
 	Results []Results `json:"results,omitempty"`
 }
 
-func (o *SearchJourneysResponse) GetHits() *float64 {
-	if o == nil {
+func (s *SearchJourneysResponse) GetHits() *float64 {
+	if s == nil {
 		return nil
 	}
-	return o.Hits
+	return s.Hits
 }
 
-func (o *SearchJourneysResponse) GetResults() []Results {
-	if o == nil {
+func (s *SearchJourneysResponse) GetResults() []Results {
+	if s == nil {
 		return nil
 	}
-	return o.Results
+	return s.Results
 }

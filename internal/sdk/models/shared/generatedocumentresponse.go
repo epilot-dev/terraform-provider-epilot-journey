@@ -33,18 +33,18 @@ type DocxOutput struct {
 	PreviewURL *string `json:"preview_url,omitempty"`
 }
 
-func (o *DocxOutput) GetOutputDocument() *OutputDocument {
-	if o == nil {
+func (d *DocxOutput) GetOutputDocument() *OutputDocument {
+	if d == nil {
 		return nil
 	}
-	return o.OutputDocument
+	return d.OutputDocument
 }
 
-func (o *DocxOutput) GetPreviewURL() *string {
-	if o == nil {
+func (d *DocxOutput) GetPreviewURL() *string {
+	if d == nil {
 		return nil
 	}
-	return o.PreviewURL
+	return d.PreviewURL
 }
 
 // JobStatus - Status of the job
@@ -86,18 +86,18 @@ type GenerateDocumentResponseOutputDocument struct {
 	S3ref    *S3Reference `json:"s3ref,omitempty"`
 }
 
-func (o *GenerateDocumentResponseOutputDocument) GetFilename() *string {
-	if o == nil {
+func (g *GenerateDocumentResponseOutputDocument) GetFilename() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Filename
+	return g.Filename
 }
 
-func (o *GenerateDocumentResponseOutputDocument) GetS3ref() *S3Reference {
-	if o == nil {
+func (g *GenerateDocumentResponseOutputDocument) GetS3ref() *S3Reference {
+	if g == nil {
 		return nil
 	}
-	return o.S3ref
+	return g.S3ref
 }
 
 type PdfOutput struct {
@@ -106,18 +106,18 @@ type PdfOutput struct {
 	PreviewURL *string `json:"preview_url,omitempty"`
 }
 
-func (o *PdfOutput) GetOutputDocument() *GenerateDocumentResponseOutputDocument {
-	if o == nil {
+func (p *PdfOutput) GetOutputDocument() *GenerateDocumentResponseOutputDocument {
+	if p == nil {
 		return nil
 	}
-	return o.OutputDocument
+	return p.OutputDocument
 }
 
-func (o *PdfOutput) GetPreviewURL() *string {
-	if o == nil {
+func (p *PdfOutput) GetPreviewURL() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PreviewURL
+	return p.PreviewURL
 }
 
 // VariablePayload - List of variables and its corresponding replaced values from the document template
@@ -125,11 +125,11 @@ type VariablePayload struct {
 	AdditionalProperties *string `json:"additionalProperties,omitempty"`
 }
 
-func (o *VariablePayload) GetAdditionalProperties() *string {
-	if o == nil {
+func (v *VariablePayload) GetAdditionalProperties() *string {
+	if v == nil {
 		return nil
 	}
-	return o.AdditionalProperties
+	return v.AdditionalProperties
 }
 
 type GenerateDocumentResponse struct {
@@ -146,51 +146,51 @@ type GenerateDocumentResponse struct {
 	VariablePayload *VariablePayload `json:"variable_payload,omitempty"`
 }
 
-func (o *GenerateDocumentResponse) GetDocxOutput() *DocxOutput {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetDocxOutput() *DocxOutput {
+	if g == nil {
 		return nil
 	}
-	return o.DocxOutput
+	return g.DocxOutput
 }
 
-func (o *GenerateDocumentResponse) GetJobID() *string {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetJobID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.JobID
+	return g.JobID
 }
 
-func (o *GenerateDocumentResponse) GetJobStatus() *JobStatus {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetJobStatus() *JobStatus {
+	if g == nil {
 		return nil
 	}
-	return o.JobStatus
+	return g.JobStatus
 }
 
-func (o *GenerateDocumentResponse) GetMessage() *string {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetMessage() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Message
+	return g.Message
 }
 
-func (o *GenerateDocumentResponse) GetPdfOutput() *PdfOutput {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetPdfOutput() *PdfOutput {
+	if g == nil {
 		return nil
 	}
-	return o.PdfOutput
+	return g.PdfOutput
 }
 
-func (o *GenerateDocumentResponse) GetTemplateSettings() *TemplateSettings {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetTemplateSettings() *TemplateSettings {
+	if g == nil {
 		return nil
 	}
-	return o.TemplateSettings
+	return g.TemplateSettings
 }
 
-func (o *GenerateDocumentResponse) GetVariablePayload() *VariablePayload {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetVariablePayload() *VariablePayload {
+	if g == nil {
 		return nil
 	}
-	return o.VariablePayload
+	return g.VariablePayload
 }

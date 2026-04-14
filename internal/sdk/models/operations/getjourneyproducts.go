@@ -22,46 +22,46 @@ type GetJourneyProductsRequest struct {
 	StreetNumber *string `queryParam:"style=form,explode=true,name=street_number"`
 }
 
-func (o *GetJourneyProductsRequest) GetCity() *string {
-	if o == nil {
+func (g *GetJourneyProductsRequest) GetCity() *string {
+	if g == nil {
 		return nil
 	}
-	return o.City
+	return g.City
 }
 
-func (o *GetJourneyProductsRequest) GetID() string {
-	if o == nil {
+func (g *GetJourneyProductsRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
-func (o *GetJourneyProductsRequest) GetPostalCode() *string {
-	if o == nil {
+func (g *GetJourneyProductsRequest) GetPostalCode() *string {
+	if g == nil {
 		return nil
 	}
-	return o.PostalCode
+	return g.PostalCode
 }
 
-func (o *GetJourneyProductsRequest) GetSource() *string {
-	if o == nil {
+func (g *GetJourneyProductsRequest) GetSource() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Source
+	return g.Source
 }
 
-func (o *GetJourneyProductsRequest) GetStreet() *string {
-	if o == nil {
+func (g *GetJourneyProductsRequest) GetStreet() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Street
+	return g.Street
 }
 
-func (o *GetJourneyProductsRequest) GetStreetNumber() *string {
-	if o == nil {
+func (g *GetJourneyProductsRequest) GetStreetNumber() *string {
+	if g == nil {
 		return nil
 	}
-	return o.StreetNumber
+	return g.StreetNumber
 }
 
 type GetJourneyProductsResponse struct {
@@ -75,30 +75,30 @@ type GetJourneyProductsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetJourneyProductsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetJourneyProductsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetJourneyProductsResponse) GetJourneyProductsResponse() []shared.JourneyProductsResponse {
-	if o == nil {
+func (g *GetJourneyProductsResponse) GetJourneyProductsResponse() []shared.JourneyProductsResponse {
+	if g == nil {
 		return nil
 	}
-	return o.JourneyProductsResponse
+	return g.JourneyProductsResponse
 }
 
-func (o *GetJourneyProductsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetJourneyProductsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetJourneyProductsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetJourneyProductsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

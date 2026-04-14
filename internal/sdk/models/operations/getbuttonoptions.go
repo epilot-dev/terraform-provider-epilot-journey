@@ -12,11 +12,11 @@ type GetButtonOptionsRequest struct {
 	FileID string `queryParam:"style=form,explode=true,name=fileId"`
 }
 
-func (o *GetButtonOptionsRequest) GetFileID() string {
-	if o == nil {
+func (g *GetButtonOptionsRequest) GetFileID() string {
+	if g == nil {
 		return ""
 	}
-	return o.FileID
+	return g.FileID
 }
 
 // GetButtonOptionsJourneysResponseResponseBody - Internal Server Error
@@ -24,11 +24,11 @@ type GetButtonOptionsJourneysResponseResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *GetButtonOptionsJourneysResponseResponseBody) GetMessage() *string {
-	if o == nil {
+func (g *GetButtonOptionsJourneysResponseResponseBody) GetMessage() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Message
+	return g.Message
 }
 
 // GetButtonOptionsJourneysResponseBody - Not found
@@ -36,11 +36,11 @@ type GetButtonOptionsJourneysResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *GetButtonOptionsJourneysResponseBody) GetMessage() *string {
-	if o == nil {
+func (g *GetButtonOptionsJourneysResponseBody) GetMessage() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Message
+	return g.Message
 }
 
 // GetButtonOptionsResponseBody - Bad Request - Invalid file or content
@@ -49,18 +49,18 @@ type GetButtonOptionsResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *GetButtonOptionsResponseBody) GetDetails() *string {
-	if o == nil {
+func (g *GetButtonOptionsResponseBody) GetDetails() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Details
+	return g.Details
 }
 
-func (o *GetButtonOptionsResponseBody) GetMessage() *string {
-	if o == nil {
+func (g *GetButtonOptionsResponseBody) GetMessage() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Message
+	return g.Message
 }
 
 type GetButtonOptionsResponse struct {
@@ -80,51 +80,51 @@ type GetButtonOptionsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetButtonOptionsResponse) GetTwoHundredApplicationJSONClasses() []shared.ButtonOption {
-	if o == nil {
+func (g *GetButtonOptionsResponse) GetTwoHundredApplicationJSONClasses() []shared.ButtonOption {
+	if g == nil {
 		return nil
 	}
-	return o.TwoHundredApplicationJSONClasses
+	return g.TwoHundredApplicationJSONClasses
 }
 
-func (o *GetButtonOptionsResponse) GetFourHundredApplicationJSONObject() *GetButtonOptionsResponseBody {
-	if o == nil {
+func (g *GetButtonOptionsResponse) GetFourHundredApplicationJSONObject() *GetButtonOptionsResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.FourHundredApplicationJSONObject
+	return g.FourHundredApplicationJSONObject
 }
 
-func (o *GetButtonOptionsResponse) GetFourHundredAndFourApplicationJSONObject() *GetButtonOptionsJourneysResponseBody {
-	if o == nil {
+func (g *GetButtonOptionsResponse) GetFourHundredAndFourApplicationJSONObject() *GetButtonOptionsJourneysResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.FourHundredAndFourApplicationJSONObject
+	return g.FourHundredAndFourApplicationJSONObject
 }
 
-func (o *GetButtonOptionsResponse) GetFiveHundredApplicationJSONObject() *GetButtonOptionsJourneysResponseResponseBody {
-	if o == nil {
+func (g *GetButtonOptionsResponse) GetFiveHundredApplicationJSONObject() *GetButtonOptionsJourneysResponseResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.FiveHundredApplicationJSONObject
+	return g.FiveHundredApplicationJSONObject
 }
 
-func (o *GetButtonOptionsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetButtonOptionsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetButtonOptionsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetButtonOptionsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetButtonOptionsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetButtonOptionsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

@@ -7,16 +7,19 @@ type S3Reference struct {
 	Key    string `json:"key"`
 }
 
-func (o *S3Reference) GetBucket() string {
-	if o == nil {
+func (s *S3Reference) GetBucket() string {
+	if s == nil {
 		return ""
 	}
-	return o.Bucket
+	return s.Bucket
 }
 
-func (o *S3Reference) GetKey() string {
-	if o == nil {
+func (s *S3Reference) GetKey() string {
+	if s == nil {
 		return ""
 	}
-	return o.Key
+	return s.Key
 }
+
+// #region class-body-s3reference
+// #endregion class-body-s3reference

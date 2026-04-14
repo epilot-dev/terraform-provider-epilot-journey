@@ -35,30 +35,30 @@ func (s *SearchJourneysQueryRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *SearchJourneysQueryRequest) GetFrom() *int64 {
-	if o == nil {
+func (s *SearchJourneysQueryRequest) GetFrom() *int64 {
+	if s == nil {
 		return nil
 	}
-	return o.From
+	return s.From
 }
 
-func (o *SearchJourneysQueryRequest) GetQ() *string {
-	if o == nil {
+func (s *SearchJourneysQueryRequest) GetQ() *string {
+	if s == nil {
 		return nil
 	}
-	return o.Q
+	return s.Q
 }
 
-func (o *SearchJourneysQueryRequest) GetSize() *int64 {
-	if o == nil {
+func (s *SearchJourneysQueryRequest) GetSize() *int64 {
+	if s == nil {
 		return nil
 	}
-	return o.Size
+	return s.Size
 }
 
-func (o *SearchJourneysQueryRequest) GetSort() *string {
-	if o == nil {
+func (s *SearchJourneysQueryRequest) GetSort() *string {
+	if s == nil {
 		return nil
 	}
-	return o.Sort
+	return s.Sort
 }

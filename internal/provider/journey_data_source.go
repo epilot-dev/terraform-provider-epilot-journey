@@ -30,19 +30,21 @@ type JourneyDataSource struct {
 
 // JourneyDataSourceModel describes the data model.
 type JourneyDataSourceModel struct {
-	BrandID         types.String                                    `tfsdk:"brand_id"`
-	ContextSchema   []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
-	Design          *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
-	JourneyID       types.String                                    `tfsdk:"journey_id"`
-	JourneyType     types.String                                    `tfsdk:"journey_type"`
-	Logics          jsontypes.Normalized                            `tfsdk:"logics"`
-	LogicsV4        jsontypes.Normalized                            `tfsdk:"logics_v4"`
-	Manifest        []types.String                                  `tfsdk:"manifest"`
-	Name            types.String                                    `tfsdk:"name"`
-	Rules           []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
-	Settings        *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
-	Steps           jsontypes.Normalized                            `tfsdk:"steps"`
-	ValidationRules jsontypes.Normalized                            `tfsdk:"validation_rules"`
+	BrandID           types.String                                    `tfsdk:"brand_id"`
+	ContextSchema     []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
+	Design            *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
+	JourneyID         types.String                                    `tfsdk:"journey_id"`
+	JourneyType       types.String                                    `tfsdk:"journey_type"`
+	Logics            jsontypes.Normalized                            `tfsdk:"logics"`
+	LogicsV4          jsontypes.Normalized                            `tfsdk:"logics_v4"`
+	Manifest          []types.String                                  `tfsdk:"manifest"`
+	Name              types.String                                    `tfsdk:"name"`
+	Protected         types.Bool                                      `tfsdk:"protected"`
+	ProtectedEditable []types.String                                  `tfsdk:"protected_editable"`
+	Rules             []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
+	Settings          *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
+	Steps             jsontypes.Normalized                            `tfsdk:"steps"`
+	ValidationRules   jsontypes.Normalized                            `tfsdk:"validation_rules"`
 }
 
 // Metadata returns the data source type name.
@@ -103,6 +105,7 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			},
 			"journey_id": schema.StringAttribute{
 				Computed: true,
+				Optional: true,
 			},
 			"journey_type": schema.StringAttribute{
 				Computed:    true,
@@ -125,6 +128,15 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
+			},
+			"protected": schema.BoolAttribute{
+				Computed:    true,
+				Description: `If true, journey is displayed in read-only mode`,
+			},
+			"protected_editable": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `Whitelist of paths that remain editable when the journey is protected. Supports wildcard patterns (e.g. steps/*/blocks/**).`,
 			},
 			"rules": schema.ListNestedAttribute{
 				Computed: true,
@@ -151,12 +163,29 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 					"access_mode": schema.StringAttribute{
 						Computed: true,
 					},
+					"address_suggestions_country_code": schema.StringAttribute{
+						Computed:    true,
+						Description: `Country code for address format (e.g. DE, AT, CH, LU)`,
+					},
+					"address_suggestions_enable_auto_complete": schema.BoolAttribute{
+						Computed:    true,
+						Description: `Whether address auto-complete is enabled`,
+					},
+					"address_suggestions_enable_free_text": schema.BoolAttribute{
+						Computed:    true,
+						Description: `Whether free text input is allowed when auto-complete is on`,
+					},
 					"address_suggestions_file_id": schema.StringAttribute{
 						Computed: true,
 					},
 					"address_suggestions_file_url": schema.StringAttribute{
 						Computed:    true,
 						Description: `@deprecated Use addressSuggestionsFileId instead`,
+					},
+					"address_suggestions_source": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+						Description: `Sources for address auto-complete (e.g. deutschePostService, customAddressesFile)`,
 					},
 					"description": schema.StringAttribute{
 						Computed: true,

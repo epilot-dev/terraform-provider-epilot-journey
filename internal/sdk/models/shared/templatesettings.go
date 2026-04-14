@@ -10,18 +10,18 @@ type CustomMargins struct {
 	Top *float64 `json:"top,omitempty"`
 }
 
-func (o *CustomMargins) GetBottom() *float64 {
-	if o == nil {
+func (c *CustomMargins) GetBottom() *float64 {
+	if c == nil {
 		return nil
 	}
-	return o.Bottom
+	return c.Bottom
 }
 
-func (o *CustomMargins) GetTop() *float64 {
-	if o == nil {
+func (c *CustomMargins) GetTop() *float64 {
+	if c == nil {
 		return nil
 	}
-	return o.Top
+	return c.Top
 }
 
 // SuggestedMargins - Suggested margins for the document
@@ -32,18 +32,18 @@ type SuggestedMargins struct {
 	Top *float64 `json:"top,omitempty"`
 }
 
-func (o *SuggestedMargins) GetBottom() *float64 {
-	if o == nil {
+func (s *SuggestedMargins) GetBottom() *float64 {
+	if s == nil {
 		return nil
 	}
-	return o.Bottom
+	return s.Bottom
 }
 
-func (o *SuggestedMargins) GetTop() *float64 {
-	if o == nil {
+func (s *SuggestedMargins) GetTop() *float64 {
+	if s == nil {
 		return nil
 	}
-	return o.Top
+	return s.Top
 }
 
 // TemplateSettings - Template Settings for document generation
@@ -66,58 +66,58 @@ type TemplateSettings struct {
 	TemplateWithDatatable *bool `json:"template_with_datatable,omitempty"`
 }
 
-func (o *TemplateSettings) GetCustomMargins() *CustomMargins {
-	if o == nil {
+func (t *TemplateSettings) GetCustomMargins() *CustomMargins {
+	if t == nil {
 		return nil
 	}
-	return o.CustomMargins
+	return t.CustomMargins
 }
 
-func (o *TemplateSettings) GetDisplayMarginGuidelines() *bool {
-	if o == nil {
+func (t *TemplateSettings) GetDisplayMarginGuidelines() *bool {
+	if t == nil {
 		return nil
 	}
-	return o.DisplayMarginGuidelines
+	return t.DisplayMarginGuidelines
 }
 
-func (o *TemplateSettings) GetEnableDataTableMarginAutofix() *bool {
-	if o == nil {
+func (t *TemplateSettings) GetEnableDataTableMarginAutofix() *bool {
+	if t == nil {
 		return nil
 	}
-	return o.EnableDataTableMarginAutofix
+	return t.EnableDataTableMarginAutofix
 }
 
-func (o *TemplateSettings) GetEnabledTemplateSettingsPersistence() *bool {
-	if o == nil {
+func (t *TemplateSettings) GetEnabledTemplateSettingsPersistence() *bool {
+	if t == nil {
 		return nil
 	}
-	return o.EnabledTemplateSettingsPersistence
+	return t.EnabledTemplateSettingsPersistence
 }
 
-func (o *TemplateSettings) GetFileEntityID() *string {
-	if o == nil {
+func (t *TemplateSettings) GetFileEntityID() *string {
+	if t == nil {
 		return nil
 	}
-	return o.FileEntityID
+	return t.FileEntityID
 }
 
-func (o *TemplateSettings) GetMisconfiguredMargins() *bool {
-	if o == nil {
+func (t *TemplateSettings) GetMisconfiguredMargins() *bool {
+	if t == nil {
 		return nil
 	}
-	return o.MisconfiguredMargins
+	return t.MisconfiguredMargins
 }
 
-func (o *TemplateSettings) GetSuggestedMargins() *SuggestedMargins {
-	if o == nil {
+func (t *TemplateSettings) GetSuggestedMargins() *SuggestedMargins {
+	if t == nil {
 		return nil
 	}
-	return o.SuggestedMargins
+	return t.SuggestedMargins
 }
 
-func (o *TemplateSettings) GetTemplateWithDatatable() *bool {
-	if o == nil {
+func (t *TemplateSettings) GetTemplateWithDatatable() *bool {
+	if t == nil {
 		return nil
 	}
-	return o.TemplateWithDatatable
+	return t.TemplateWithDatatable
 }

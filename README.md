@@ -102,9 +102,10 @@ Available configuration:
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources
 
-### Resources
+### Managed Resources
 
 * [epilot-journey_journey](docs/resources/journey.md)
+
 ### Data Sources
 
 * [epilot-journey_journey](docs/data-sources/journey.md)

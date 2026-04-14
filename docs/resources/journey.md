@@ -40,7 +40,11 @@ resource "epilot-journey_journey" "my_journey" {
   manifest = [
     "123e4567-e89b-12d3-a456-426614174000"
   ]
-  name = "...my_name..."
+  name      = "...my_name..."
+  protected = true
+  protected_editable = [
+    "..."
+  ]
   rules = [
     {
       source      = "...my_source..."
@@ -50,11 +54,17 @@ resource "epilot-journey_journey" "my_journey" {
     }
   ]
   settings = {
-    access_mode                  = "PUBLIC"
-    address_suggestions_file_id  = "...my_address_suggestions_file_id..."
-    address_suggestions_file_url = "...my_address_suggestions_file_url..."
-    description                  = "...my_description..."
-    design_id                    = "...my_design_id..."
+    access_mode                              = "PUBLIC"
+    address_suggestions_country_code         = "...my_address_suggestions_country_code..."
+    address_suggestions_enable_auto_complete = true
+    address_suggestions_enable_free_text     = true
+    address_suggestions_file_id              = "...my_address_suggestions_file_id..."
+    address_suggestions_file_url             = "...my_address_suggestions_file_url..."
+    address_suggestions_source = [
+      "..."
+    ]
+    description = "...my_description..."
+    design_id   = "...my_design_id..."
     embed_options = {
       button = {
         align = "center"
@@ -108,6 +118,8 @@ resource "epilot-journey_journey" "my_journey" {
 - `logics` (String) Parsed as JSON.
 - `logics_v4` (String) Parsed as JSON.
 - `manifest` (List of String) Manifest/Blueprint ID used to create/update the entity
+- `protected` (Boolean) If true, journey is displayed in read-only mode
+- `protected_editable` (List of String) Whitelist of paths that remain editable when the journey is protected. Supports wildcard patterns (e.g. steps/*/blocks/**).
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
 - `validation_rules` (String) Parsed as JSON.
@@ -155,8 +167,12 @@ Optional:
 Optional:
 
 - `access_mode` (String) must be one of ["PUBLIC", "PRIVATE"]
+- `address_suggestions_country_code` (String) Country code for address format (e.g. DE, AT, CH, LU)
+- `address_suggestions_enable_auto_complete` (Boolean) Whether address auto-complete is enabled
+- `address_suggestions_enable_free_text` (Boolean) Whether free text input is allowed when auto-complete is on
 - `address_suggestions_file_id` (String)
 - `address_suggestions_file_url` (String) @deprecated Use addressSuggestionsFileId instead
+- `address_suggestions_source` (List of String) Sources for address auto-complete (e.g. deutschePostService, customAddressesFile)
 - `description` (String)
 - `design_id` (String)
 - `embed_options` (Attributes) (see [below for nested schema](#nestedatt--settings--embed_options))

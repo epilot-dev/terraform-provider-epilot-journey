@@ -7,11 +7,11 @@ type ContextData struct {
 	AdditionalProperties *string `json:"additionalProperties,omitempty"`
 }
 
-func (o *ContextData) GetAdditionalProperties() *string {
-	if o == nil {
+func (c *ContextData) GetAdditionalProperties() *string {
+	if c == nil {
 		return nil
 	}
-	return o.AdditionalProperties
+	return c.AdditionalProperties
 }
 
 type GenerateDocumentRequest struct {
@@ -23,23 +23,23 @@ type GenerateDocumentRequest struct {
 	Language *string `json:"language,omitempty"`
 }
 
-func (o *GenerateDocumentRequest) GetContextData() ContextData {
-	if o == nil {
+func (g *GenerateDocumentRequest) GetContextData() ContextData {
+	if g == nil {
 		return ContextData{}
 	}
-	return o.ContextData
+	return g.ContextData
 }
 
-func (o *GenerateDocumentRequest) GetFileID() string {
-	if o == nil {
+func (g *GenerateDocumentRequest) GetFileID() string {
+	if g == nil {
 		return ""
 	}
-	return o.FileID
+	return g.FileID
 }
 
-func (o *GenerateDocumentRequest) GetLanguage() *string {
-	if o == nil {
+func (g *GenerateDocumentRequest) GetLanguage() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Language
+	return g.Language
 }

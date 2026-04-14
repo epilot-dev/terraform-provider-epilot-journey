@@ -11,23 +11,23 @@ type GetSettingsForJourney struct {
 	ThirdPartyCookies *bool `json:"thirdPartyCookies,omitempty"`
 }
 
-func (o *GetSettingsForJourney) GetCanary() *bool {
-	if o == nil {
+func (g *GetSettingsForJourney) GetCanary() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.Canary
+	return g.Canary
 }
 
-func (o *GetSettingsForJourney) GetOrganizationID() *string {
-	if o == nil {
+func (g *GetSettingsForJourney) GetOrganizationID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.OrganizationID
+	return g.OrganizationID
 }
 
-func (o *GetSettingsForJourney) GetThirdPartyCookies() *bool {
-	if o == nil {
+func (g *GetSettingsForJourney) GetThirdPartyCookies() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.ThirdPartyCookies
+	return g.ThirdPartyCookies
 }

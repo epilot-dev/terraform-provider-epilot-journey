@@ -12,36 +12,48 @@ type CreateJourneyV2Response struct {
 	ContentType string
 	// Success
 	JourneyCreationRequestV2 *shared.JourneyCreationRequestV2
+	// Validation failed (when validation mode is STRICT)
+	JourneyValidationError *shared.JourneyValidationError
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 }
 
-func (o *CreateJourneyV2Response) GetContentType() string {
-	if o == nil {
+func (c *CreateJourneyV2Response) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
-	if o == nil {
+func (c *CreateJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
+	if c == nil {
 		return nil
 	}
-	return o.JourneyCreationRequestV2
+	return c.JourneyCreationRequestV2
 }
 
-func (o *CreateJourneyV2Response) GetStatusCode() int {
-	if o == nil {
+func (c *CreateJourneyV2Response) GetJourneyValidationError() *shared.JourneyValidationError {
+	if c == nil {
+		return nil
+	}
+	return c.JourneyValidationError
+}
+
+func (c *CreateJourneyV2Response) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateJourneyV2Response) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateJourneyV2Response) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
+
+// #region class-body-createjourneyv2response
+// #endregion class-body-createjourneyv2response

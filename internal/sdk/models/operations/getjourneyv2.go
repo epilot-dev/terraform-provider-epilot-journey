@@ -12,12 +12,15 @@ type GetJourneyV2Request struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GetJourneyV2Request) GetID() string {
-	if o == nil {
+func (g *GetJourneyV2Request) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
+
+// #region class-body-getjourneyv2request
+// #endregion class-body-getjourneyv2request
 
 type GetJourneyV2Response struct {
 	// HTTP response content type for this operation
@@ -30,30 +33,33 @@ type GetJourneyV2Response struct {
 	RawResponse *http.Response
 }
 
-func (o *GetJourneyV2Response) GetContentType() string {
-	if o == nil {
+func (g *GetJourneyV2Response) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
-	if o == nil {
+func (g *GetJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
+	if g == nil {
 		return nil
 	}
-	return o.JourneyCreationRequestV2
+	return g.JourneyCreationRequestV2
 }
 
-func (o *GetJourneyV2Response) GetStatusCode() int {
-	if o == nil {
+func (g *GetJourneyV2Response) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetJourneyV2Response) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetJourneyV2Response) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
+
+// #region class-body-getjourneyv2response
+// #endregion class-body-getjourneyv2response

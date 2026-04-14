@@ -12,18 +12,23 @@ type PatchUpdateJourneyV2ResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *PatchUpdateJourneyV2ResponseBody) GetMessage() *string {
-	if o == nil {
+func (p *PatchUpdateJourneyV2ResponseBody) GetMessage() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Message
+	return p.Message
 }
+
+// #region class-body-patchupdatejourneyv2responsebody
+// #endregion class-body-patchupdatejourneyv2responsebody
 
 type PatchUpdateJourneyV2Response struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// Success
 	JourneyCreationRequestV2 *shared.JourneyCreationRequestV2
+	// Validation failed (when validation mode is STRICT)
+	JourneyValidationError *shared.JourneyValidationError
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
@@ -32,37 +37,47 @@ type PatchUpdateJourneyV2Response struct {
 	Object *PatchUpdateJourneyV2ResponseBody
 }
 
-func (o *PatchUpdateJourneyV2Response) GetContentType() string {
-	if o == nil {
+func (p *PatchUpdateJourneyV2Response) GetContentType() string {
+	if p == nil {
 		return ""
 	}
-	return o.ContentType
+	return p.ContentType
 }
 
-func (o *PatchUpdateJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
-	if o == nil {
+func (p *PatchUpdateJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
+	if p == nil {
 		return nil
 	}
-	return o.JourneyCreationRequestV2
+	return p.JourneyCreationRequestV2
 }
 
-func (o *PatchUpdateJourneyV2Response) GetStatusCode() int {
-	if o == nil {
+func (p *PatchUpdateJourneyV2Response) GetJourneyValidationError() *shared.JourneyValidationError {
+	if p == nil {
+		return nil
+	}
+	return p.JourneyValidationError
+}
+
+func (p *PatchUpdateJourneyV2Response) GetStatusCode() int {
+	if p == nil {
 		return 0
 	}
-	return o.StatusCode
+	return p.StatusCode
 }
 
-func (o *PatchUpdateJourneyV2Response) GetRawResponse() *http.Response {
-	if o == nil {
+func (p *PatchUpdateJourneyV2Response) GetRawResponse() *http.Response {
+	if p == nil {
 		return nil
 	}
-	return o.RawResponse
+	return p.RawResponse
 }
 
-func (o *PatchUpdateJourneyV2Response) GetObject() *PatchUpdateJourneyV2ResponseBody {
-	if o == nil {
+func (p *PatchUpdateJourneyV2Response) GetObject() *PatchUpdateJourneyV2ResponseBody {
+	if p == nil {
 		return nil
 	}
-	return o.Object
+	return p.Object
 }
+
+// #region class-body-patchupdatejourneyv2response
+// #endregion class-body-patchupdatejourneyv2response

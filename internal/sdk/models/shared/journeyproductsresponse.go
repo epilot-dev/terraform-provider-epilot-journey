@@ -21,93 +21,93 @@ type JourneyProductsResponse struct {
 	Type             *string `json:"type,omitempty"`
 }
 
-func (o *JourneyProductsResponse) GetID() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.ID
+	return j.ID
 }
 
-func (o *JourneyProductsResponse) GetOrg() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetOrg() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Org
+	return j.Org
 }
 
-func (o *JourneyProductsResponse) GetSchema() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetSchema() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Schema
+	return j.Schema
 }
 
-func (o *JourneyProductsResponse) GetTitle() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetTitle() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Title
+	return j.Title
 }
 
-func (o *JourneyProductsResponse) GetCode() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetCode() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Code
+	return j.Code
 }
 
-func (o *JourneyProductsResponse) GetDescription() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetDescription() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Description
+	return j.Description
 }
 
-func (o *JourneyProductsResponse) GetFeature() []any {
-	if o == nil {
+func (j *JourneyProductsResponse) GetFeature() []any {
+	if j == nil {
 		return nil
 	}
-	return o.Feature
+	return j.Feature
 }
 
-func (o *JourneyProductsResponse) GetLegalFootnote() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetLegalFootnote() *string {
+	if j == nil {
 		return nil
 	}
-	return o.LegalFootnote
+	return j.LegalFootnote
 }
 
-func (o *JourneyProductsResponse) GetName() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetName() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Name
+	return j.Name
 }
 
-func (o *JourneyProductsResponse) GetPrice() *Price {
-	if o == nil {
+func (j *JourneyProductsResponse) GetPrice() *Price {
+	if j == nil {
 		return nil
 	}
-	return o.Price
+	return j.Price
 }
 
-func (o *JourneyProductsResponse) GetProductDownloads() []any {
-	if o == nil {
+func (j *JourneyProductsResponse) GetProductDownloads() []any {
+	if j == nil {
 		return nil
 	}
-	return o.ProductDownloads
+	return j.ProductDownloads
 }
 
-func (o *JourneyProductsResponse) GetProductImages() []any {
-	if o == nil {
+func (j *JourneyProductsResponse) GetProductImages() []any {
+	if j == nil {
 		return nil
 	}
-	return o.ProductImages
+	return j.ProductImages
 }
 
-func (o *JourneyProductsResponse) GetType() *string {
-	if o == nil {
+func (j *JourneyProductsResponse) GetType() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Type
+	return j.Type
 }

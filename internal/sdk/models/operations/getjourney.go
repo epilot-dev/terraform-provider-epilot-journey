@@ -9,13 +9,21 @@ import (
 
 type GetJourneySecurity struct {
 	EpilotAuth *string `security:"scheme,type=http,subtype=bearer,name=Authorization"`
+	PortalAuth *string `security:"scheme,type=http,subtype=bearer,name=Authorization"`
 }
 
-func (o *GetJourneySecurity) GetEpilotAuth() *string {
-	if o == nil {
+func (g *GetJourneySecurity) GetEpilotAuth() *string {
+	if g == nil {
 		return nil
 	}
-	return o.EpilotAuth
+	return g.EpilotAuth
+}
+
+func (g *GetJourneySecurity) GetPortalAuth() *string {
+	if g == nil {
+		return nil
+	}
+	return g.PortalAuth
 }
 
 type GetJourneyRequest struct {
@@ -27,25 +35,25 @@ type GetJourneyRequest struct {
 	Source *string `queryParam:"style=form,explode=true,name=source"`
 }
 
-func (o *GetJourneyRequest) GetID() string {
-	if o == nil {
+func (g *GetJourneyRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
-func (o *GetJourneyRequest) GetOrgID() *string {
-	if o == nil {
+func (g *GetJourneyRequest) GetOrgID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.OrgID
+	return g.OrgID
 }
 
-func (o *GetJourneyRequest) GetSource() *string {
-	if o == nil {
+func (g *GetJourneyRequest) GetSource() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Source
+	return g.Source
 }
 
 type GetJourneyResponse struct {
@@ -59,30 +67,30 @@ type GetJourneyResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetJourneyResponse) GetContentType() string {
-	if o == nil {
+func (g *GetJourneyResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetJourneyResponse) GetJourney() *shared.Journey {
-	if o == nil {
+func (g *GetJourneyResponse) GetJourney() *shared.Journey {
+	if g == nil {
 		return nil
 	}
-	return o.Journey
+	return g.Journey
 }
 
-func (o *GetJourneyResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetJourneyResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetJourneyResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetJourneyResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

@@ -6,9 +6,9 @@ type JourneyResponse struct {
 	CreatedJourney *Journey `json:"createdJourney,omitempty"`
 }
 
-func (o *JourneyResponse) GetCreatedJourney() *Journey {
-	if o == nil {
+func (j *JourneyResponse) GetCreatedJourney() *Journey {
+	if j == nil {
 		return nil
 	}
-	return o.CreatedJourney
+	return j.CreatedJourney
 }

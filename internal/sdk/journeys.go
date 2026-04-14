@@ -64,7 +64,7 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createJourney",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "JourneyCreationRequest", "json", `request:"mediaType=application/json"`)
@@ -93,7 +93,7 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 		req.Header.Set("Content-Type", reqContentType)
 	}
 
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
@@ -230,6 +230,27 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 400:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out shared.JourneyValidationError
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.JourneyValidationError = &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -254,7 +275,7 @@ func (s *Journeys) CreateJourney(ctx context.Context, request operations.CreateJ
 //
 // Uses [Document API](https://gitlab.com/e-pilot/product/file-management/document-api) to generate the document.
 // Uses [Template Variables API](https://docs.epilot.io/api/template-variables) to replace variables in the document.
-func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.GenerateDocumentRequest, security *operations.GenerateDocumentSecurity, opts ...operations.Option) (*operations.GenerateDocumentResponse, error) {
+func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.GenerateDocumentRequest, opts ...operations.Option) (*operations.GenerateDocumentResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -285,7 +306,7 @@ func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.Generat
 		Context:          ctx,
 		OperationID:      "generateDocument",
 		OAuth2Scopes:     nil,
-		SecuritySource:   utils.AsSecuritySource(security),
+		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
@@ -313,7 +334,7 @@ func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.Generat
 		req.Header.Set("Content-Type", reqContentType)
 	}
 
-	if err := utils.PopulateSecurity(ctx, req, utils.AsSecuritySource(security)); err != nil {
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
 	}
 
@@ -460,6 +481,8 @@ func (s *Journeys) GenerateDocument(ctx context.Context, request *shared.Generat
 
 // GetButtonOptions - getButtonOptions
 // Get button options from a csv file.
+//
+// If set, this operation will use [Security.EpilotAuth] from the global security.
 func (s *Journeys) GetButtonOptions(ctx context.Context, request operations.GetButtonOptionsRequest, opts ...operations.Option) (*operations.GetButtonOptionsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -490,7 +513,7 @@ func (s *Journeys) GetButtonOptions(ctx context.Context, request operations.GetB
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getButtonOptions",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -512,11 +535,11 @@ func (s *Journeys) GetButtonOptions(ctx context.Context, request operations.GetB
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
-	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security, "EpilotAuth"); err != nil {
 		return nil, err
 	}
 
@@ -778,7 +801,7 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
@@ -929,6 +952,8 @@ func (s *Journeys) GetJourney(ctx context.Context, request operations.GetJourney
 
 // GetJourneyProducts - getJourneyProducts
 // Get products available in the journey by id. requires public journey token to be passed.
+//
+// If set, this operation will use [Security.EpilotAuth] from the global security.
 func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.GetJourneyProductsRequest, opts ...operations.Option) (*operations.GetJourneyProductsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -959,7 +984,7 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getJourneyProducts",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -981,11 +1006,11 @@ func (s *Journeys) GetJourneyProducts(ctx context.Context, request operations.Ge
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
-	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security, "EpilotAuth"); err != nil {
 		return nil, err
 	}
 
@@ -1162,7 +1187,7 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getJourneysByOrgId",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1184,7 +1209,7 @@ func (s *Journeys) GetJourneysByOrgID(ctx context.Context, request operations.Ge
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
@@ -1365,7 +1390,7 @@ func (s *Journeys) GetSettingsForJourney(ctx context.Context, request operations
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getSettingsForJourney",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   nil,
 	}
 
@@ -1602,7 +1627,7 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "patchUpdateJourney",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
@@ -1764,6 +1789,27 @@ func (s *Journeys) PatchUpdateJourney(ctx context.Context, request *shared.Patch
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 400:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out shared.JourneyValidationError
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.JourneyValidationError = &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
@@ -1829,7 +1875,7 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "removeJourney",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1964,6 +2010,7 @@ func (s *Journeys) RemoveJourney(ctx context.Context, request operations.RemoveJ
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
@@ -2029,7 +2076,7 @@ func (s *Journeys) SearchJourneys(ctx context.Context, request *shared.SearchJou
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "searchJourneys",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
@@ -2235,7 +2282,7 @@ func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCre
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateJourney",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
@@ -2258,7 +2305,7 @@ func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCre
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
-	req.Header.Set("Accept", "*/*")
+	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 	if reqContentType != "" {
 		req.Header.Set("Content-Type", reqContentType)
@@ -2379,7 +2426,30 @@ func (s *Journeys) UpdateJourney(ctx context.Context, request *shared.JourneyCre
 	case httpRes.StatusCode == 204:
 		res.Headers = httpRes.Header
 
+		utils.DrainBody(httpRes)
+	case httpRes.StatusCode == 400:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out shared.JourneyValidationError
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.JourneyValidationError = &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
 	case httpRes.StatusCode == 409:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

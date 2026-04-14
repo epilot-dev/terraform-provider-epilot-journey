@@ -37,19 +37,21 @@ type JourneyResource struct {
 
 // JourneyResourceModel describes the resource data model.
 type JourneyResourceModel struct {
-	BrandID         types.String                                    `tfsdk:"brand_id"`
-	ContextSchema   []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
-	Design          *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
-	JourneyID       types.String                                    `tfsdk:"journey_id"`
-	JourneyType     types.String                                    `tfsdk:"journey_type"`
-	Logics          jsontypes.Normalized                            `tfsdk:"logics"`
-	LogicsV4        jsontypes.Normalized                            `tfsdk:"logics_v4"`
-	Manifest        []types.String                                  `tfsdk:"manifest"`
-	Name            types.String                                    `tfsdk:"name"`
-	Rules           []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
-	Settings        *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
-	Steps           jsontypes.Normalized                            `tfsdk:"steps"`
-	ValidationRules jsontypes.Normalized                            `tfsdk:"validation_rules"`
+	BrandID           types.String                                    `tfsdk:"brand_id"`
+	ContextSchema     []tfTypes.JourneyCreationRequestV2ContextSchema `tfsdk:"context_schema"`
+	Design            *tfTypes.JourneyCreationRequestV2Design         `tfsdk:"design"`
+	JourneyID         types.String                                    `tfsdk:"journey_id"`
+	JourneyType       types.String                                    `tfsdk:"journey_type"`
+	Logics            jsontypes.Normalized                            `tfsdk:"logics"`
+	LogicsV4          jsontypes.Normalized                            `tfsdk:"logics_v4"`
+	Manifest          []types.String                                  `tfsdk:"manifest"`
+	Name              types.String                                    `tfsdk:"name"`
+	Protected         types.Bool                                      `tfsdk:"protected"`
+	ProtectedEditable []types.String                                  `tfsdk:"protected_editable"`
+	Rules             []tfTypes.JourneyCreationRequestV2Rules         `tfsdk:"rules"`
+	Settings          *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
+	Steps             jsontypes.Normalized                            `tfsdk:"steps"`
+	ValidationRules   jsontypes.Normalized                            `tfsdk:"validation_rules"`
 }
 
 func (r *JourneyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -158,6 +160,17 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 			"name": schema.StringAttribute{
 				Required: true,
 			},
+			"protected": schema.BoolAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `If true, journey is displayed in read-only mode`,
+			},
+			"protected_editable": schema.ListAttribute{
+				Computed:    true,
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: `Whitelist of paths that remain editable when the journey is protected. Supports wildcard patterns (e.g. steps/*/blocks/**).`,
+			},
 			"rules": schema.ListNestedAttribute{
 				Computed: true,
 				Optional: true,
@@ -225,6 +238,21 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 							),
 						},
 					},
+					"address_suggestions_country_code": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Country code for address format (e.g. DE, AT, CH, LU)`,
+					},
+					"address_suggestions_enable_auto_complete": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Whether address auto-complete is enabled`,
+					},
+					"address_suggestions_enable_free_text": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Whether free text input is allowed when auto-complete is on`,
+					},
 					"address_suggestions_file_id": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
@@ -233,6 +261,12 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Computed:    true,
 						Optional:    true,
 						Description: `@deprecated Use addressSuggestionsFileId instead`,
+					},
+					"address_suggestions_source": schema.ListAttribute{
+						Computed:    true,
+						Optional:    true,
+						ElementType: types.StringType,
+						Description: `Sources for address auto-complete (e.g. deutschePostService, customAddressesFile)`,
 					},
 					"description": schema.StringAttribute{
 						Computed: true,
@@ -606,7 +640,10 @@ func (r *JourneyResource) Delete(ctx context.Context, req resource.DeleteRequest
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

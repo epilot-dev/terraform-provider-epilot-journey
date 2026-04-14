@@ -11,11 +11,11 @@ type RemoveJourneyRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *RemoveJourneyRequest) GetID() string {
-	if o == nil {
+func (r *RemoveJourneyRequest) GetID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ID
+	return r.ID
 }
 
 // RemoveJourneyResponseBody - Journey not found
@@ -23,11 +23,11 @@ type RemoveJourneyResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *RemoveJourneyResponseBody) GetMessage() *string {
-	if o == nil {
+func (r *RemoveJourneyResponseBody) GetMessage() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Message
+	return r.Message
 }
 
 type RemoveJourneyResponse struct {
@@ -41,30 +41,30 @@ type RemoveJourneyResponse struct {
 	Object *RemoveJourneyResponseBody
 }
 
-func (o *RemoveJourneyResponse) GetContentType() string {
-	if o == nil {
+func (r *RemoveJourneyResponse) GetContentType() string {
+	if r == nil {
 		return ""
 	}
-	return o.ContentType
+	return r.ContentType
 }
 
-func (o *RemoveJourneyResponse) GetStatusCode() int {
-	if o == nil {
+func (r *RemoveJourneyResponse) GetStatusCode() int {
+	if r == nil {
 		return 0
 	}
-	return o.StatusCode
+	return r.StatusCode
 }
 
-func (o *RemoveJourneyResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (r *RemoveJourneyResponse) GetRawResponse() *http.Response {
+	if r == nil {
 		return nil
 	}
-	return o.RawResponse
+	return r.RawResponse
 }
 
-func (o *RemoveJourneyResponse) GetObject() *RemoveJourneyResponseBody {
-	if o == nil {
+func (r *RemoveJourneyResponse) GetObject() *RemoveJourneyResponseBody {
+	if r == nil {
 		return nil
 	}
-	return o.Object
+	return r.Object
 }

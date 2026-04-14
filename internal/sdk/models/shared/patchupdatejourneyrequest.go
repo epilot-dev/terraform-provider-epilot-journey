@@ -19,29 +19,29 @@ func (p PatchUpdateJourneyRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PatchUpdateJourneyRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &p, "", false, []string{"journeyId"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &p, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *PatchUpdateJourneyRequest) GetAdditionalProperties() any {
-	if o == nil {
+func (p *PatchUpdateJourneyRequest) GetAdditionalProperties() any {
+	if p == nil {
 		return nil
 	}
-	return o.AdditionalProperties
+	return p.AdditionalProperties
 }
 
-func (o *PatchUpdateJourneyRequest) GetLastModifiedAt() *string {
-	if o == nil {
+func (p *PatchUpdateJourneyRequest) GetLastModifiedAt() *string {
+	if p == nil {
 		return nil
 	}
-	return o.LastModifiedAt
+	return p.LastModifiedAt
 }
 
-func (o *PatchUpdateJourneyRequest) GetJourneyID() string {
-	if o == nil {
+func (p *PatchUpdateJourneyRequest) GetJourneyID() string {
+	if p == nil {
 		return ""
 	}
-	return o.JourneyID
+	return p.JourneyID
 }

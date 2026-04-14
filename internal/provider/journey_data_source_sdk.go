@@ -68,6 +68,11 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(ctx c
 			r.LogicsV4 = jsontypes.NewNormalizedValue(string(logicsV4Result))
 		}
 		r.Name = types.StringValue(resp.Name)
+		r.Protected = types.BoolPointerValue(resp.Protected)
+		r.ProtectedEditable = make([]types.String, 0, len(resp.ProtectedEditable))
+		for _, v := range resp.ProtectedEditable {
+			r.ProtectedEditable = append(r.ProtectedEditable, types.StringValue(v))
+		}
 		r.Rules = []tfTypes.JourneyCreationRequestV2Rules{}
 
 		for _, rulesItem := range resp.Rules {
@@ -89,8 +94,15 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(ctx c
 			} else {
 				r.Settings.AccessMode = types.StringNull()
 			}
+			r.Settings.AddressSuggestionsCountryCode = types.StringPointerValue(resp.Settings.AddressSuggestionsCountryCode)
+			r.Settings.AddressSuggestionsEnableAutoComplete = types.BoolPointerValue(resp.Settings.AddressSuggestionsEnableAutoComplete)
+			r.Settings.AddressSuggestionsEnableFreeText = types.BoolPointerValue(resp.Settings.AddressSuggestionsEnableFreeText)
 			r.Settings.AddressSuggestionsFileID = types.StringPointerValue(resp.Settings.AddressSuggestionsFileID)
 			r.Settings.AddressSuggestionsFileURL = types.StringPointerValue(resp.Settings.AddressSuggestionsFileURL)
+			r.Settings.AddressSuggestionsSource = make([]types.String, 0, len(resp.Settings.AddressSuggestionsSource))
+			for _, v := range resp.Settings.AddressSuggestionsSource {
+				r.Settings.AddressSuggestionsSource = append(r.Settings.AddressSuggestionsSource, types.StringValue(v))
+			}
 			r.Settings.Description = types.StringPointerValue(resp.Settings.Description)
 			r.Settings.DesignID = types.StringPointerValue(resp.Settings.DesignID)
 			if resp.Settings.EmbedOptions == nil {
