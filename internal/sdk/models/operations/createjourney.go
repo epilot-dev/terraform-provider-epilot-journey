@@ -14,18 +14,18 @@ type CreateJourneyRequest struct {
 	SkipAutomation *string `queryParam:"style=form,explode=true,name=skipAutomation"`
 }
 
-func (o *CreateJourneyRequest) GetJourneyCreationRequest() *shared.JourneyCreationRequest {
-	if o == nil {
+func (c *CreateJourneyRequest) GetJourneyCreationRequest() *shared.JourneyCreationRequest {
+	if c == nil {
 		return nil
 	}
-	return o.JourneyCreationRequest
+	return c.JourneyCreationRequest
 }
 
-func (o *CreateJourneyRequest) GetSkipAutomation() *string {
-	if o == nil {
+func (c *CreateJourneyRequest) GetSkipAutomation() *string {
+	if c == nil {
 		return nil
 	}
-	return o.SkipAutomation
+	return c.SkipAutomation
 }
 
 type CreateJourneyResponse struct {
@@ -33,36 +33,45 @@ type CreateJourneyResponse struct {
 	ContentType string
 	// Success
 	Journey *shared.Journey
+	// Validation failed (when validation mode is STRICT)
+	JourneyValidationError *shared.JourneyValidationError
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 }
 
-func (o *CreateJourneyResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateJourneyResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateJourneyResponse) GetJourney() *shared.Journey {
-	if o == nil {
+func (c *CreateJourneyResponse) GetJourney() *shared.Journey {
+	if c == nil {
 		return nil
 	}
-	return o.Journey
+	return c.Journey
 }
 
-func (o *CreateJourneyResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateJourneyResponse) GetJourneyValidationError() *shared.JourneyValidationError {
+	if c == nil {
+		return nil
+	}
+	return c.JourneyValidationError
+}
+
+func (c *CreateJourneyResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateJourneyResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateJourneyResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

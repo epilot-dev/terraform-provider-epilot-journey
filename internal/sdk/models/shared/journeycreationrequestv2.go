@@ -20,43 +20,49 @@ type JourneyCreationRequestV2ContextSchema struct {
 	Type string `json:"type"`
 }
 
-func (o *JourneyCreationRequestV2ContextSchema) GetID() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2ContextSchema) GetID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.ID
+	return j.ID
 }
 
-func (o *JourneyCreationRequestV2ContextSchema) GetIsRequired() *bool {
-	if o == nil {
+func (j *JourneyCreationRequestV2ContextSchema) GetIsRequired() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.IsRequired
+	return j.IsRequired
 }
 
-func (o *JourneyCreationRequestV2ContextSchema) GetParamKey() string {
-	if o == nil {
+func (j *JourneyCreationRequestV2ContextSchema) GetParamKey() string {
+	if j == nil {
 		return ""
 	}
-	return o.ParamKey
+	return j.ParamKey
 }
 
-func (o *JourneyCreationRequestV2ContextSchema) GetShouldLoadEntity() *bool {
-	if o == nil {
+func (j *JourneyCreationRequestV2ContextSchema) GetShouldLoadEntity() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.ShouldLoadEntity
+	return j.ShouldLoadEntity
 }
 
-func (o *JourneyCreationRequestV2ContextSchema) GetType() string {
-	if o == nil {
+func (j *JourneyCreationRequestV2ContextSchema) GetType() string {
+	if j == nil {
 		return ""
 	}
-	return o.Type
+	return j.Type
 }
+
+// #region class-body-journeycreationrequestv2contextschema
+// #endregion class-body-journeycreationrequestv2contextschema
 
 type JourneyCreationRequestV2DesignTokens struct {
 }
+
+// #region class-body-journeycreationrequestv2designtokens
+// #endregion class-body-journeycreationrequestv2designtokens
 
 type JourneyCreationRequestV2Design struct {
 	DesignTokens *JourneyCreationRequestV2DesignTokens `json:"designTokens,omitempty"`
@@ -64,26 +70,29 @@ type JourneyCreationRequestV2Design struct {
 	Theme        map[string]any                        `json:"theme,omitempty"`
 }
 
-func (o *JourneyCreationRequestV2Design) GetDesignTokens() *JourneyCreationRequestV2DesignTokens {
-	if o == nil {
+func (j *JourneyCreationRequestV2Design) GetDesignTokens() *JourneyCreationRequestV2DesignTokens {
+	if j == nil {
 		return nil
 	}
-	return o.DesignTokens
+	return j.DesignTokens
 }
 
-func (o *JourneyCreationRequestV2Design) GetLogoURL() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Design) GetLogoURL() *string {
+	if j == nil {
 		return nil
 	}
-	return o.LogoURL
+	return j.LogoURL
 }
 
-func (o *JourneyCreationRequestV2Design) GetTheme() map[string]any {
-	if o == nil {
+func (j *JourneyCreationRequestV2Design) GetTheme() map[string]any {
+	if j == nil {
 		return nil
 	}
-	return o.Theme
+	return j.Theme
 }
+
+// #region class-body-journeycreationrequestv2design
+// #endregion class-body-journeycreationrequestv2design
 
 type JourneyCreationRequestV2SourceType string
 
@@ -147,33 +156,36 @@ type JourneyCreationRequestV2Rules struct {
 	Type       JourneyCreationRequestV2Type       `json:"type"`
 }
 
-func (o *JourneyCreationRequestV2Rules) GetSource() string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Rules) GetSource() string {
+	if j == nil {
 		return ""
 	}
-	return o.Source
+	return j.Source
 }
 
-func (o *JourneyCreationRequestV2Rules) GetSourceType() JourneyCreationRequestV2SourceType {
-	if o == nil {
+func (j *JourneyCreationRequestV2Rules) GetSourceType() JourneyCreationRequestV2SourceType {
+	if j == nil {
 		return JourneyCreationRequestV2SourceType("")
 	}
-	return o.SourceType
+	return j.SourceType
 }
 
-func (o *JourneyCreationRequestV2Rules) GetTarget() string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Rules) GetTarget() string {
+	if j == nil {
 		return ""
 	}
-	return o.Target
+	return j.Target
 }
 
-func (o *JourneyCreationRequestV2Rules) GetType() JourneyCreationRequestV2Type {
-	if o == nil {
+func (j *JourneyCreationRequestV2Rules) GetType() JourneyCreationRequestV2Type {
+	if j == nil {
 		return JourneyCreationRequestV2Type("")
 	}
-	return o.Type
+	return j.Type
 }
+
+// #region class-body-journeycreationrequestv2rules
+// #endregion class-body-journeycreationrequestv2rules
 
 type JourneyCreationRequestV2AccessMode string
 
@@ -235,19 +247,22 @@ type JourneyCreationRequestV2Button struct {
 	Text  *string                        `json:"text,omitempty"`
 }
 
-func (o *JourneyCreationRequestV2Button) GetAlign() *JourneyCreationRequestV2Align {
-	if o == nil {
+func (j *JourneyCreationRequestV2Button) GetAlign() *JourneyCreationRequestV2Align {
+	if j == nil {
 		return nil
 	}
-	return o.Align
+	return j.Align
 }
 
-func (o *JourneyCreationRequestV2Button) GetText() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Button) GetText() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Text
+	return j.Text
 }
+
+// #region class-body-journeycreationrequestv2button
+// #endregion class-body-journeycreationrequestv2button
 
 type JourneyCreationRequestV2Lang string
 
@@ -313,47 +328,50 @@ type JourneyCreationRequestV2EmbedOptions struct {
 	Width       *string                         `json:"width,omitempty"`
 }
 
-func (o *JourneyCreationRequestV2EmbedOptions) GetButton() *JourneyCreationRequestV2Button {
-	if o == nil {
+func (j *JourneyCreationRequestV2EmbedOptions) GetButton() *JourneyCreationRequestV2Button {
+	if j == nil {
 		return nil
 	}
-	return o.Button
+	return j.Button
 }
 
-func (o *JourneyCreationRequestV2EmbedOptions) GetLang() *JourneyCreationRequestV2Lang {
-	if o == nil {
+func (j *JourneyCreationRequestV2EmbedOptions) GetLang() *JourneyCreationRequestV2Lang {
+	if j == nil {
 		return nil
 	}
-	return o.Lang
+	return j.Lang
 }
 
-func (o *JourneyCreationRequestV2EmbedOptions) GetMode() *JourneyCreationRequestV2Mode {
-	if o == nil {
+func (j *JourneyCreationRequestV2EmbedOptions) GetMode() *JourneyCreationRequestV2Mode {
+	if j == nil {
 		return nil
 	}
-	return o.Mode
+	return j.Mode
 }
 
-func (o *JourneyCreationRequestV2EmbedOptions) GetScrollToTop() *bool {
-	if o == nil {
+func (j *JourneyCreationRequestV2EmbedOptions) GetScrollToTop() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.ScrollToTop
+	return j.ScrollToTop
 }
 
-func (o *JourneyCreationRequestV2EmbedOptions) GetTopBar() *bool {
-	if o == nil {
+func (j *JourneyCreationRequestV2EmbedOptions) GetTopBar() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.TopBar
+	return j.TopBar
 }
 
-func (o *JourneyCreationRequestV2EmbedOptions) GetWidth() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2EmbedOptions) GetWidth() *string {
+	if j == nil {
 		return nil
 	}
-	return o.Width
+	return j.Width
 }
+
+// #region class-body-journeycreationrequestv2embedoptions
+// #endregion class-body-journeycreationrequestv2embedoptions
 
 type JourneyCreationRequestV2RuntimeEntities string
 
@@ -382,13 +400,21 @@ func (e *JourneyCreationRequestV2RuntimeEntities) UnmarshalJSON(data []byte) err
 }
 
 type JourneyCreationRequestV2Settings struct {
-	AccessMode               *JourneyCreationRequestV2AccessMode `json:"accessMode,omitempty"`
-	AddressSuggestionsFileID *string                             `json:"addressSuggestionsFileId,omitempty"`
+	AccessMode *JourneyCreationRequestV2AccessMode `json:"accessMode,omitempty"`
+	// Country code for address format (e.g. DE, AT, CH, LU)
+	AddressSuggestionsCountryCode *string `json:"addressSuggestionsCountryCode,omitempty"`
+	// Whether address auto-complete is enabled
+	AddressSuggestionsEnableAutoComplete *bool `json:"addressSuggestionsEnableAutoComplete,omitempty"`
+	// Whether free text input is allowed when auto-complete is on
+	AddressSuggestionsEnableFreeText *bool   `json:"addressSuggestionsEnableFreeText,omitempty"`
+	AddressSuggestionsFileID         *string `json:"addressSuggestionsFileId,omitempty"`
 	// @deprecated Use addressSuggestionsFileId instead
-	AddressSuggestionsFileURL *string                               `json:"addressSuggestionsFileUrl,omitempty"`
-	Description               *string                               `json:"description,omitempty"`
-	DesignID                  *string                               `json:"designId,omitempty"`
-	EmbedOptions              *JourneyCreationRequestV2EmbedOptions `json:"embedOptions,omitempty"`
+	AddressSuggestionsFileURL *string `json:"addressSuggestionsFileUrl,omitempty"`
+	// Sources for address auto-complete (e.g. deutschePostService, customAddressesFile)
+	AddressSuggestionsSource []string                              `json:"addressSuggestionsSource,omitempty"`
+	Description              *string                               `json:"description,omitempty"`
+	DesignID                 *string                               `json:"designId,omitempty"`
+	EmbedOptions             *JourneyCreationRequestV2EmbedOptions `json:"embedOptions,omitempty"`
 	// If true, the journey shows an icon to toggle dark mode
 	EnableDarkMode       *bool                                     `json:"enableDarkMode,omitempty"`
 	EntityID             *string                                   `json:"entityId,omitempty"`
@@ -406,131 +432,162 @@ type JourneyCreationRequestV2Settings struct {
 	UseNewDesign *bool `json:"useNewDesign,omitempty"`
 }
 
-func (o *JourneyCreationRequestV2Settings) GetAccessMode() *JourneyCreationRequestV2AccessMode {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetAccessMode() *JourneyCreationRequestV2AccessMode {
+	if j == nil {
 		return nil
 	}
-	return o.AccessMode
+	return j.AccessMode
 }
 
-func (o *JourneyCreationRequestV2Settings) GetAddressSuggestionsFileID() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetAddressSuggestionsCountryCode() *string {
+	if j == nil {
 		return nil
 	}
-	return o.AddressSuggestionsFileID
+	return j.AddressSuggestionsCountryCode
 }
 
-func (o *JourneyCreationRequestV2Settings) GetAddressSuggestionsFileURL() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetAddressSuggestionsEnableAutoComplete() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.AddressSuggestionsFileURL
+	return j.AddressSuggestionsEnableAutoComplete
 }
 
-func (o *JourneyCreationRequestV2Settings) GetDescription() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetAddressSuggestionsEnableFreeText() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.Description
+	return j.AddressSuggestionsEnableFreeText
 }
 
-func (o *JourneyCreationRequestV2Settings) GetDesignID() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetAddressSuggestionsFileID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.DesignID
+	return j.AddressSuggestionsFileID
 }
 
-func (o *JourneyCreationRequestV2Settings) GetEmbedOptions() *JourneyCreationRequestV2EmbedOptions {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetAddressSuggestionsFileURL() *string {
+	if j == nil {
 		return nil
 	}
-	return o.EmbedOptions
+	return j.AddressSuggestionsFileURL
 }
 
-func (o *JourneyCreationRequestV2Settings) GetEnableDarkMode() *bool {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetAddressSuggestionsSource() []string {
+	if j == nil {
 		return nil
 	}
-	return o.EnableDarkMode
+	return j.AddressSuggestionsSource
 }
 
-func (o *JourneyCreationRequestV2Settings) GetEntityID() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetDescription() *string {
+	if j == nil {
 		return nil
 	}
-	return o.EntityID
+	return j.Description
 }
 
-func (o *JourneyCreationRequestV2Settings) GetEntityTags() []string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetDesignID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.EntityTags
+	return j.DesignID
 }
 
-func (o *JourneyCreationRequestV2Settings) GetFilePurposes() []string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetEmbedOptions() *JourneyCreationRequestV2EmbedOptions {
+	if j == nil {
 		return nil
 	}
-	return o.FilePurposes
+	return j.EmbedOptions
 }
 
-func (o *JourneyCreationRequestV2Settings) GetMappingsAutomationID() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetEnableDarkMode() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.MappingsAutomationID
+	return j.EnableDarkMode
 }
 
-func (o *JourneyCreationRequestV2Settings) GetPublicToken() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetEntityID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.PublicToken
+	return j.EntityID
 }
 
-func (o *JourneyCreationRequestV2Settings) GetRuntimeEntities() []JourneyCreationRequestV2RuntimeEntities {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetEntityTags() []string {
+	if j == nil {
 		return nil
 	}
-	return o.RuntimeEntities
+	return j.EntityTags
 }
 
-func (o *JourneyCreationRequestV2Settings) GetSafeModeAutomation() *bool {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetFilePurposes() []string {
+	if j == nil {
 		return nil
 	}
-	return o.SafeModeAutomation
+	return j.FilePurposes
 }
 
-func (o *JourneyCreationRequestV2Settings) GetTargetedCustomer() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetMappingsAutomationID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.TargetedCustomer
+	return j.MappingsAutomationID
 }
 
-func (o *JourneyCreationRequestV2Settings) GetTemplateID() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetPublicToken() *string {
+	if j == nil {
 		return nil
 	}
-	return o.TemplateID
+	return j.PublicToken
 }
 
-func (o *JourneyCreationRequestV2Settings) GetThirdPartyCookies() *bool {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetRuntimeEntities() []JourneyCreationRequestV2RuntimeEntities {
+	if j == nil {
 		return nil
 	}
-	return o.ThirdPartyCookies
+	return j.RuntimeEntities
 }
 
-func (o *JourneyCreationRequestV2Settings) GetUseNewDesign() *bool {
-	if o == nil {
+func (j *JourneyCreationRequestV2Settings) GetSafeModeAutomation() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.UseNewDesign
+	return j.SafeModeAutomation
 }
+
+func (j *JourneyCreationRequestV2Settings) GetTargetedCustomer() *string {
+	if j == nil {
+		return nil
+	}
+	return j.TargetedCustomer
+}
+
+func (j *JourneyCreationRequestV2Settings) GetTemplateID() *string {
+	if j == nil {
+		return nil
+	}
+	return j.TemplateID
+}
+
+func (j *JourneyCreationRequestV2Settings) GetThirdPartyCookies() *bool {
+	if j == nil {
+		return nil
+	}
+	return j.ThirdPartyCookies
+}
+
+func (j *JourneyCreationRequestV2Settings) GetUseNewDesign() *bool {
+	if j == nil {
+		return nil
+	}
+	return j.UseNewDesign
+}
+
+// #region class-body-journeycreationrequestv2settings
+// #endregion class-body-journeycreationrequestv2settings
 
 type JourneyCreationRequestV2 struct {
 	// Manifest/Blueprint ID used to create/update the entity
@@ -540,103 +597,124 @@ type JourneyCreationRequestV2 struct {
 	Design        *JourneyCreationRequestV2Design         `json:"design,omitempty"`
 	JourneyID     *string                                 `json:"journeyId,omitempty"`
 	// Journey Template
-	JourneyType     *string                           `json:"journey_type,omitempty"`
-	Logics          any                               `json:"logics,omitempty"`
-	LogicsV4        any                               `json:"logicsV4,omitempty"`
-	Name            string                            `json:"name"`
-	Rules           []JourneyCreationRequestV2Rules   `json:"rules,omitempty"`
-	Settings        *JourneyCreationRequestV2Settings `json:"settings,omitempty"`
-	Steps           any                               `json:"steps"`
-	ValidationRules any                               `json:"validationRules,omitempty"`
+	JourneyType *string `json:"journey_type,omitempty"`
+	Logics      any     `json:"logics,omitempty"`
+	LogicsV4    any     `json:"logicsV4,omitempty"`
+	Name        string  `json:"name"`
+	// If true, journey is displayed in read-only mode
+	Protected *bool `json:"protected,omitempty"`
+	// Whitelist of paths that remain editable when the journey is protected. Supports wildcard patterns (e.g. steps/*/blocks/**).
+	ProtectedEditable []string                          `json:"protectedEditable,omitempty"`
+	Rules             []JourneyCreationRequestV2Rules   `json:"rules,omitempty"`
+	Settings          *JourneyCreationRequestV2Settings `json:"settings,omitempty"`
+	Steps             any                               `json:"steps"`
+	ValidationRules   any                               `json:"validationRules,omitempty"`
 }
 
-func (o *JourneyCreationRequestV2) GetManifest() []string {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetManifest() []string {
+	if j == nil {
 		return nil
 	}
-	return o.Manifest
+	return j.Manifest
 }
 
-func (o *JourneyCreationRequestV2) GetBrandID() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetBrandID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.BrandID
+	return j.BrandID
 }
 
-func (o *JourneyCreationRequestV2) GetContextSchema() []JourneyCreationRequestV2ContextSchema {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetContextSchema() []JourneyCreationRequestV2ContextSchema {
+	if j == nil {
 		return nil
 	}
-	return o.ContextSchema
+	return j.ContextSchema
 }
 
-func (o *JourneyCreationRequestV2) GetDesign() *JourneyCreationRequestV2Design {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetDesign() *JourneyCreationRequestV2Design {
+	if j == nil {
 		return nil
 	}
-	return o.Design
+	return j.Design
 }
 
-func (o *JourneyCreationRequestV2) GetJourneyID() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetJourneyID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.JourneyID
+	return j.JourneyID
 }
 
-func (o *JourneyCreationRequestV2) GetJourneyType() *string {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetJourneyType() *string {
+	if j == nil {
 		return nil
 	}
-	return o.JourneyType
+	return j.JourneyType
 }
 
-func (o *JourneyCreationRequestV2) GetLogics() any {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetLogics() any {
+	if j == nil {
 		return nil
 	}
-	return o.Logics
+	return j.Logics
 }
 
-func (o *JourneyCreationRequestV2) GetLogicsV4() any {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetLogicsV4() any {
+	if j == nil {
 		return nil
 	}
-	return o.LogicsV4
+	return j.LogicsV4
 }
 
-func (o *JourneyCreationRequestV2) GetName() string {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetName() string {
+	if j == nil {
 		return ""
 	}
-	return o.Name
+	return j.Name
 }
 
-func (o *JourneyCreationRequestV2) GetRules() []JourneyCreationRequestV2Rules {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetProtected() *bool {
+	if j == nil {
 		return nil
 	}
-	return o.Rules
+	return j.Protected
 }
 
-func (o *JourneyCreationRequestV2) GetSettings() *JourneyCreationRequestV2Settings {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetProtectedEditable() []string {
+	if j == nil {
 		return nil
 	}
-	return o.Settings
+	return j.ProtectedEditable
 }
 
-func (o *JourneyCreationRequestV2) GetSteps() any {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetRules() []JourneyCreationRequestV2Rules {
+	if j == nil {
 		return nil
 	}
-	return o.Steps
+	return j.Rules
 }
 
-func (o *JourneyCreationRequestV2) GetValidationRules() any {
-	if o == nil {
+func (j *JourneyCreationRequestV2) GetSettings() *JourneyCreationRequestV2Settings {
+	if j == nil {
 		return nil
 	}
-	return o.ValidationRules
+	return j.Settings
 }
+
+func (j *JourneyCreationRequestV2) GetSteps() any {
+	if j == nil {
+		return nil
+	}
+	return j.Steps
+}
+
+func (j *JourneyCreationRequestV2) GetValidationRules() any {
+	if j == nil {
+		return nil
+	}
+	return j.ValidationRules
+}
+
+// #region class-body-journeycreationrequestv2
+// #endregion class-body-journeycreationrequestv2

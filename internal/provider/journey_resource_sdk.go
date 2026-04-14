@@ -68,6 +68,11 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(ctx con
 			r.LogicsV4 = jsontypes.NewNormalizedValue(string(logicsV4Result))
 		}
 		r.Name = types.StringValue(resp.Name)
+		r.Protected = types.BoolPointerValue(resp.Protected)
+		r.ProtectedEditable = make([]types.String, 0, len(resp.ProtectedEditable))
+		for _, v := range resp.ProtectedEditable {
+			r.ProtectedEditable = append(r.ProtectedEditable, types.StringValue(v))
+		}
 		r.Rules = []tfTypes.JourneyCreationRequestV2Rules{}
 
 		for _, rulesItem := range resp.Rules {
@@ -89,8 +94,15 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(ctx con
 			} else {
 				r.Settings.AccessMode = types.StringNull()
 			}
+			r.Settings.AddressSuggestionsCountryCode = types.StringPointerValue(resp.Settings.AddressSuggestionsCountryCode)
+			r.Settings.AddressSuggestionsEnableAutoComplete = types.BoolPointerValue(resp.Settings.AddressSuggestionsEnableAutoComplete)
+			r.Settings.AddressSuggestionsEnableFreeText = types.BoolPointerValue(resp.Settings.AddressSuggestionsEnableFreeText)
 			r.Settings.AddressSuggestionsFileID = types.StringPointerValue(resp.Settings.AddressSuggestionsFileID)
 			r.Settings.AddressSuggestionsFileURL = types.StringPointerValue(resp.Settings.AddressSuggestionsFileURL)
+			r.Settings.AddressSuggestionsSource = make([]types.String, 0, len(resp.Settings.AddressSuggestionsSource))
+			for _, v := range resp.Settings.AddressSuggestionsSource {
+				r.Settings.AddressSuggestionsSource = append(r.Settings.AddressSuggestionsSource, types.StringValue(v))
+			}
 			r.Settings.Description = types.StringPointerValue(resp.Settings.Description)
 			r.Settings.DesignID = types.StringPointerValue(resp.Settings.DesignID)
 			if resp.Settings.EmbedOptions == nil {
@@ -187,8 +199,8 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 	var diags diag.Diagnostics
 
 	manifest := make([]string, 0, len(r.Manifest))
-	for _, manifestItem := range r.Manifest {
-		manifest = append(manifest, manifestItem.ValueString())
+	for manifestIndex := range r.Manifest {
+		manifest = append(manifest, r.Manifest[manifestIndex].ValueString())
 	}
 	brandID := new(string)
 	if !r.BrandID.IsUnknown() && !r.BrandID.IsNull() {
@@ -197,30 +209,30 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 		brandID = nil
 	}
 	contextSchema := make([]shared.JourneyCreationRequestV2ContextSchema, 0, len(r.ContextSchema))
-	for _, contextSchemaItem := range r.ContextSchema {
+	for contextSchemaIndex := range r.ContextSchema {
 		id := new(string)
-		if !contextSchemaItem.ID.IsUnknown() && !contextSchemaItem.ID.IsNull() {
-			*id = contextSchemaItem.ID.ValueString()
+		if !r.ContextSchema[contextSchemaIndex].ID.IsUnknown() && !r.ContextSchema[contextSchemaIndex].ID.IsNull() {
+			*id = r.ContextSchema[contextSchemaIndex].ID.ValueString()
 		} else {
 			id = nil
 		}
 		isRequired := new(bool)
-		if !contextSchemaItem.IsRequired.IsUnknown() && !contextSchemaItem.IsRequired.IsNull() {
-			*isRequired = contextSchemaItem.IsRequired.ValueBool()
+		if !r.ContextSchema[contextSchemaIndex].IsRequired.IsUnknown() && !r.ContextSchema[contextSchemaIndex].IsRequired.IsNull() {
+			*isRequired = r.ContextSchema[contextSchemaIndex].IsRequired.ValueBool()
 		} else {
 			isRequired = nil
 		}
 		var paramKey string
-		paramKey = contextSchemaItem.ParamKey.ValueString()
+		paramKey = r.ContextSchema[contextSchemaIndex].ParamKey.ValueString()
 
 		shouldLoadEntity := new(bool)
-		if !contextSchemaItem.ShouldLoadEntity.IsUnknown() && !contextSchemaItem.ShouldLoadEntity.IsNull() {
-			*shouldLoadEntity = contextSchemaItem.ShouldLoadEntity.ValueBool()
+		if !r.ContextSchema[contextSchemaIndex].ShouldLoadEntity.IsUnknown() && !r.ContextSchema[contextSchemaIndex].ShouldLoadEntity.IsNull() {
+			*shouldLoadEntity = r.ContextSchema[contextSchemaIndex].ShouldLoadEntity.ValueBool()
 		} else {
 			shouldLoadEntity = nil
 		}
 		var typeVar string
-		typeVar = contextSchemaItem.Type.ValueString()
+		typeVar = r.ContextSchema[contextSchemaIndex].Type.ValueString()
 
 		contextSchema = append(contextSchema, shared.JourneyCreationRequestV2ContextSchema{
 			ID:               id,
@@ -243,9 +255,9 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 			logoURL = nil
 		}
 		theme := make(map[string]interface{})
-		for themeKey, themeValue := range r.Design.Theme {
+		for themeKey := range r.Design.Theme {
 			var themeInst interface{}
-			_ = json.Unmarshal([]byte(themeValue.ValueString()), &themeInst)
+			_ = json.Unmarshal([]byte(r.Design.Theme[themeKey].ValueString()), &themeInst)
 			theme[themeKey] = themeInst
 		}
 		design = &shared.JourneyCreationRequestV2Design{
@@ -277,16 +289,26 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 	var name string
 	name = r.Name.ValueString()
 
+	protected := new(bool)
+	if !r.Protected.IsUnknown() && !r.Protected.IsNull() {
+		*protected = r.Protected.ValueBool()
+	} else {
+		protected = nil
+	}
+	protectedEditable := make([]string, 0, len(r.ProtectedEditable))
+	for protectedEditableIndex := range r.ProtectedEditable {
+		protectedEditable = append(protectedEditable, r.ProtectedEditable[protectedEditableIndex].ValueString())
+	}
 	rules := make([]shared.JourneyCreationRequestV2Rules, 0, len(r.Rules))
-	for _, rulesItem := range r.Rules {
+	for rulesIndex := range r.Rules {
 		var source string
-		source = rulesItem.Source.ValueString()
+		source = r.Rules[rulesIndex].Source.ValueString()
 
-		sourceType := shared.JourneyCreationRequestV2SourceType(rulesItem.SourceType.ValueString())
+		sourceType := shared.JourneyCreationRequestV2SourceType(r.Rules[rulesIndex].SourceType.ValueString())
 		var target string
-		target = rulesItem.Target.ValueString()
+		target = r.Rules[rulesIndex].Target.ValueString()
 
-		type1 := shared.JourneyCreationRequestV2Type(rulesItem.Type.ValueString())
+		type1 := shared.JourneyCreationRequestV2Type(r.Rules[rulesIndex].Type.ValueString())
 		rules = append(rules, shared.JourneyCreationRequestV2Rules{
 			Source:     source,
 			SourceType: sourceType,
@@ -302,6 +324,24 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 		} else {
 			accessMode = nil
 		}
+		addressSuggestionsCountryCode := new(string)
+		if !r.Settings.AddressSuggestionsCountryCode.IsUnknown() && !r.Settings.AddressSuggestionsCountryCode.IsNull() {
+			*addressSuggestionsCountryCode = r.Settings.AddressSuggestionsCountryCode.ValueString()
+		} else {
+			addressSuggestionsCountryCode = nil
+		}
+		addressSuggestionsEnableAutoComplete := new(bool)
+		if !r.Settings.AddressSuggestionsEnableAutoComplete.IsUnknown() && !r.Settings.AddressSuggestionsEnableAutoComplete.IsNull() {
+			*addressSuggestionsEnableAutoComplete = r.Settings.AddressSuggestionsEnableAutoComplete.ValueBool()
+		} else {
+			addressSuggestionsEnableAutoComplete = nil
+		}
+		addressSuggestionsEnableFreeText := new(bool)
+		if !r.Settings.AddressSuggestionsEnableFreeText.IsUnknown() && !r.Settings.AddressSuggestionsEnableFreeText.IsNull() {
+			*addressSuggestionsEnableFreeText = r.Settings.AddressSuggestionsEnableFreeText.ValueBool()
+		} else {
+			addressSuggestionsEnableFreeText = nil
+		}
 		addressSuggestionsFileID := new(string)
 		if !r.Settings.AddressSuggestionsFileID.IsUnknown() && !r.Settings.AddressSuggestionsFileID.IsNull() {
 			*addressSuggestionsFileID = r.Settings.AddressSuggestionsFileID.ValueString()
@@ -313,6 +353,10 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 			*addressSuggestionsFileURL = r.Settings.AddressSuggestionsFileURL.ValueString()
 		} else {
 			addressSuggestionsFileURL = nil
+		}
+		addressSuggestionsSource := make([]string, 0, len(r.Settings.AddressSuggestionsSource))
+		for addressSuggestionsSourceIndex := range r.Settings.AddressSuggestionsSource {
+			addressSuggestionsSource = append(addressSuggestionsSource, r.Settings.AddressSuggestionsSource[addressSuggestionsSourceIndex].ValueString())
 		}
 		description := new(string)
 		if !r.Settings.Description.IsUnknown() && !r.Settings.Description.IsNull() {
@@ -399,12 +443,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 			entityID = nil
 		}
 		entityTags := make([]string, 0, len(r.Settings.EntityTags))
-		for _, entityTagsItem := range r.Settings.EntityTags {
-			entityTags = append(entityTags, entityTagsItem.ValueString())
+		for entityTagsIndex := range r.Settings.EntityTags {
+			entityTags = append(entityTags, r.Settings.EntityTags[entityTagsIndex].ValueString())
 		}
 		filePurposes := make([]string, 0, len(r.Settings.FilePurposes))
-		for _, filePurposesItem := range r.Settings.FilePurposes {
-			filePurposes = append(filePurposes, filePurposesItem.ValueString())
+		for filePurposesIndex := range r.Settings.FilePurposes {
+			filePurposes = append(filePurposes, r.Settings.FilePurposes[filePurposesIndex].ValueString())
 		}
 		mappingsAutomationID := new(string)
 		if !r.Settings.MappingsAutomationID.IsUnknown() && !r.Settings.MappingsAutomationID.IsNull() {
@@ -453,24 +497,28 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 			useNewDesign = nil
 		}
 		settings = &shared.JourneyCreationRequestV2Settings{
-			AccessMode:                accessMode,
-			AddressSuggestionsFileID:  addressSuggestionsFileID,
-			AddressSuggestionsFileURL: addressSuggestionsFileURL,
-			Description:               description,
-			DesignID:                  designID,
-			EmbedOptions:              embedOptions,
-			EnableDarkMode:            enableDarkMode,
-			EntityID:                  entityID,
-			EntityTags:                entityTags,
-			FilePurposes:              filePurposes,
-			MappingsAutomationID:      mappingsAutomationID,
-			PublicToken:               publicToken,
-			RuntimeEntities:           runtimeEntities,
-			SafeModeAutomation:        safeModeAutomation,
-			TargetedCustomer:          targetedCustomer,
-			TemplateID:                templateID,
-			ThirdPartyCookies:         thirdPartyCookies,
-			UseNewDesign:              useNewDesign,
+			AccessMode:                           accessMode,
+			AddressSuggestionsCountryCode:        addressSuggestionsCountryCode,
+			AddressSuggestionsEnableAutoComplete: addressSuggestionsEnableAutoComplete,
+			AddressSuggestionsEnableFreeText:     addressSuggestionsEnableFreeText,
+			AddressSuggestionsFileID:             addressSuggestionsFileID,
+			AddressSuggestionsFileURL:            addressSuggestionsFileURL,
+			AddressSuggestionsSource:             addressSuggestionsSource,
+			Description:                          description,
+			DesignID:                             designID,
+			EmbedOptions:                         embedOptions,
+			EnableDarkMode:                       enableDarkMode,
+			EntityID:                             entityID,
+			EntityTags:                           entityTags,
+			FilePurposes:                         filePurposes,
+			MappingsAutomationID:                 mappingsAutomationID,
+			PublicToken:                          publicToken,
+			RuntimeEntities:                      runtimeEntities,
+			SafeModeAutomation:                   safeModeAutomation,
+			TargetedCustomer:                     targetedCustomer,
+			TemplateID:                           templateID,
+			ThirdPartyCookies:                    thirdPartyCookies,
+			UseNewDesign:                         useNewDesign,
 		}
 	}
 	var steps interface{}
@@ -480,19 +528,21 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 		_ = json.Unmarshal([]byte(r.ValidationRules.ValueString()), &validationRules)
 	}
 	out := shared.JourneyCreationRequestV2{
-		Manifest:        manifest,
-		BrandID:         brandID,
-		ContextSchema:   contextSchema,
-		Design:          design,
-		JourneyID:       journeyID,
-		JourneyType:     journeyType,
-		Logics:          logics,
-		LogicsV4:        logicsV4,
-		Name:            name,
-		Rules:           rules,
-		Settings:        settings,
-		Steps:           steps,
-		ValidationRules: validationRules,
+		Manifest:          manifest,
+		BrandID:           brandID,
+		ContextSchema:     contextSchema,
+		Design:            design,
+		JourneyID:         journeyID,
+		JourneyType:       journeyType,
+		Logics:            logics,
+		LogicsV4:          logicsV4,
+		Name:              name,
+		Protected:         protected,
+		ProtectedEditable: protectedEditable,
+		Rules:             rules,
+		Settings:          settings,
+		Steps:             steps,
+		ValidationRules:   validationRules,
 	}
 
 	return &out, diags

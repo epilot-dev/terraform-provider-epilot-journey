@@ -6,8 +6,11 @@ import (
 	"context"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
+	"github.com/hashicorp/terraform-plugin-framework/function"
+	"github.com/hashicorp/terraform-plugin-framework/list"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -16,7 +19,9 @@ import (
 )
 
 var _ provider.Provider = (*EpilotJourneyProvider)(nil)
+var _ provider.ProviderWithActions = (*EpilotJourneyProvider)(nil)
 var _ provider.ProviderWithEphemeralResources = (*EpilotJourneyProvider)(nil)
+var _ provider.ProviderWithFunctions = (*EpilotJourneyProvider)(nil)
 
 type EpilotJourneyProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -89,9 +94,19 @@ func (p *EpilotJourneyProvider) Configure(ctx context.Context, req provider.Conf
 	}
 
 	client := sdk.New(opts...)
+	resp.ActionData = client
 	resp.DataSourceData = client
 	resp.EphemeralResourceData = client
+	resp.ListResourceData = client
 	resp.ResourceData = client
+}
+
+func (p *EpilotJourneyProvider) Functions(_ context.Context) []func() function.Function {
+	return []func() function.Function{}
+}
+
+func (p *EpilotJourneyProvider) Actions(_ context.Context) []func() action.Action {
+	return []func() action.Action{}
 }
 
 func (p *EpilotJourneyProvider) Resources(ctx context.Context) []func() resource.Resource {
@@ -108,6 +123,10 @@ func (p *EpilotJourneyProvider) DataSources(ctx context.Context) []func() dataso
 
 func (p *EpilotJourneyProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
 	return []func() ephemeral.EphemeralResource{}
+}
+
+func (p *EpilotJourneyProvider) ListResources(ctx context.Context) []func() list.ListResource {
+	return []func() list.ListResource{}
 }
 
 func New(version string) func() provider.Provider {

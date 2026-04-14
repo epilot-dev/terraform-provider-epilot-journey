@@ -7,17 +7,6 @@ import (
 	"net/http"
 )
 
-type GenerateDocumentSecurity struct {
-	EpilotAuth *string `security:"scheme,type=http,subtype=bearer,name=Authorization"`
-}
-
-func (o *GenerateDocumentSecurity) GetEpilotAuth() *string {
-	if o == nil {
-		return nil
-	}
-	return o.EpilotAuth
-}
-
 type GenerateDocumentResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -29,30 +18,30 @@ type GenerateDocumentResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GenerateDocumentResponse) GetContentType() string {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GenerateDocumentResponse) GetGenerateDocumentResponse() *shared.GenerateDocumentResponse {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetGenerateDocumentResponse() *shared.GenerateDocumentResponse {
+	if g == nil {
 		return nil
 	}
-	return o.GenerateDocumentResponse
+	return g.GenerateDocumentResponse
 }
 
-func (o *GenerateDocumentResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GenerateDocumentResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GenerateDocumentResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
 	"net/http"
 )
 
@@ -10,36 +11,45 @@ type UpdateJourneyResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	Headers     map[string][]string
+	// Validation failed (when validation mode is STRICT)
+	JourneyValidationError *shared.JourneyValidationError
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 }
 
-func (o *UpdateJourneyResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateJourneyResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateJourneyResponse) GetHeaders() map[string][]string {
-	if o == nil {
+func (u *UpdateJourneyResponse) GetHeaders() map[string][]string {
+	if u == nil {
 		return map[string][]string{}
 	}
-	return o.Headers
+	return u.Headers
 }
 
-func (o *UpdateJourneyResponse) GetStatusCode() int {
-	if o == nil {
-		return 0
-	}
-	return o.StatusCode
-}
-
-func (o *UpdateJourneyResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateJourneyResponse) GetJourneyValidationError() *shared.JourneyValidationError {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.JourneyValidationError
+}
+
+func (u *UpdateJourneyResponse) GetStatusCode() int {
+	if u == nil {
+		return 0
+	}
+	return u.StatusCode
+}
+
+func (u *UpdateJourneyResponse) GetRawResponse() *http.Response {
+	if u == nil {
+		return nil
+	}
+	return u.RawResponse
 }

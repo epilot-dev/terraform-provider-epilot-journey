@@ -14,18 +14,18 @@ type GetJourneysByOrgIDRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GetJourneysByOrgIDRequest) GetHydrate() *string {
-	if o == nil {
+func (g *GetJourneysByOrgIDRequest) GetHydrate() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Hydrate
+	return g.Hydrate
 }
 
-func (o *GetJourneysByOrgIDRequest) GetID() string {
-	if o == nil {
+func (g *GetJourneysByOrgIDRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetJourneysByOrgIDResponse struct {
@@ -39,30 +39,30 @@ type GetJourneysByOrgIDResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetJourneysByOrgIDResponse) GetContentType() string {
-	if o == nil {
+func (g *GetJourneysByOrgIDResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetJourneysByOrgIDResponse) GetGetJourneysResponse() *shared.GetJourneysResponse {
-	if o == nil {
+func (g *GetJourneysByOrgIDResponse) GetGetJourneysResponse() *shared.GetJourneysResponse {
+	if g == nil {
 		return nil
 	}
-	return o.GetJourneysResponse
+	return g.GetJourneysResponse
 }
 
-func (o *GetJourneysByOrgIDResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetJourneysByOrgIDResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetJourneysByOrgIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetJourneysByOrgIDResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

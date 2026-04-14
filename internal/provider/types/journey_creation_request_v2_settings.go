@@ -7,22 +7,26 @@ import (
 )
 
 type JourneyCreationRequestV2Settings struct {
-	AccessMode                types.String                          `tfsdk:"access_mode"`
-	AddressSuggestionsFileID  types.String                          `tfsdk:"address_suggestions_file_id"`
-	AddressSuggestionsFileURL types.String                          `tfsdk:"address_suggestions_file_url"`
-	Description               types.String                          `tfsdk:"description"`
-	DesignID                  types.String                          `tfsdk:"design_id"`
-	EmbedOptions              *JourneyCreationRequestV2EmbedOptions `tfsdk:"embed_options"`
-	EnableDarkMode            types.Bool                            `tfsdk:"enable_dark_mode"`
-	EntityID                  types.String                          `tfsdk:"entity_id"`
-	EntityTags                []types.String                        `tfsdk:"entity_tags"`
-	FilePurposes              []types.String                        `tfsdk:"file_purposes"`
-	MappingsAutomationID      types.String                          `tfsdk:"mappings_automation_id"`
-	PublicToken               types.String                          `tfsdk:"public_token"`
-	RuntimeEntities           []types.String                        `tfsdk:"runtime_entities"`
-	SafeModeAutomation        types.Bool                            `tfsdk:"safe_mode_automation"`
-	TargetedCustomer          types.String                          `tfsdk:"targeted_customer"`
-	TemplateID                types.String                          `tfsdk:"template_id"`
-	ThirdPartyCookies         types.Bool                            `tfsdk:"third_party_cookies"`
-	UseNewDesign              types.Bool                            `tfsdk:"use_new_design"`
+	AccessMode                           types.String                          `tfsdk:"access_mode"`
+	AddressSuggestionsCountryCode        types.String                          `tfsdk:"address_suggestions_country_code"`
+	AddressSuggestionsEnableAutoComplete types.Bool                            `tfsdk:"address_suggestions_enable_auto_complete"`
+	AddressSuggestionsEnableFreeText     types.Bool                            `tfsdk:"address_suggestions_enable_free_text"`
+	AddressSuggestionsFileID             types.String                          `tfsdk:"address_suggestions_file_id"`
+	AddressSuggestionsFileURL            types.String                          `tfsdk:"address_suggestions_file_url"`
+	AddressSuggestionsSource             []types.String                        `tfsdk:"address_suggestions_source"`
+	Description                          types.String                          `tfsdk:"description"`
+	DesignID                             types.String                          `tfsdk:"design_id"`
+	EmbedOptions                         *JourneyCreationRequestV2EmbedOptions `tfsdk:"embed_options"`
+	EnableDarkMode                       types.Bool                            `tfsdk:"enable_dark_mode"`
+	EntityID                             types.String                          `tfsdk:"entity_id"`
+	EntityTags                           []types.String                        `tfsdk:"entity_tags"`
+	FilePurposes                         []types.String                        `tfsdk:"file_purposes"`
+	MappingsAutomationID                 types.String                          `tfsdk:"mappings_automation_id"`
+	PublicToken                          types.String                          `tfsdk:"public_token"`
+	RuntimeEntities                      []types.String                        `tfsdk:"runtime_entities"`
+	SafeModeAutomation                   types.Bool                            `tfsdk:"safe_mode_automation"`
+	TargetedCustomer                     types.String                          `tfsdk:"targeted_customer"`
+	TemplateID                           types.String                          `tfsdk:"template_id"`
+	ThirdPartyCookies                    types.Bool                            `tfsdk:"third_party_cookies"`
+	UseNewDesign                         types.Bool                            `tfsdk:"use_new_design"`
 }

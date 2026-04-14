@@ -11,12 +11,15 @@ type RemoveJourneyV2Request struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *RemoveJourneyV2Request) GetID() string {
-	if o == nil {
+func (r *RemoveJourneyV2Request) GetID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ID
+	return r.ID
 }
+
+// #region class-body-removejourneyv2request
+// #endregion class-body-removejourneyv2request
 
 type RemoveJourneyV2Response struct {
 	// HTTP response content type for this operation
@@ -27,23 +30,26 @@ type RemoveJourneyV2Response struct {
 	RawResponse *http.Response
 }
 
-func (o *RemoveJourneyV2Response) GetContentType() string {
-	if o == nil {
+func (r *RemoveJourneyV2Response) GetContentType() string {
+	if r == nil {
 		return ""
 	}
-	return o.ContentType
+	return r.ContentType
 }
 
-func (o *RemoveJourneyV2Response) GetStatusCode() int {
-	if o == nil {
+func (r *RemoveJourneyV2Response) GetStatusCode() int {
+	if r == nil {
 		return 0
 	}
-	return o.StatusCode
+	return r.StatusCode
 }
 
-func (o *RemoveJourneyV2Response) GetRawResponse() *http.Response {
-	if o == nil {
+func (r *RemoveJourneyV2Response) GetRawResponse() *http.Response {
+	if r == nil {
 		return nil
 	}
-	return o.RawResponse
+	return r.RawResponse
 }
+
+// #region class-body-removejourneyv2response
+// #endregion class-body-removejourneyv2response

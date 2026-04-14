@@ -12,11 +12,11 @@ type GetSettingsForJourneyRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GetSettingsForJourneyRequest) GetID() string {
-	if o == nil {
+func (g *GetSettingsForJourneyRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 // GetSettingsForJourneyJourneysResponseBody - Internal Server Error
@@ -24,11 +24,11 @@ type GetSettingsForJourneyJourneysResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *GetSettingsForJourneyJourneysResponseBody) GetMessage() *string {
-	if o == nil {
+func (g *GetSettingsForJourneyJourneysResponseBody) GetMessage() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Message
+	return g.Message
 }
 
 // GetSettingsForJourneyResponseBody - Not found
@@ -36,11 +36,11 @@ type GetSettingsForJourneyResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *GetSettingsForJourneyResponseBody) GetMessage() *string {
-	if o == nil {
+func (g *GetSettingsForJourneyResponseBody) GetMessage() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Message
+	return g.Message
 }
 
 type GetSettingsForJourneyResponse struct {
@@ -58,44 +58,44 @@ type GetSettingsForJourneyResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetSettingsForJourneyResponse) GetFourHundredAndFourApplicationJSONObject() *GetSettingsForJourneyResponseBody {
-	if o == nil {
+func (g *GetSettingsForJourneyResponse) GetFourHundredAndFourApplicationJSONObject() *GetSettingsForJourneyResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.FourHundredAndFourApplicationJSONObject
+	return g.FourHundredAndFourApplicationJSONObject
 }
 
-func (o *GetSettingsForJourneyResponse) GetFiveHundredApplicationJSONObject() *GetSettingsForJourneyJourneysResponseBody {
-	if o == nil {
+func (g *GetSettingsForJourneyResponse) GetFiveHundredApplicationJSONObject() *GetSettingsForJourneyJourneysResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.FiveHundredApplicationJSONObject
+	return g.FiveHundredApplicationJSONObject
 }
 
-func (o *GetSettingsForJourneyResponse) GetContentType() string {
-	if o == nil {
+func (g *GetSettingsForJourneyResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetSettingsForJourneyResponse) GetGetSettingsForJourney() *shared.GetSettingsForJourney {
-	if o == nil {
+func (g *GetSettingsForJourneyResponse) GetGetSettingsForJourney() *shared.GetSettingsForJourney {
+	if g == nil {
 		return nil
 	}
-	return o.GetSettingsForJourney
+	return g.GetSettingsForJourney
 }
 
-func (o *GetSettingsForJourneyResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetSettingsForJourneyResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetSettingsForJourneyResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetSettingsForJourneyResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

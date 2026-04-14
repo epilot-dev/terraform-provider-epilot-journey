@@ -12,18 +12,23 @@ type UpdateJourneyV2ResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *UpdateJourneyV2ResponseBody) GetMessage() *string {
-	if o == nil {
+func (u *UpdateJourneyV2ResponseBody) GetMessage() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Message
+	return u.Message
 }
+
+// #region class-body-updatejourneyv2responsebody
+// #endregion class-body-updatejourneyv2responsebody
 
 type UpdateJourneyV2Response struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// Success
 	JourneyCreationRequestV2 *shared.JourneyCreationRequestV2
+	// Validation failed (when validation mode is STRICT)
+	JourneyValidationError *shared.JourneyValidationError
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
@@ -32,37 +37,47 @@ type UpdateJourneyV2Response struct {
 	Object *UpdateJourneyV2ResponseBody
 }
 
-func (o *UpdateJourneyV2Response) GetContentType() string {
-	if o == nil {
+func (u *UpdateJourneyV2Response) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
-	if o == nil {
+func (u *UpdateJourneyV2Response) GetJourneyCreationRequestV2() *shared.JourneyCreationRequestV2 {
+	if u == nil {
 		return nil
 	}
-	return o.JourneyCreationRequestV2
+	return u.JourneyCreationRequestV2
 }
 
-func (o *UpdateJourneyV2Response) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateJourneyV2Response) GetJourneyValidationError() *shared.JourneyValidationError {
+	if u == nil {
+		return nil
+	}
+	return u.JourneyValidationError
+}
+
+func (u *UpdateJourneyV2Response) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateJourneyV2Response) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateJourneyV2Response) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateJourneyV2Response) GetObject() *UpdateJourneyV2ResponseBody {
-	if o == nil {
+func (u *UpdateJourneyV2Response) GetObject() *UpdateJourneyV2ResponseBody {
+	if u == nil {
 		return nil
 	}
-	return o.Object
+	return u.Object
 }
+
+// #region class-body-updatejourneyv2response
+// #endregion class-body-updatejourneyv2response

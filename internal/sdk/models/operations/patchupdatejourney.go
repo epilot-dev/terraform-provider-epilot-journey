@@ -12,11 +12,11 @@ type PatchUpdateJourneyResponseBody struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *PatchUpdateJourneyResponseBody) GetMessage() *string {
-	if o == nil {
+func (p *PatchUpdateJourneyResponseBody) GetMessage() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Message
+	return p.Message
 }
 
 type PatchUpdateJourneyResponse struct {
@@ -24,6 +24,8 @@ type PatchUpdateJourneyResponse struct {
 	ContentType string
 	// Success
 	JourneyResponse *shared.JourneyResponse
+	// Validation failed (when validation mode is STRICT)
+	JourneyValidationError *shared.JourneyValidationError
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
@@ -32,37 +34,44 @@ type PatchUpdateJourneyResponse struct {
 	Object *PatchUpdateJourneyResponseBody
 }
 
-func (o *PatchUpdateJourneyResponse) GetContentType() string {
-	if o == nil {
+func (p *PatchUpdateJourneyResponse) GetContentType() string {
+	if p == nil {
 		return ""
 	}
-	return o.ContentType
+	return p.ContentType
 }
 
-func (o *PatchUpdateJourneyResponse) GetJourneyResponse() *shared.JourneyResponse {
-	if o == nil {
+func (p *PatchUpdateJourneyResponse) GetJourneyResponse() *shared.JourneyResponse {
+	if p == nil {
 		return nil
 	}
-	return o.JourneyResponse
+	return p.JourneyResponse
 }
 
-func (o *PatchUpdateJourneyResponse) GetStatusCode() int {
-	if o == nil {
+func (p *PatchUpdateJourneyResponse) GetJourneyValidationError() *shared.JourneyValidationError {
+	if p == nil {
+		return nil
+	}
+	return p.JourneyValidationError
+}
+
+func (p *PatchUpdateJourneyResponse) GetStatusCode() int {
+	if p == nil {
 		return 0
 	}
-	return o.StatusCode
+	return p.StatusCode
 }
 
-func (o *PatchUpdateJourneyResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (p *PatchUpdateJourneyResponse) GetRawResponse() *http.Response {
+	if p == nil {
 		return nil
 	}
-	return o.RawResponse
+	return p.RawResponse
 }
 
-func (o *PatchUpdateJourneyResponse) GetObject() *PatchUpdateJourneyResponseBody {
-	if o == nil {
+func (p *PatchUpdateJourneyResponse) GetObject() *PatchUpdateJourneyResponseBody {
+	if p == nil {
 		return nil
 	}
-	return o.Object
+	return p.Object
 }
