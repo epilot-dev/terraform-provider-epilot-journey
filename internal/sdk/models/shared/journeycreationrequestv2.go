@@ -55,14 +55,8 @@ func (j *JourneyCreationRequestV2ContextSchema) GetType() string {
 	return j.Type
 }
 
-// #region class-body-journeycreationrequestv2contextschema
-// #endregion class-body-journeycreationrequestv2contextschema
-
 type JourneyCreationRequestV2DesignTokens struct {
 }
-
-// #region class-body-journeycreationrequestv2designtokens
-// #endregion class-body-journeycreationrequestv2designtokens
 
 type JourneyCreationRequestV2Design struct {
 	DesignTokens *JourneyCreationRequestV2DesignTokens `json:"designTokens,omitempty"`
@@ -90,9 +84,6 @@ func (j *JourneyCreationRequestV2Design) GetTheme() map[string]any {
 	}
 	return j.Theme
 }
-
-// #region class-body-journeycreationrequestv2design
-// #endregion class-body-journeycreationrequestv2design
 
 type JourneyCreationRequestV2SourceType string
 
@@ -184,9 +175,6 @@ func (j *JourneyCreationRequestV2Rules) GetType() JourneyCreationRequestV2Type {
 	return j.Type
 }
 
-// #region class-body-journeycreationrequestv2rules
-// #endregion class-body-journeycreationrequestv2rules
-
 type JourneyCreationRequestV2AccessMode string
 
 const (
@@ -260,9 +248,6 @@ func (j *JourneyCreationRequestV2Button) GetText() *string {
 	}
 	return j.Text
 }
-
-// #region class-body-journeycreationrequestv2button
-// #endregion class-body-journeycreationrequestv2button
 
 type JourneyCreationRequestV2Lang string
 
@@ -370,9 +355,6 @@ func (j *JourneyCreationRequestV2EmbedOptions) GetWidth() *string {
 	return j.Width
 }
 
-// #region class-body-journeycreationrequestv2embedoptions
-// #endregion class-body-journeycreationrequestv2embedoptions
-
 type JourneyCreationRequestV2RuntimeEntities string
 
 const (
@@ -420,6 +402,7 @@ type JourneyCreationRequestV2Settings struct {
 	EntityID             *string                                   `json:"entityId,omitempty"`
 	EntityTags           []string                                  `json:"entityTags,omitempty"`
 	FilePurposes         []string                                  `json:"filePurposes,omitempty"`
+	IsActive             *bool                                     `json:"isActive,omitempty"`
 	MappingsAutomationID *string                                   `json:"mappingsAutomationId,omitempty"`
 	PublicToken          *string                                   `json:"publicToken,omitempty"`
 	RuntimeEntities      []JourneyCreationRequestV2RuntimeEntities `json:"runtimeEntities,omitempty"`
@@ -530,6 +513,13 @@ func (j *JourneyCreationRequestV2Settings) GetFilePurposes() []string {
 	return j.FilePurposes
 }
 
+func (j *JourneyCreationRequestV2Settings) GetIsActive() *bool {
+	if j == nil {
+		return nil
+	}
+	return j.IsActive
+}
+
 func (j *JourneyCreationRequestV2Settings) GetMappingsAutomationID() *string {
 	if j == nil {
 		return nil
@@ -585,9 +575,6 @@ func (j *JourneyCreationRequestV2Settings) GetUseNewDesign() *bool {
 	}
 	return j.UseNewDesign
 }
-
-// #region class-body-journeycreationrequestv2settings
-// #endregion class-body-journeycreationrequestv2settings
 
 type JourneyCreationRequestV2 struct {
 	// Manifest/Blueprint ID used to create/update the entity
@@ -715,6 +702,3 @@ func (j *JourneyCreationRequestV2) GetValidationRules() any {
 	}
 	return j.ValidationRules
 }
-
-// #region class-body-journeycreationrequestv2
-// #endregion class-body-journeycreationrequestv2

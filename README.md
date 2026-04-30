@@ -18,13 +18,13 @@ terraform {
   required_providers {
     epilot-journey = {
       source  = "epilot-dev/epilot-journey"
-      version = "0.13.0"
+      version = "0.14.2"
     }
   }
 }
 
 provider "epilot-journey" {
-  # Configuration options
+  server_url = "..." # Optional
 }
 ```
 <!-- End Installation [installation] -->
@@ -102,10 +102,9 @@ Available configuration:
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources
 
-### Managed Resources
+### Resources
 
 * [epilot-journey_journey](docs/resources/journey.md)
-
 ### Data Sources
 
 * [epilot-journey_journey](docs/data-sources/journey.md)

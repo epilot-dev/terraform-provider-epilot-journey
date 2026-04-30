@@ -19,9 +19,6 @@ func (p *PatchUpdateJourneyV2ResponseBody) GetMessage() *string {
 	return p.Message
 }
 
-// #region class-body-patchupdatejourneyv2responsebody
-// #endregion class-body-patchupdatejourneyv2responsebody
-
 type PatchUpdateJourneyV2Response struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -78,6 +75,3 @@ func (p *PatchUpdateJourneyV2Response) GetObject() *PatchUpdateJourneyV2Response
 	}
 	return p.Object
 }
-
-// #region class-body-patchupdatejourneyv2response
-// #endregion class-body-patchupdatejourneyv2response

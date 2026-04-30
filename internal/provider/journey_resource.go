@@ -358,6 +358,10 @@ func (r *JourneyResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Optional:    true,
 						ElementType: types.StringType,
 					},
+					"is_active": schema.BoolAttribute{
+						Computed: true,
+						Optional: true,
+					},
 					"mappings_automation_id": schema.StringAttribute{
 						Computed: true,
 						Optional: true,

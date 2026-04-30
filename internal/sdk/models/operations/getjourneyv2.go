@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/internal/utils"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
 	"net/http"
 )
@@ -10,6 +11,20 @@ import (
 type GetJourneyV2Request struct {
 	// Journey ID
 	ID string `pathParam:"style=simple,explode=false,name=id"`
+	// DynamoDB version to fetch. `0` (default) is the live row; positive integers are historical snapshots created on each save. Note: this is distinct from the `revisions` counter on the row body.
+	//
+	Version *int64 `default:"0" queryParam:"style=form,explode=true,name=version"`
+}
+
+func (g GetJourneyV2Request) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(g, "", false)
+}
+
+func (g *GetJourneyV2Request) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (g *GetJourneyV2Request) GetID() string {
@@ -19,8 +34,12 @@ func (g *GetJourneyV2Request) GetID() string {
 	return g.ID
 }
 
-// #region class-body-getjourneyv2request
-// #endregion class-body-getjourneyv2request
+func (g *GetJourneyV2Request) GetVersion() *int64 {
+	if g == nil {
+		return nil
+	}
+	return g.Version
+}
 
 type GetJourneyV2Response struct {
 	// HTTP response content type for this operation
@@ -60,6 +79,3 @@ func (g *GetJourneyV2Response) GetRawResponse() *http.Response {
 	}
 	return g.RawResponse
 }
-
-// #region class-body-getjourneyv2response
-// #endregion class-body-getjourneyv2response

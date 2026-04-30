@@ -19,9 +19,6 @@ func (u *UpdateJourneyV2ResponseBody) GetMessage() *string {
 	return u.Message
 }
 
-// #region class-body-updatejourneyv2responsebody
-// #endregion class-body-updatejourneyv2responsebody
-
 type UpdateJourneyV2Response struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -78,6 +75,3 @@ func (u *UpdateJourneyV2Response) GetObject() *UpdateJourneyV2ResponseBody {
 	}
 	return u.Object
 }
-
-// #region class-body-updatejourneyv2response
-// #endregion class-body-updatejourneyv2response

@@ -144,6 +144,7 @@ func (r *JourneyDataSourceModel) RefreshFromSharedJourneyCreationRequestV2(ctx c
 			for _, v := range resp.Settings.FilePurposes {
 				r.Settings.FilePurposes = append(r.Settings.FilePurposes, types.StringValue(v))
 			}
+			r.Settings.IsActive = types.BoolPointerValue(resp.Settings.IsActive)
 			r.Settings.MappingsAutomationID = types.StringPointerValue(resp.Settings.MappingsAutomationID)
 			r.Settings.PublicToken = types.StringPointerValue(resp.Settings.PublicToken)
 			r.Settings.RuntimeEntities = make([]types.String, 0, len(resp.Settings.RuntimeEntities))
@@ -175,8 +176,15 @@ func (r *JourneyDataSourceModel) ToOperationsGetJourneyV2Request(ctx context.Con
 	var id string
 	id = r.JourneyID.ValueString()
 
+	version := new(int64)
+	if !r.Version.IsUnknown() && !r.Version.IsNull() {
+		*version = r.Version.ValueInt64()
+	} else {
+		version = nil
+	}
 	out := operations.GetJourneyV2Request{
-		ID: id,
+		ID:      id,
+		Version: version,
 	}
 
 	return &out, diags

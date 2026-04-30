@@ -21,6 +21,7 @@ type JourneyCreationRequestV2Settings struct {
 	EntityID                             types.String                          `tfsdk:"entity_id"`
 	EntityTags                           []types.String                        `tfsdk:"entity_tags"`
 	FilePurposes                         []types.String                        `tfsdk:"file_purposes"`
+	IsActive                             types.Bool                            `tfsdk:"is_active"`
 	MappingsAutomationID                 types.String                          `tfsdk:"mappings_automation_id"`
 	PublicToken                          types.String                          `tfsdk:"public_token"`
 	RuntimeEntities                      []types.String                        `tfsdk:"runtime_entities"`

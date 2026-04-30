@@ -45,6 +45,7 @@ type JourneyDataSourceModel struct {
 	Settings          *tfTypes.JourneyCreationRequestV2Settings       `tfsdk:"settings"`
 	Steps             jsontypes.Normalized                            `tfsdk:"steps"`
 	ValidationRules   jsontypes.Normalized                            `tfsdk:"validation_rules"`
+	Version           types.Int64                                     `queryParam:"style=form,explode=true,name=version" tfsdk:"version"`
 }
 
 // Metadata returns the data source type name.
@@ -105,7 +106,6 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			},
 			"journey_id": schema.StringAttribute{
 				Computed: true,
-				Optional: true,
 			},
 			"journey_type": schema.StringAttribute{
 				Computed:    true,
@@ -239,6 +239,9 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						Computed:    true,
 						ElementType: types.StringType,
 					},
+					"is_active": schema.BoolAttribute{
+						Computed: true,
+					},
 					"mappings_automation_id": schema.StringAttribute{
 						Computed: true,
 					},
@@ -277,6 +280,10 @@ func (r *JourneyDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				CustomType:  jsontypes.NormalizedType{},
 				Computed:    true,
 				Description: `Parsed as JSON.`,
+			},
+			"version": schema.Int64Attribute{
+				Optional:    true,
+				Description: `DynamoDB version to fetch. ` + "`" + `0` + "`" + ` (default) is the live row; positive integers are historical snapshots created on each save. Note: this is distinct from the ` + "`" + `revisions` + "`" + ` counter on the row body.`,
 			},
 		},
 	}

@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/internal/utils"
 	"github.com/epilot-dev/terraform-provider-epilot-journey/internal/sdk/models/shared"
 	"net/http"
 )
@@ -33,6 +34,20 @@ type GetJourneyRequest struct {
 	OrgID *string `queryParam:"style=form,explode=true,name=orgId"`
 	// What source ID. Journey or Entity ID
 	Source *string `queryParam:"style=form,explode=true,name=source"`
+	// DynamoDB version to fetch. `0` (default) is the live row; positive integers are historical snapshots created on each save. Note: this is distinct from the `revisions` counter on the row body.
+	//
+	Version *int64 `default:"0" queryParam:"style=form,explode=true,name=version"`
+}
+
+func (g GetJourneyRequest) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(g, "", false)
+}
+
+func (g *GetJourneyRequest) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (g *GetJourneyRequest) GetID() string {
@@ -54,6 +69,13 @@ func (g *GetJourneyRequest) GetSource() *string {
 		return nil
 	}
 	return g.Source
+}
+
+func (g *GetJourneyRequest) GetVersion() *int64 {
+	if g == nil {
+		return nil
+	}
+	return g.Version
 }
 
 type GetJourneyResponse struct {

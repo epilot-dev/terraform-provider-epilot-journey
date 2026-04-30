@@ -14,7 +14,7 @@ Journey DataSource
 
 ```terraform
 data "epilot-journey_journey" "my_journey" {
-  journey_id = "...my_journey_id..."
+  version = 9
 }
 ```
 
@@ -23,13 +23,14 @@ data "epilot-journey_journey" "my_journey" {
 
 ### Optional
 
-- `journey_id` (String)
+- `version` (Number) DynamoDB version to fetch. `0` (default) is the live row; positive integers are historical snapshots created on each save. Note: this is distinct from the `revisions` counter on the row body.
 
 ### Read-Only
 
 - `brand_id` (String)
 - `context_schema` (Attributes List) (see [below for nested schema](#nestedatt--context_schema))
 - `design` (Attributes) (see [below for nested schema](#nestedatt--design))
+- `journey_id` (String)
 - `journey_type` (String) Journey Template
 - `logics` (String) Parsed as JSON.
 - `logics_v4` (String) Parsed as JSON.
@@ -98,6 +99,7 @@ Read-Only:
 - `entity_id` (String)
 - `entity_tags` (List of String)
 - `file_purposes` (List of String)
+- `is_active` (Boolean)
 - `mappings_automation_id` (String)
 - `public_token` (String)
 - `runtime_entities` (List of String)

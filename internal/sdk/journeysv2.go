@@ -313,6 +313,10 @@ func (s *JourneysV2) GetJourneyV2(ctx context.Context, request operations.GetJou
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
 	}
@@ -447,7 +451,6 @@ func (s *JourneysV2) GetJourneyV2(ctx context.Context, request operations.GetJou
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
-		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -875,9 +878,7 @@ func (s *JourneysV2) RemoveJourneyV2(ctx context.Context, request operations.Rem
 
 	switch {
 	case httpRes.StatusCode == 200:
-		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
-		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

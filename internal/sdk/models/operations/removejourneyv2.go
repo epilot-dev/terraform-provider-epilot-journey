@@ -18,9 +18,6 @@ func (r *RemoveJourneyV2Request) GetID() string {
 	return r.ID
 }
 
-// #region class-body-removejourneyv2request
-// #endregion class-body-removejourneyv2request
-
 type RemoveJourneyV2Response struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -50,6 +47,3 @@ func (r *RemoveJourneyV2Response) GetRawResponse() *http.Response {
 	}
 	return r.RawResponse
 }
-
-// #region class-body-removejourneyv2response
-// #endregion class-body-removejourneyv2response

@@ -54,6 +54,3 @@ func (c *CreateJourneyV2Response) GetRawResponse() *http.Response {
 	}
 	return c.RawResponse
 }
-
-// #region class-body-createjourneyv2response
-// #endregion class-body-createjourneyv2response

@@ -69,6 +69,7 @@ resource "epilot-journey_journey" "my_journey" {
     file_purposes = [
       "..."
     ]
+    is_active              = false
     mappings_automation_id = "...my_mappings_automation_id..."
     public_token           = "...my_public_token..."
     runtime_entities = [

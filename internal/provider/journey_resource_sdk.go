@@ -144,6 +144,7 @@ func (r *JourneyResourceModel) RefreshFromSharedJourneyCreationRequestV2(ctx con
 			for _, v := range resp.Settings.FilePurposes {
 				r.Settings.FilePurposes = append(r.Settings.FilePurposes, types.StringValue(v))
 			}
+			r.Settings.IsActive = types.BoolPointerValue(resp.Settings.IsActive)
 			r.Settings.MappingsAutomationID = types.StringPointerValue(resp.Settings.MappingsAutomationID)
 			r.Settings.PublicToken = types.StringPointerValue(resp.Settings.PublicToken)
 			r.Settings.RuntimeEntities = make([]types.String, 0, len(resp.Settings.RuntimeEntities))
@@ -450,6 +451,12 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 		for filePurposesIndex := range r.Settings.FilePurposes {
 			filePurposes = append(filePurposes, r.Settings.FilePurposes[filePurposesIndex].ValueString())
 		}
+		isActive := new(bool)
+		if !r.Settings.IsActive.IsUnknown() && !r.Settings.IsActive.IsNull() {
+			*isActive = r.Settings.IsActive.ValueBool()
+		} else {
+			isActive = nil
+		}
 		mappingsAutomationID := new(string)
 		if !r.Settings.MappingsAutomationID.IsUnknown() && !r.Settings.MappingsAutomationID.IsNull() {
 			*mappingsAutomationID = r.Settings.MappingsAutomationID.ValueString()
@@ -511,6 +518,7 @@ func (r *JourneyResourceModel) ToSharedJourneyCreationRequestV2(ctx context.Cont
 			EntityID:                             entityID,
 			EntityTags:                           entityTags,
 			FilePurposes:                         filePurposes,
+			IsActive:                             isActive,
 			MappingsAutomationID:                 mappingsAutomationID,
 			PublicToken:                          publicToken,
 			RuntimeEntities:                      runtimeEntities,

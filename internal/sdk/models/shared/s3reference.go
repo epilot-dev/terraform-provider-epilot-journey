@@ -20,6 +20,3 @@ func (s *S3Reference) GetKey() string {
 	}
 	return s.Key
 }
-
-// #region class-body-s3reference
-// #endregion class-body-s3reference
